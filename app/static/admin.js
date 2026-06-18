@@ -45,7 +45,7 @@ function renderOverview(data) {
 
 function renderKpis(summary) {
   const kpis = [
-    ["今日事件", summary.today_events || 0, "观察测试活跃度"],
+    ["今日事件", summary.today_events || 0, "观察使用活跃度"],
     ["商品扫描", summary.product_scans || 0, "核心拍商品链路"],
     ["小票扫描", summary.receipt_scans || 0, "家庭记录数据入口"],
     ["AI 追问", summary.ai_chats || 0, "开放问题需求"],

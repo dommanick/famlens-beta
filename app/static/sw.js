@@ -1,4 +1,4 @@
-const CACHE_NAME = "famlens-shell-v3";
+const CACHE_NAME = "famlens-shell-v4";
 const SHELL_ASSETS = [
   "/",
   "/static/styles.css",

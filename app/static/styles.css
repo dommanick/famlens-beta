@@ -48,7 +48,7 @@ textarea {
   gap: 16px;
 }
 
-.beta-notice {
+.product-notice {
   margin: 2px 0 18px;
   border: 1px solid #d8e4d9;
   border-radius: 16px;
@@ -60,27 +60,27 @@ textarea {
   gap: 14px;
 }
 
-.beta-notice strong {
+.product-notice strong {
   color: var(--green-deep);
   font-size: 16px;
   line-height: 1.25;
 }
 
-.beta-notice p {
+.product-notice p {
   margin-top: 4px;
   color: #4b5a52;
   font-size: 15px;
   line-height: 1.45;
 }
 
-.beta-links {
+.notice-links {
   display: flex;
   align-items: center;
   gap: 9px;
   white-space: nowrap;
 }
 
-.beta-links a,
+.notice-links a,
 .site-footer a,
 .legal-back {
   color: var(--green-deep);
@@ -1389,7 +1389,7 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .beta-notice {
+  .product-notice {
     align-items: flex-start;
     flex-direction: column;
   }

@@ -97,8 +97,8 @@ const recentReceiptsTitle = document.querySelector("#recentReceiptsTitle");
 const recentProductsTitle = document.querySelector("#recentProductsTitle");
 const recentReceipts = document.querySelector("#recentReceipts");
 const recentProducts = document.querySelector("#recentProducts");
-const betaTitle = document.querySelector("#betaTitle");
-const betaCopy = document.querySelector("#betaCopy");
+const noticeTitle = document.querySelector("#noticeTitle");
+const noticeCopy = document.querySelector("#noticeCopy");
 const feedbackPanel = document.querySelector("#feedbackPanel");
 const feedbackKicker = document.querySelector("#feedbackKicker");
 const feedbackTitle = document.querySelector("#feedbackTitle");
@@ -131,7 +131,7 @@ const languageConfig = {
     speech: "zh-CN",
     ui: {
       language: "语言",
-      ready: "可试用",
+      ready: "在线",
       analyzing: "分析中",
       done: "已完成",
       retry: "需重试",
@@ -141,7 +141,7 @@ const languageConfig = {
       receiptTab: "扫小票",
       profileLabel: "家庭提醒，可选",
       profilePlaceholder: "例如：家里有人血脂高；老人高血压；孩子8岁；想少糖少盐。",
-      resultKicker: "FamLens 内测版",
+      resultKicker: "FamLens",
       errorTitle: "这张没看成功",
       replace: "换一张",
       uploadFromAlbum: "从相册上传",
@@ -173,16 +173,16 @@ const languageConfig = {
       itemUnit: "件",
       productFileError: "请选择商品照片。",
       receiptFileError: "请选择小票照片。",
-      betaTitle: "FamLens 内测版",
-      betaCopy: "请用真实购物场景测试：拍商品、扫小票、继续问 AI。结果仅供购物参考，不替代医生或药师建议。",
+      noticeTitle: "给家里采购的人用",
+      noticeCopy: "拍商品看懂说明，扫小票记录采购，还可以用语音继续问 AI。结果仅供购物参考，不替代医生或药师建议。",
     },
     modes: {
       product: {
         pick: "拍商品",
         upload: "商品、说明、价签都可以",
         note: "结果直接显示在本页，不跳链接，不需要再聊天追问",
-        emptyTitle: "这是什么，能不能买，怎么用",
-        emptyCopy: "先做拍照判断；看懂单个商品、说明、价签和注意事项。",
+        emptyTitle: "商品信息会显示在这里",
+        emptyCopy: "支持包装、说明、价签和使用提示。",
         loadingTitle: "正在看这张商品图",
         loadingCopy: "通常需要 8-20 秒。尽量拍清楚正面、背面或说明文字。",
         error: "这张图暂时没分析成功。请换一张更清楚的正面或背面照片。",
@@ -222,7 +222,7 @@ const languageConfig = {
       receiptTab: "Receipt",
       profileLabel: "Family notes, optional",
       profilePlaceholder: "Example: someone has high cholesterol; grandma has high blood pressure; child is 8; prefer less sugar and salt.",
-      resultKicker: "FamLens closed beta",
+      resultKicker: "FamLens",
       errorTitle: "This photo did not work",
       replace: "Choose another",
       uploadFromAlbum: "Upload from album",
@@ -254,16 +254,16 @@ const languageConfig = {
       itemUnit: "items",
       productFileError: "Please choose a product photo.",
       receiptFileError: "Please choose a receipt photo.",
-      betaTitle: "FamLens closed beta",
-      betaCopy: "Use real shopping moments: scan products, receipts, and ask AI. Results are for shopping reference only, not medical advice.",
+      noticeTitle: "For the family shopper",
+      noticeCopy: "Scan products, record receipts, and ask AI by voice. Results are for shopping reference only, not medical advice.",
     },
     modes: {
       product: {
         pick: "Scan product",
         upload: "Product, label, instructions, or price tag",
         note: "Results appear here directly, no chat loop or extra link",
-        emptyTitle: "What is it, should I buy it, how do I use it?",
-        emptyCopy: "Start with product scans for labels, usage, warnings, and simple decisions.",
+        emptyTitle: "Product information appears here",
+        emptyCopy: "Works with packaging, labels, instructions, and price tags.",
         loadingTitle: "Reading this product photo",
         loadingCopy: "Usually takes 8-20 seconds. Clear front, back, or instruction photos work best.",
         error: "This product photo did not analyze well. Try a clearer front or back photo.",
@@ -303,7 +303,7 @@ const languageConfig = {
       receiptTab: "Recibo",
       profileLabel: "Notas familiares, opcional",
       profilePlaceholder: "Ejemplo: colesterol alto; presión alta; niño de 8 años; menos azúcar y sal.",
-      resultKicker: "Beta cerrada FamLens",
+      resultKicker: "FamLens",
       errorTitle: "La foto no funcionó",
       replace: "Cambiar foto",
       uploadFromAlbum: "Subir desde álbum",
@@ -335,8 +335,8 @@ const languageConfig = {
       itemUnit: "art.",
       productFileError: "Elige una foto del producto.",
       receiptFileError: "Elige una foto del recibo.",
-      betaTitle: "Beta cerrada de FamLens",
-      betaCopy: "Úsalo en compras reales: productos, recibos y preguntas a AI. Es solo referencia de compra, no consejo médico.",
+      noticeTitle: "Para quien compra en casa",
+      noticeCopy: "Escanea productos, guarda recibos y pregunta a AI por voz. Es solo referencia de compra, no consejo médico.",
     },
     modes: {
       product: {
@@ -377,7 +377,7 @@ const languageConfig = {
       receiptTab: "Reçu",
       profileLabel: "Notes famille, optionnel",
       profilePlaceholder: "Exemple : cholestérol élevé ; tension élevée ; enfant de 8 ans ; moins de sucre et de sel.",
-      resultKicker: "Bêta fermée FamLens",
+      resultKicker: "FamLens",
       errorTitle: "La photo n'a pas marché",
       replace: "Changer",
       uploadFromAlbum: "Importer une photo",
@@ -409,8 +409,8 @@ const languageConfig = {
       itemUnit: "art.",
       productFileError: "Choisissez une photo du produit.",
       receiptFileError: "Choisissez une photo du reçu.",
-      betaTitle: "Bêta fermée FamLens",
-      betaCopy: "Utilisez-le en vraies courses : produits, reçus et questions AI. Information pratique, pas avis médical.",
+      noticeTitle: "Pour la personne qui fait les courses",
+      noticeCopy: "Scannez les produits, enregistrez les reçus et posez vos questions à l'AI par la voix. Information pratique, pas avis médical.",
     },
     modes: {
       product: {
@@ -451,7 +451,7 @@ const languageConfig = {
       receiptTab: "영수증",
       profileLabel: "가족 메모, 선택",
       profilePlaceholder: "예: 고지혈증, 고혈압, 8세 아이, 설탕과 소금 줄이기.",
-      resultKicker: "FamLens 비공개 베타",
+      resultKicker: "FamLens",
       errorTitle: "사진 분석 실패",
       replace: "다른 사진",
       uploadFromAlbum: "앨범에서 올리기",
@@ -483,8 +483,8 @@ const languageConfig = {
       itemUnit: "개",
       productFileError: "상품 사진을 선택하세요.",
       receiptFileError: "영수증 사진을 선택하세요.",
-      betaTitle: "FamLens 비공개 베타",
-      betaCopy: "실제 쇼핑에서 상품, 영수증, AI 질문을 테스트해 주세요. 결과는 쇼핑 참고용이며 의료 조언이 아닙니다.",
+      noticeTitle: "가족 장보는 사람을 위해",
+      noticeCopy: "상품을 스캔하고 영수증을 기록하며 음성으로 AI에게 물어볼 수 있습니다. 쇼핑 참고용이며 의료 조언은 아닙니다.",
     },
     modes: {
       product: {
@@ -525,7 +525,7 @@ const languageConfig = {
       receiptTab: "レシート",
       profileLabel: "家族メモ 任意",
       profilePlaceholder: "例：脂質を控えたい、血圧が高い、8歳の子ども、砂糖と塩を控えたい。",
-      resultKicker: "FamLens クローズドベータ",
+      resultKicker: "FamLens",
       errorTitle: "写真を分析できません",
       replace: "別の写真",
       uploadFromAlbum: "写真から選ぶ",
@@ -557,8 +557,8 @@ const languageConfig = {
       itemUnit: "点",
       productFileError: "商品写真を選んでください。",
       receiptFileError: "レシート写真を選んでください。",
-      betaTitle: "FamLens クローズドベータ",
-      betaCopy: "実際の買い物で商品、レシート、AI質問を試してください。買い物の参考であり、医療助言ではありません。",
+      noticeTitle: "家族の買い物担当に",
+      noticeCopy: "商品を読み取り、レシートを記録し、音声でAIに質問できます。買い物の参考であり、医療助言ではありません。",
     },
     modes: {
       product: {
@@ -599,7 +599,7 @@ const languageConfig = {
       receiptTab: "Hóa đơn",
       profileLabel: "Ghi chú gia đình, tùy chọn",
       profilePlaceholder: "Ví dụ: mỡ máu cao; huyết áp cao; bé 8 tuổi; muốn ít đường ít muối.",
-      resultKicker: "FamLens beta kín",
+      resultKicker: "FamLens",
       errorTitle: "Ảnh chưa phân tích được",
       replace: "Đổi ảnh",
       uploadFromAlbum: "Tải từ album",
@@ -631,8 +631,8 @@ const languageConfig = {
       itemUnit: "món",
       productFileError: "Vui lòng chọn ảnh sản phẩm.",
       receiptFileError: "Vui lòng chọn ảnh hóa đơn.",
-      betaTitle: "FamLens beta kín",
-      betaCopy: "Hãy dùng trong mua sắm thật: quét sản phẩm, hóa đơn và hỏi AI. Chỉ để tham khảo mua sắm, không phải tư vấn y tế.",
+      noticeTitle: "Cho người đi chợ trong gia đình",
+      noticeCopy: "Quét sản phẩm, lưu hóa đơn và hỏi AI bằng giọng nói. Chỉ để tham khảo mua sắm, không phải tư vấn y tế.",
     },
     modes: {
       product: {
@@ -673,7 +673,7 @@ const languageConfig = {
       receiptTab: "रसीद",
       profileLabel: "परिवार नोट, वैकल्पिक",
       profilePlaceholder: "जैसे: हाई ब्लड प्रेशर; बच्चा 8 साल का; कम चीनी और कम नमक चाहिए।",
-      resultKicker: "FamLens closed beta",
+      resultKicker: "FamLens",
       errorTitle: "यह फोटो साफ नहीं पढ़ी गई",
       replace: "दूसरी फोटो",
       uploadFromAlbum: "गैलरी से अपलोड करें",
@@ -705,8 +705,8 @@ const languageConfig = {
       itemUnit: "आइटम",
       productFileError: "कृपया सामान की फोटो चुनें।",
       receiptFileError: "कृपया रसीद की फोटो चुनें।",
-      betaTitle: "FamLens closed beta",
-      betaCopy: "असली खरीदारी में इस्तेमाल करें: सामान, रसीद और AI सवाल। यह खरीदारी संदर्भ है, मेडिकल सलाह नहीं।",
+      noticeTitle: "परिवार के खरीदारी करने वाले के लिए",
+      noticeCopy: "सामान स्कैन करें, रसीद रिकॉर्ड करें और आवाज़ से AI से पूछें। यह खरीदारी संदर्भ है, मेडिकल सलाह नहीं।",
     },
     modes: {
       product: {
@@ -749,7 +749,7 @@ const chatLanguageCopy = {
     voiceTranscribing: "正在听懂这段语音",
     voiceHeard: "听到了，正在问 AI",
     voicePermission: "需要允许麦克风权限，才能语音提问。",
-    voiceUnsupported: "这个浏览器暂时不支持语音输入，可以先用文字；正式 App 会接入稳定语音。",
+    voiceUnsupported: "这个浏览器暂时不支持语音输入，可以先用文字提问。",
     voiceError: "这次没听清，请再说一次。",
     welcome: "可以问我：这个适合老人吗？怎么用？有没有要注意的地方？",
     error: "这次没有回答成功，请换个问法再试一次。",
@@ -1030,7 +1030,7 @@ const recordsLanguageCopy = {
 
 const feedbackLanguageCopy = {
   "zh-Hans": {
-    kicker: "内测反馈",
+    kicker: "反馈",
     title: "这个结果有帮助吗？",
     helpful: "有帮助",
     inaccurate: "不准确",
@@ -1038,7 +1038,7 @@ const feedbackLanguageCopy = {
     thanks: "收到，谢谢。你的反馈会帮助我们改进。",
   },
   en: {
-    kicker: "Beta feedback",
+    kicker: "Feedback",
     title: "Was this result helpful?",
     helpful: "Helpful",
     inaccurate: "Inaccurate",
@@ -1046,7 +1046,7 @@ const feedbackLanguageCopy = {
     thanks: "Thanks. Your feedback helps us improve FamLens.",
   },
   es: {
-    kicker: "Comentarios beta",
+    kicker: "Comentarios",
     title: "¿Fue útil este resultado?",
     helpful: "Útil",
     inaccurate: "Incorrecto",
@@ -1054,7 +1054,7 @@ const feedbackLanguageCopy = {
     thanks: "Gracias. Tu comentario nos ayuda a mejorar.",
   },
   fr: {
-    kicker: "Retour bêta",
+    kicker: "Retour",
     title: "Ce résultat est-il utile ?",
     helpful: "Utile",
     inaccurate: "Inexact",
@@ -1062,7 +1062,7 @@ const feedbackLanguageCopy = {
     thanks: "Merci. Votre retour nous aide à améliorer FamLens.",
   },
   ko: {
-    kicker: "베타 피드백",
+    kicker: "피드백",
     title: "이 결과가 도움이 되었나요?",
     helpful: "도움 됨",
     inaccurate: "부정확",
@@ -1070,7 +1070,7 @@ const feedbackLanguageCopy = {
     thanks: "감사합니다. 피드백은 FamLens 개선에 도움이 됩니다.",
   },
   ja: {
-    kicker: "ベータ feedback",
+    kicker: "フィードバック",
     title: "この結果は役に立ちましたか？",
     helpful: "役に立つ",
     inaccurate: "不正確",
@@ -1078,7 +1078,7 @@ const feedbackLanguageCopy = {
     thanks: "ありがとうございます。改善に役立てます。",
   },
   vi: {
-    kicker: "Phản hồi beta",
+    kicker: "Phản hồi",
     title: "Kết quả này có hữu ích không?",
     helpful: "Hữu ích",
     inaccurate: "Không đúng",
@@ -1086,7 +1086,7 @@ const feedbackLanguageCopy = {
     thanks: "Cảm ơn. Phản hồi giúp chúng tôi cải thiện.",
   },
   hi: {
-    kicker: "Beta feedback",
+    kicker: "Feedback",
     title: "क्या यह नतीजा मददगार था?",
     helpful: "मददगार",
     inaccurate: "गलत",
@@ -1997,8 +1997,8 @@ function applyLanguage() {
   nutritionSignalLabel.textContent = ui().nutrition;
   spendingSignalLabel.textContent = ui().spending;
   familyReportNoteLabel.textContent = ui().report;
-  betaTitle.textContent = ui().betaTitle || "FamLens closed beta";
-  betaCopy.textContent = ui().betaCopy || "";
+  noticeTitle.textContent = ui().noticeTitle || "FamLens";
+  noticeCopy.textContent = ui().noticeCopy || "";
   applyFeedbackLanguage();
   applyChatLanguage();
   renderFamilyRecords();
@@ -2146,7 +2146,7 @@ function getClientUserId() {
   const randomId = window.crypto?.randomUUID
     ? window.crypto.randomUUID()
     : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  const id = `beta-${randomId}`;
+  const id = `user-${randomId}`;
   localStorage.setItem(key, id);
   return id;
 }
@@ -2169,7 +2169,7 @@ sendClientEvent("app_open", {
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("/static/sw.js").catch(() => {
-      // Offline shell is useful but not required for beta usage.
+      // Offline shell is useful but not required for core usage.
     });
   });
 }
