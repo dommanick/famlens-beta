@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f8f3ea" />
+    <meta
+      name="description"
+      content="FamLens helps immigrant families understand groceries, household products, receipts, and family shopping patterns."
+    />
+    <title>FamLens</title>
+    <link rel="manifest" href="/static/manifest.webmanifest" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar" aria-label="应用状态">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">F</div>
+          <div>
+            <p class="eyebrow">Family grocery care</p>
+            <h1>FamLens</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <label class="language-control" for="languageSelect">
+            <span id="languageLabel">语言</span>
+            <select id="languageSelect" class="language-select">
+              <option value="zh-Hans">中文</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="ko">한국어</option>
+              <option value="ja">日本語</option>
+              <option value="vi">Tiếng Việt</option>
+              <option value="hi">हिन्दी</option>
+            </select>
+          </label>
+          <span class="status-dot" id="serviceStatus">可试用</span>
+        </div>
+      </section>
+
+      <section class="beta-notice" aria-label="内测说明">
+        <div>
+          <strong id="betaTitle">FamLens 内测版</strong>
+          <p id="betaCopy">请用真实购物场景测试：拍商品、扫小票、继续问 AI。结果仅供购物参考，不替代医生或药师建议。</p>
+        </div>
+        <div class="beta-links">
+          <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
+          <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="拍照分析">
+        <div class="camera-panel">
+          <div class="panel-head">
+            <p class="panel-kicker" id="panelKicker">给家里主要采购的人用</p>
+            <h2 id="panelTitle">拍一下，马上看懂</h2>
+          </div>
+
+          <div class="scan-tabs" aria-label="选择拍照类型">
+            <button class="scan-tab active" id="productTab" type="button" data-mode="product">拍商品</button>
+            <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt">扫小票</button>
+          </div>
+
+          <div class="upload-zone" id="dropZone">
+            <input id="imageInput" class="file-input" type="file" accept="image/*" capture="environment" />
+            <button class="primary-action" id="pickButton" type="button">
+              <span class="camera-icon" aria-hidden="true"></span>
+              <span id="pickButtonText">拍商品</span>
+            </button>
+            <p class="upload-copy" id="uploadCopy">商品、说明、价签都可以</p>
+            <p class="upload-note" id="uploadNote">结果直接显示在本页，不跳链接，不需要再聊天追问</p>
+          </div>
+
+          <div class="preview-wrap" id="previewWrap" hidden>
+            <img id="previewImage" alt="已选择的商品照片" />
+            <button class="secondary-action" id="replaceButton" type="button">换一张</button>
+          </div>
+
+          <label class="profile-box" for="familyProfile">
+            <span id="profileLabel">家庭提醒，可选</span>
+            <textarea id="familyProfile" rows="3" placeholder="例如：家里有人血脂高；老人高血压；孩子8岁；想少糖少盐。"></textarea>
+          </label>
+        </div>
+
+        <div class="result-panel">
+          <div class="empty-state" id="emptyState">
+            <p class="result-kicker" id="resultKicker">FamLens closed beta</p>
+            <h2 id="emptyTitle">这是什么，能不能买，怎么用</h2>
+            <p id="emptyCopy">先做拍照判断；后续承接小票记录、家庭饮食结构和月度支出报告。</p>
+          </div>
+
+          <div class="loading-state" id="loadingState" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <h2 id="loadingTitle">正在看这张照片</h2>
+            <p id="loadingCopy">通常需要 8-20 秒。正式 App 会加入压缩、重试和进度提示。</p>
+          </div>
+
+          <div class="error-state" id="errorState" hidden>
+            <h2 id="errorTitle">这张没看成功</h2>
+            <p id="errorText">请换一张更清楚的照片。</p>
+          </div>
+
+          <div class="result-state" id="resultState" hidden>
+            <div class="verdict-line">
+              <span id="verdictBadge">看情况</span>
+              <div>
+                <h2 id="itemName">商品名称</h2>
+                <p id="subtitle">用途说明</p>
+              </div>
+            </div>
+
+            <div class="voice-box">
+              <button class="voice-button" id="speakButton" type="button">
+                <span class="speaker-icon" aria-hidden="true"></span>
+                <span id="speakButtonText">播放给老人听</span>
+              </button>
+              <p id="voiceSummary"></p>
+            </div>
+
+            <div class="card-stage" id="cardStage" aria-label="图文判断卡"></div>
+
+            <div class="quick-grid" aria-label="下一步操作">
+              <button id="clerkButton" type="button">问店员怎么说</button>
+              <button id="copyButton" type="button">发给家人</button>
+              <button id="downloadButton" type="button">保存图文卡</button>
+            </div>
+
+            <div class="detail-list" id="detailList"></div>
+          </div>
+
+          <div class="receipt-state" id="receiptState" hidden>
+            <div class="receipt-hero">
+              <p id="receiptHeroLabel">小票记录</p>
+              <h2 id="receiptTotal">总额 --</h2>
+              <span id="receiptStore">未知商店</span>
+            </div>
+
+            <div class="receipt-meta">
+              <div>
+                <span id="receiptDateLabel">日期</span>
+                <strong id="receiptDate">未知日期</strong>
+              </div>
+              <div>
+                <span id="receiptCountLabel">商品数</span>
+                <strong id="receiptCount">--</strong>
+              </div>
+              <div>
+                <span id="receiptTaxLabel">税费</span>
+                <strong id="receiptTax">--</strong>
+              </div>
+            </div>
+
+            <div class="voice-box">
+              <button class="voice-button" id="receiptSpeakButton" type="button">
+                <span class="speaker-icon" aria-hidden="true"></span>
+                <span id="receiptSpeakButtonText">播放小票摘要</span>
+              </button>
+              <p id="receiptVoiceSummary"></p>
+            </div>
+
+            <section class="receipt-section" aria-label="小票商品清单">
+              <h3 id="receiptItemsTitle">采购清单</h3>
+              <div class="receipt-items" id="receiptItems"></div>
+            </section>
+
+            <section class="receipt-section" aria-label="分类统计">
+              <h3 id="receiptCategoriesTitle">分类统计</h3>
+              <div class="category-list" id="receiptCategories"></div>
+            </section>
+
+            <div class="insight-grid">
+              <div>
+                <span id="nutritionSignalLabel">饮食结构提示</span>
+                <p id="nutritionSignal"></p>
+              </div>
+              <div>
+                <span id="spendingSignalLabel">支出提示</span>
+                <p id="spendingSignal"></p>
+              </div>
+              <div>
+                <span id="familyReportNoteLabel">月报价值</span>
+                <p id="familyReportNote"></p>
+              </div>
+            </div>
+          </div>
+
+          <section class="feedback-panel" id="feedbackPanel" hidden aria-label="结果反馈">
+            <div>
+              <p id="feedbackKicker">内测反馈</p>
+              <h2 id="feedbackTitle">这个结果有帮助吗？</h2>
+            </div>
+            <div class="feedback-actions">
+              <button type="button" data-feedback="helpful" id="feedbackHelpful">有帮助</button>
+              <button type="button" data-feedback="inaccurate" id="feedbackInaccurate">不准确</button>
+              <button type="button" data-feedback="confusing" id="feedbackConfusing">看不懂</button>
+            </div>
+            <p id="feedbackThanks" hidden>收到，谢谢。你的反馈会帮助我们改进。</p>
+          </section>
+
+          <section class="ai-chat-panel" id="chatPanel" aria-label="AI 问答">
+            <div class="chat-head">
+              <div>
+                <p id="chatKicker">继续问 AI</p>
+                <h2 id="chatTitle">还有问题，直接问</h2>
+              </div>
+              <button class="chat-clear" id="clearChatButton" type="button">清空</button>
+            </div>
+            <div class="chat-suggestions" id="chatSuggestions" aria-label="常用问题"></div>
+            <div class="chat-messages" id="chatMessages" aria-live="polite">
+              <div class="chat-message assistant" id="chatWelcome">可以问我：这个适合老人吗？怎么用？有没有要注意的地方？</div>
+            </div>
+            <form class="chat-form" id="chatForm">
+              <textarea id="chatInput" rows="2" placeholder="输入你想问的问题"></textarea>
+              <button class="chat-submit" id="chatSubmitButton" type="submit">发送</button>
+            </form>
+          </section>
+        </div>
+      </section>
+
+      <section class="records-panel" id="recordsPanel" aria-label="家庭记录">
+        <div class="records-head">
+          <div>
+            <p id="recordsKicker">家庭记录</p>
+            <h2 id="recordsTitle">这个月家里买了什么</h2>
+          </div>
+          <button class="records-clear" id="clearRecordsButton" type="button">清空记录</button>
+        </div>
+
+        <div class="records-summary" aria-label="本月概览">
+          <div>
+            <span id="monthlySpendLabel">本月小票支出</span>
+            <strong id="monthlySpend">$0.00</strong>
+          </div>
+          <div>
+            <span id="monthlyReceiptLabel">已记录小票</span>
+            <strong id="monthlyReceiptCount">0 张</strong>
+          </div>
+          <div>
+            <span id="monthlyProductLabel">看过商品</span>
+            <strong id="monthlyProductCount">0 件</strong>
+          </div>
+        </div>
+
+        <div class="records-grid">
+          <section class="record-section" aria-label="最近小票">
+            <h3 id="recentReceiptsTitle">最近小票</h3>
+            <div class="record-list" id="recentReceipts"></div>
+          </section>
+
+          <section class="record-section" aria-label="最近商品">
+            <h3 id="recentProductsTitle">最近商品</h3>
+            <div class="record-list" id="recentProducts"></div>
+          </section>
+        </div>
+      </section>
+
+      <footer class="site-footer">
+        <span>FamLens closed beta</span>
+        <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
+        <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
+      </footer>
+    </main>
+
+    <dialog class="clerk-dialog" id="clerkDialog">
+      <div class="dialog-head">
+        <h2 id="dialogTitle">给店员看</h2>
+        <button id="closeDialogButton" type="button" aria-label="关闭">×</button>
+      </div>
+      <p class="clerk-phrase" id="clerkPhrase">Where can I find this product?</p>
+      <p class="dialog-hint" id="dialogHint">把这句话给店员看，或点复制后粘贴到翻译器。</p>
+      <button class="primary-action compact" id="copyClerkButton" type="button">复制英文</button>
+    </dialog>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#166b48"/>
+  <path d="M148 190h216l-25 186H173l-25-186Z" fill="#fffdf8"/>
+  <path d="M190 190c0-46 29-78 66-78s66 32 66 78" fill="none" stroke="#fffdf8" stroke-width="34" stroke-linecap="round"/>
+  <path d="M206 283c39 8 71-5 101-39 22 68-27 112-92 94" fill="#d9a354"/>
+  <text x="256" y="316" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Arial,sans-serif" font-size="118" font-weight="900" fill="#166b48">C</text>
+</svg>

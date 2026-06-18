@@ -1,0 +1,14 @@
+.venv/
+.tools/
+__pycache__/
+*.py[cod]
+.env
+*.env
+*.env.rtf
+.DS_Store
+.pytest_cache/
+data/*.json
+data/*.jsonl
+data/cards/
+data/uploads/
+!data/.gitkeep

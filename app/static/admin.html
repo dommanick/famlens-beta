@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f2" />
+    <title>FamLens Admin</title>
+    <link rel="stylesheet" href="/static/admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <header class="admin-topbar">
+        <div>
+          <p>FamLens Operations</p>
+          <h1>家庭 AI 购物管家后台</h1>
+        </div>
+        <div class="topbar-actions">
+          <a href="/" class="ghost-link">用户端</a>
+          <button id="refreshButton" type="button">刷新数据</button>
+        </div>
+      </header>
+
+      <section class="kpi-grid" id="kpiGrid" aria-label="核心指标"></section>
+
+      <section class="admin-layout">
+        <div class="module-grid" id="moduleGrid" aria-label="运营模块"></div>
+
+        <aside class="insight-panel">
+          <div class="panel-block">
+            <div class="section-head">
+              <h2>语言分布</h2>
+              <span id="generatedAt">--</span>
+            </div>
+            <div class="bar-list" id="languageChart"></div>
+          </div>
+
+          <div class="panel-block">
+            <div class="section-head">
+              <h2>品类分布</h2>
+            </div>
+            <div class="bar-list" id="categoryChart"></div>
+          </div>
+
+          <div class="panel-block">
+            <div class="section-head">
+              <h2>最近事件</h2>
+            </div>
+            <div class="event-list" id="eventList"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/static/admin.js"></script>
+  </body>
+</html>

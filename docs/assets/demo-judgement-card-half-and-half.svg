@@ -1,0 +1,40 @@
+<svg width="900" height="1200" viewBox="0 0 900 1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 58px; font-weight: 800; fill: #1e293b; }
+      .subtitle { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 32px; font-weight: 600; fill: #475569; }
+      .section-title { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 34px; font-weight: 800; fill: #0f172a; }
+      .body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 40px; font-weight: 650; fill: #111827; }
+      .small { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 28px; font-weight: 600; fill: #64748b; }
+      .badge { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 30px; font-weight: 800; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect width="900" height="1200" fill="#f8fafc"/>
+  <rect x="48" y="48" width="804" height="1104" rx="34" fill="#ffffff" stroke="#e2e8f0" stroke-width="4"/>
+
+  <rect x="86" y="86" width="728" height="176" rx="28" fill="#fee2e2"/>
+  <rect x="116" y="117" width="126" height="54" rx="27" fill="#dc2626"/>
+  <text x="179" y="154" text-anchor="middle" class="badge">注意</text>
+  <text x="116" y="226" class="title">不是普通牛奶</text>
+
+  <text x="86" y="322" class="subtitle">拍到商品：Half &amp; Half</text>
+
+  <rect x="86" y="370" width="728" height="178" rx="24" fill="#f1f5f9"/>
+  <text x="122" y="423" class="section-title">这是什么</text>
+  <text x="122" y="486" class="body">牛奶 + 奶油</text>
+  <text x="122" y="528" class="small">一般倒在咖啡里</text>
+
+  <rect x="86" y="580" width="728" height="200" rx="24" fill="#ecfdf5"/>
+  <text x="122" y="633" class="section-title">怎么用</text>
+  <text x="122" y="696" class="body">少量放咖啡</text>
+  <text x="122" y="752" class="body">也能做奶油汤</text>
+
+  <rect x="86" y="812" width="728" height="214" rx="24" fill="#fff7ed"/>
+  <text x="122" y="865" class="section-title">别这样用</text>
+  <text x="122" y="928" class="body">不要当牛奶大杯喝</text>
+  <text x="122" y="984" class="body">脂肪比牛奶高</text>
+
+  <line x1="86" y1="1070" x2="814" y2="1070" stroke="#e2e8f0" stroke-width="3"/>
+  <text x="450" y="1122" text-anchor="middle" class="small">看不懂商品，拍给我，我告诉你怎么买、怎么吃</text>
+</svg>

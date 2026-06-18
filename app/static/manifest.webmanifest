@@ -1,0 +1,21 @@
+{
+  "name": "FamLens",
+  "short_name": "FamLens",
+  "description": "AI grocery and household shopping assistant for immigrant families.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f3ea",
+  "theme_color": "#f8f3ea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/static/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "shopping", "lifestyle"],
+  "lang": "zh-CN"
+}
