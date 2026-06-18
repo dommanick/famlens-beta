@@ -172,6 +172,12 @@ async def invite_page() -> FileResponse:
     return FileResponse(static_dir / "invite.html")
 
 
+@app.get("/manifest.json")
+@app.get("/site.webmanifest")
+async def web_manifest() -> FileResponse:
+    return FileResponse(static_dir / "manifest.webmanifest", media_type="application/manifest+json")
+
+
 @app.get("/api/invite/qr.svg")
 async def invite_qr(request: Request) -> Response:
     base_url = settings.public_base_url or str(request.base_url).rstrip("/")

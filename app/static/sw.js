@@ -4,6 +4,8 @@ const SHELL_ASSETS = [
   "/static/styles.css",
   "/static/app.js",
   "/static/manifest.webmanifest",
+  "/manifest.json",
+  "/site.webmanifest",
   "/static/icon.svg"
 ];
 

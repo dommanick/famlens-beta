@@ -30,6 +30,13 @@ class InvitePageTests(unittest.TestCase):
         self.assertEqual(response.headers["content-type"], "image/svg+xml")
         self.assertIn("<svg", response.text)
 
+    def test_manifest_json_compatibility_route(self) -> None:
+        response = self.client.get("/manifest.json")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("FamLens", response.text)
+        self.assertIn("application/manifest+json", response.headers["content-type"])
+
 
 if __name__ == "__main__":
     unittest.main()
