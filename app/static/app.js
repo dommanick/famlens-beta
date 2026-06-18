@@ -111,7 +111,7 @@ const feedbackThanks = document.querySelector("#feedbackThanks");
 let latestResult = null;
 let latestCardSvg = "";
 let scanMode = "product";
-let appLanguage = localStorage.getItem("carecart.language") || "zh-Hans";
+let appLanguage = localStorage.getItem("carecart.language") || "en";
 const clientUserId = getClientUserId();
 let serviceState = "ready";
 let currentAudio = null;
@@ -1100,7 +1100,7 @@ pickButton.addEventListener("click", () => cameraInput.click());
 albumButton.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
-  appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "zh-Hans";
+  appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "en";
   localStorage.setItem("carecart.language", appLanguage);
   stopSpeech();
   stopChatVoiceInput();
@@ -1979,7 +1979,7 @@ function setScanMode(mode) {
 }
 
 function applyLanguage() {
-  appLanguage = languageConfig[appLanguage] ? appLanguage : "zh-Hans";
+  appLanguage = languageConfig[appLanguage] ? appLanguage : "en";
   languageSelect.value = appLanguage;
   document.documentElement.lang = config().htmlLang;
 
@@ -2129,7 +2129,7 @@ function formatItemCount(value) {
 }
 
 function config() {
-  return languageConfig[appLanguage] || languageConfig["zh-Hans"];
+  return languageConfig[appLanguage] || languageConfig.en;
 }
 
 function ui() {
@@ -2141,15 +2141,15 @@ function modeCopy() {
 }
 
 function chatCopy() {
-  return chatLanguageCopy[appLanguage] || chatLanguageCopy["zh-Hans"];
+  return chatLanguageCopy[appLanguage] || chatLanguageCopy.en;
 }
 
 function recordCopy() {
-  return recordsLanguageCopy[appLanguage] || recordsLanguageCopy["zh-Hans"];
+  return recordsLanguageCopy[appLanguage] || recordsLanguageCopy.en;
 }
 
 function feedbackCopy() {
-  return feedbackLanguageCopy[appLanguage] || feedbackLanguageCopy["zh-Hans"];
+  return feedbackLanguageCopy[appLanguage] || feedbackLanguageCopy.en;
 }
 
 function getClientUserId() {

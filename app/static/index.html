@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -26,8 +26,8 @@
           <label class="language-control" for="languageSelect">
             <span id="languageLabel">语言</span>
             <select id="languageSelect" class="language-select">
-              <option value="zh-Hans">中文</option>
               <option value="en">English</option>
+              <option value="zh-Hans">中文</option>
               <option value="es">Español</option>
               <option value="fr">Français</option>
               <option value="ko">한국어</option>
@@ -36,21 +36,21 @@
               <option value="hi">हिन्दी</option>
             </select>
           </label>
-          <button class="records-open" id="recordsOpenButton" type="button">家庭记录</button>
-          <span class="status-dot visually-hidden" id="serviceStatus" aria-live="polite">在线</span>
+          <button class="records-open" id="recordsOpenButton" type="button">Records</button>
+          <span class="status-dot visually-hidden" id="serviceStatus" aria-live="polite">Ready</span>
         </div>
       </section>
 
       <section class="workspace" aria-label="拍照分析">
         <div class="camera-panel">
           <div class="panel-head">
-            <p class="panel-kicker" id="panelKicker">给家里主要采购的人用</p>
-            <h2 id="panelTitle">拍一下，马上看懂</h2>
+            <p class="panel-kicker" id="panelKicker">For the family shopper</p>
+            <h2 id="panelTitle">Snap it. Understand it.</h2>
           </div>
 
           <div class="scan-tabs" aria-label="选择拍照类型">
-            <button class="scan-tab active" id="productTab" type="button" data-mode="product">拍商品</button>
-            <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt">扫小票</button>
+            <button class="scan-tab active" id="productTab" type="button" data-mode="product">Product</button>
+            <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt">Receipt</button>
           </div>
 
           <div class="upload-zone" id="dropZone">
@@ -59,59 +59,59 @@
             <div class="upload-actions">
               <button class="primary-action" id="pickButton" type="button">
                 <span class="camera-icon" aria-hidden="true"></span>
-                <span id="pickButtonText">拍商品</span>
+                <span id="pickButtonText">Scan product</span>
               </button>
               <button class="album-action" id="albumButton" type="button">
                 <span class="album-icon" aria-hidden="true"></span>
-                <span id="albumButtonText">从相册上传</span>
+                <span id="albumButtonText">Upload from album</span>
               </button>
             </div>
-            <p class="upload-copy" id="uploadCopy">商品、说明、价签都可以</p>
-            <p class="upload-note" id="uploadNote">结果直接显示在本页，不跳链接，不需要再聊天追问</p>
+            <p class="upload-copy" id="uploadCopy">Product, label, instructions, or price tag</p>
+            <p class="upload-note" id="uploadNote">Results appear here directly, no chat loop or extra link</p>
           </div>
 
           <div class="preview-wrap" id="previewWrap" hidden>
             <img id="previewImage" alt="已选择的商品照片" />
-            <button class="secondary-action" id="replaceButton" type="button">换一张</button>
+            <button class="secondary-action" id="replaceButton" type="button">Choose another</button>
           </div>
 
           <details class="profile-box">
-            <summary id="profileLabel">家庭提醒，可选</summary>
-            <textarea id="familyProfile" rows="3" placeholder="例如：家里有人血脂高；老人高血压；孩子8岁；想少糖少盐。"></textarea>
+            <summary id="profileLabel">Family notes, optional</summary>
+            <textarea id="familyProfile" rows="3" placeholder="Example: someone has high cholesterol; grandma has high blood pressure; child is 8; prefer less sugar and salt."></textarea>
           </details>
         </div>
 
         <div class="result-panel">
           <div class="empty-state" id="emptyState">
             <p class="result-kicker" id="resultKicker">FamLens</p>
-            <h2 id="emptyTitle">购物信息会显示在这里</h2>
-            <p id="emptyCopy">支持商品说明、小票清单和家庭记录。</p>
+            <h2 id="emptyTitle">Product information appears here</h2>
+            <p id="emptyCopy">Works with packaging, labels, instructions, and price tags.</p>
           </div>
 
           <div class="loading-state" id="loadingState" hidden>
             <div class="spinner" aria-hidden="true"></div>
-            <h2 id="loadingTitle">正在看这张照片</h2>
-            <p id="loadingCopy">通常需要 8-20 秒。照片越清楚，结果越准确。</p>
+            <h2 id="loadingTitle">Reading this photo</h2>
+            <p id="loadingCopy">Usually takes 8-20 seconds. Clear photos work best.</p>
           </div>
 
           <div class="error-state" id="errorState" hidden>
-            <h2 id="errorTitle">这张没看成功</h2>
-            <p id="errorText">请换一张更清楚的照片。</p>
+            <h2 id="errorTitle">This photo did not work</h2>
+            <p id="errorText">Try a clearer photo.</p>
           </div>
 
           <div class="result-state" id="resultState" hidden>
             <div class="verdict-line">
-              <span id="verdictBadge">看情况</span>
+              <span id="verdictBadge">Check</span>
               <div>
-                <h2 id="itemName">商品名称</h2>
-                <p id="subtitle">用途说明</p>
+                <h2 id="itemName">Product name</h2>
+                <p id="subtitle">Usage summary</p>
               </div>
             </div>
 
             <div class="voice-box">
               <button class="voice-button" id="speakButton" type="button">
                 <span class="speaker-icon" aria-hidden="true"></span>
-                <span id="speakButtonText">播放给老人听</span>
+                <span id="speakButtonText">Play aloud</span>
               </button>
               <p id="voiceSummary"></p>
             </div>
@@ -119,9 +119,9 @@
             <div class="card-stage" id="cardStage" aria-label="图文判断卡"></div>
 
             <div class="quick-grid" aria-label="下一步操作">
-              <button id="clerkButton" type="button">问店员怎么说</button>
-              <button id="copyButton" type="button">发给家人</button>
-              <button id="downloadButton" type="button">保存图文卡</button>
+              <button id="clerkButton" type="button">Ask staff</button>
+              <button id="copyButton" type="button">Share with family</button>
+              <button id="downloadButton" type="button">Save card</button>
             </div>
 
             <div class="detail-list" id="detailList"></div>
@@ -129,22 +129,22 @@
 
           <div class="receipt-state" id="receiptState" hidden>
             <div class="receipt-hero">
-              <p id="receiptHeroLabel">小票记录</p>
-              <h2 id="receiptTotal">总额 --</h2>
-              <span id="receiptStore">未知商店</span>
+              <p id="receiptHeroLabel">Receipt record</p>
+              <h2 id="receiptTotal">Total --</h2>
+              <span id="receiptStore">Unknown store</span>
             </div>
 
             <div class="receipt-meta">
               <div>
-                <span id="receiptDateLabel">日期</span>
-                <strong id="receiptDate">未知日期</strong>
+                <span id="receiptDateLabel">Date</span>
+                <strong id="receiptDate">Unknown date</strong>
               </div>
               <div>
-                <span id="receiptCountLabel">商品数</span>
+                <span id="receiptCountLabel">Items</span>
                 <strong id="receiptCount">--</strong>
               </div>
               <div>
-                <span id="receiptTaxLabel">税费</span>
+                <span id="receiptTaxLabel">Tax</span>
                 <strong id="receiptTax">--</strong>
               </div>
             </div>
@@ -152,72 +152,72 @@
             <div class="voice-box">
               <button class="voice-button" id="receiptSpeakButton" type="button">
                 <span class="speaker-icon" aria-hidden="true"></span>
-                <span id="receiptSpeakButtonText">播放小票摘要</span>
+                <span id="receiptSpeakButtonText">Play receipt summary</span>
               </button>
               <p id="receiptVoiceSummary"></p>
             </div>
 
-            <section class="receipt-section" aria-label="小票商品清单">
-              <h3 id="receiptItemsTitle">采购清单</h3>
+            <section class="receipt-section" aria-label="Receipt item list">
+              <h3 id="receiptItemsTitle">Shopping list</h3>
               <div class="receipt-items" id="receiptItems"></div>
             </section>
 
-            <section class="receipt-section" aria-label="分类统计">
-              <h3 id="receiptCategoriesTitle">分类统计</h3>
+            <section class="receipt-section" aria-label="Category summary">
+              <h3 id="receiptCategoriesTitle">Category summary</h3>
               <div class="category-list" id="receiptCategories"></div>
             </section>
 
             <div class="insight-grid">
               <div>
-                <span id="nutritionSignalLabel">饮食结构提示</span>
+                <span id="nutritionSignalLabel">Diet signal</span>
                 <p id="nutritionSignal"></p>
               </div>
               <div>
-                <span id="spendingSignalLabel">支出提示</span>
+                <span id="spendingSignalLabel">Spending signal</span>
                 <p id="spendingSignal"></p>
               </div>
               <div>
-                <span id="familyReportNoteLabel">月报价值</span>
+                <span id="familyReportNoteLabel">Report value</span>
                 <p id="familyReportNote"></p>
               </div>
             </div>
           </div>
 
-          <section class="feedback-panel" id="feedbackPanel" hidden aria-label="结果反馈">
+          <section class="feedback-panel" id="feedbackPanel" hidden aria-label="Feedback">
             <div>
-              <p id="feedbackKicker">反馈</p>
-              <h2 id="feedbackTitle">这个结果有帮助吗？</h2>
+              <p id="feedbackKicker">Feedback</p>
+              <h2 id="feedbackTitle">Was this result helpful?</h2>
             </div>
             <div class="feedback-actions">
-              <button type="button" data-feedback="helpful" id="feedbackHelpful">有帮助</button>
-              <button type="button" data-feedback="inaccurate" id="feedbackInaccurate">不准确</button>
-              <button type="button" data-feedback="confusing" id="feedbackConfusing">看不懂</button>
+              <button type="button" data-feedback="helpful" id="feedbackHelpful">Helpful</button>
+              <button type="button" data-feedback="inaccurate" id="feedbackInaccurate">Inaccurate</button>
+              <button type="button" data-feedback="confusing" id="feedbackConfusing">Confusing</button>
             </div>
-            <p id="feedbackThanks" hidden>收到，谢谢。你的反馈会帮助我们改进。</p>
+            <p id="feedbackThanks" hidden>Thanks. Your feedback helps us improve FamLens.</p>
           </section>
 
-          <section class="ai-chat-panel" id="chatPanel" aria-label="AI 问答">
+          <section class="ai-chat-panel" id="chatPanel" aria-label="AI questions">
             <div class="chat-head">
               <div>
-                <p id="chatKicker">继续问 AI</p>
-                <h2 id="chatTitle">还有问题，直接问</h2>
+                <p id="chatKicker">Ask AI</p>
+                <h2 id="chatTitle">Ask a follow-up</h2>
               </div>
-              <button class="chat-clear" id="clearChatButton" type="button">清空</button>
+              <button class="chat-clear" id="clearChatButton" type="button">Clear</button>
             </div>
             <div class="chat-suggestions" id="chatSuggestions" aria-label="常用问题"></div>
             <div class="chat-messages" id="chatMessages" aria-live="polite">
-              <div class="chat-message assistant" id="chatWelcome">可以问我：这个适合老人吗？怎么用？有没有要注意的地方？</div>
+              <div class="chat-message assistant" id="chatWelcome">You can ask: Is this good for seniors? How do I use it? What should I watch out for?</div>
             </div>
             <div class="chat-voice-box">
               <button class="chat-mic" id="chatMicButton" type="button">
                 <span class="mic-icon" aria-hidden="true"></span>
-                <span id="chatMicButtonText">点一下，说问题</span>
+                <span id="chatMicButtonText">Tap to speak</span>
               </button>
-              <p id="chatVoiceStatus">老人可以直接说：“这个怎么用？”</p>
+              <p id="chatVoiceStatus">Speak naturally, for example: How do I use this?</p>
             </div>
             <form class="chat-form" id="chatForm">
-              <textarea id="chatInput" rows="2" placeholder="输入你想问的问题"></textarea>
-              <button class="chat-submit" id="chatSubmitButton" type="submit">发送</button>
+              <textarea id="chatInput" rows="2" placeholder="Type your question"></textarea>
+              <button class="chat-submit" id="chatSubmitButton" type="submit">Send</button>
             </form>
           </section>
         </div>
@@ -232,50 +232,50 @@
 
     <dialog class="clerk-dialog" id="clerkDialog">
       <div class="dialog-head">
-        <h2 id="dialogTitle">给店员看</h2>
-        <button id="closeDialogButton" type="button" aria-label="关闭">×</button>
+        <h2 id="dialogTitle">Show staff</h2>
+        <button id="closeDialogButton" type="button" aria-label="Close">×</button>
       </div>
       <p class="clerk-phrase" id="clerkPhrase">Where can I find this product?</p>
-      <p class="dialog-hint" id="dialogHint">把这句话给店员看，或点复制后粘贴到翻译器。</p>
-      <button class="primary-action compact" id="copyClerkButton" type="button">复制英文</button>
+      <p class="dialog-hint" id="dialogHint">Show this sentence to staff, or copy it into a translator.</p>
+      <button class="primary-action compact" id="copyClerkButton" type="button">Copy English</button>
     </dialog>
 
     <dialog class="records-dialog" id="recordsDialog">
-      <section class="records-panel" id="recordsPanel" aria-label="家庭记录">
+      <section class="records-panel" id="recordsPanel" aria-label="Family records">
         <div class="records-head">
           <div>
-            <p id="recordsKicker">家庭记录</p>
-            <h2 id="recordsTitle">这个月家里买了什么</h2>
+            <p id="recordsKicker">Family records</p>
+            <h2 id="recordsTitle">What the family bought this month</h2>
           </div>
           <div class="records-actions">
-            <button class="records-clear" id="clearRecordsButton" type="button">清空记录</button>
-            <button class="records-close" id="recordsCloseButton" type="button" aria-label="关闭">×</button>
+            <button class="records-clear" id="clearRecordsButton" type="button">Clear records</button>
+            <button class="records-close" id="recordsCloseButton" type="button" aria-label="Close">×</button>
           </div>
         </div>
 
         <div class="records-summary" aria-label="本月概览">
           <div>
-            <span id="monthlySpendLabel">本月小票支出</span>
+            <span id="monthlySpendLabel">Receipt spend</span>
             <strong id="monthlySpend">$0.00</strong>
           </div>
           <div>
-            <span id="monthlyReceiptLabel">已记录小票</span>
-            <strong id="monthlyReceiptCount">0 张</strong>
+            <span id="monthlyReceiptLabel">Receipts saved</span>
+            <strong id="monthlyReceiptCount">0</strong>
           </div>
           <div>
-            <span id="monthlyProductLabel">看过商品</span>
-            <strong id="monthlyProductCount">0 件</strong>
+            <span id="monthlyProductLabel">Products viewed</span>
+            <strong id="monthlyProductCount">0</strong>
           </div>
         </div>
 
         <div class="records-grid">
-          <section class="record-section" aria-label="最近小票">
-            <h3 id="recentReceiptsTitle">最近小票</h3>
+          <section class="record-section" aria-label="Recent receipts">
+            <h3 id="recentReceiptsTitle">Recent receipts</h3>
             <div class="record-list" id="recentReceipts"></div>
           </section>
 
-          <section class="record-section" aria-label="最近商品">
-            <h3 id="recentProductsTitle">最近商品</h3>
+          <section class="record-section" aria-label="Recent products">
+            <h3 id="recentProductsTitle">Recent products</h3>
             <div class="record-list" id="recentProducts"></div>
           </section>
         </div>
