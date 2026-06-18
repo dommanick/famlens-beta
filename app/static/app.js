@@ -1,6 +1,9 @@
+const cameraInput = document.querySelector("#cameraInput");
 const imageInput = document.querySelector("#imageInput");
 const pickButton = document.querySelector("#pickButton");
 const pickButtonText = document.querySelector("#pickButtonText");
+const albumButton = document.querySelector("#albumButton");
+const albumButtonText = document.querySelector("#albumButtonText");
 const replaceButton = document.querySelector("#replaceButton");
 const dropZone = document.querySelector("#dropZone");
 const previewWrap = document.querySelector("#previewWrap");
@@ -133,6 +136,7 @@ const languageConfig = {
       resultKicker: "FamLens 内测版",
       errorTitle: "这张没看成功",
       replace: "换一张",
+      uploadFromAlbum: "从相册上传",
       speakProduct: "播放给老人听",
       speakReceipt: "播放小票摘要",
       askStaff: "问店员怎么说",
@@ -213,6 +217,7 @@ const languageConfig = {
       resultKicker: "FamLens closed beta",
       errorTitle: "This photo did not work",
       replace: "Choose another",
+      uploadFromAlbum: "Upload from album",
       speakProduct: "Play aloud",
       speakReceipt: "Play receipt summary",
       askStaff: "Ask staff",
@@ -293,6 +298,7 @@ const languageConfig = {
       resultKicker: "Beta cerrada FamLens",
       errorTitle: "La foto no funcionó",
       replace: "Cambiar foto",
+      uploadFromAlbum: "Subir desde álbum",
       speakProduct: "Leer en voz alta",
       speakReceipt: "Leer resumen",
       askStaff: "Preguntar al personal",
@@ -366,6 +372,7 @@ const languageConfig = {
       resultKicker: "Bêta fermée FamLens",
       errorTitle: "La photo n'a pas marché",
       replace: "Changer",
+      uploadFromAlbum: "Importer une photo",
       speakProduct: "Lire à voix haute",
       speakReceipt: "Lire le reçu",
       askStaff: "Demander au personnel",
@@ -439,6 +446,7 @@ const languageConfig = {
       resultKicker: "FamLens 비공개 베타",
       errorTitle: "사진 분석 실패",
       replace: "다른 사진",
+      uploadFromAlbum: "앨범에서 올리기",
       speakProduct: "소리로 듣기",
       speakReceipt: "영수증 요약 듣기",
       askStaff: "직원에게 묻기",
@@ -512,6 +520,7 @@ const languageConfig = {
       resultKicker: "FamLens クローズドベータ",
       errorTitle: "写真を分析できません",
       replace: "別の写真",
+      uploadFromAlbum: "写真から選ぶ",
       speakProduct: "音声で聞く",
       speakReceipt: "レシート要約",
       askStaff: "店員に聞く",
@@ -585,6 +594,7 @@ const languageConfig = {
       resultKicker: "FamLens beta kín",
       errorTitle: "Ảnh chưa phân tích được",
       replace: "Đổi ảnh",
+      uploadFromAlbum: "Tải từ album",
       speakProduct: "Đọc thành tiếng",
       speakReceipt: "Đọc tóm tắt hóa đơn",
       askStaff: "Hỏi nhân viên",
@@ -658,6 +668,7 @@ const languageConfig = {
       resultKicker: "FamLens closed beta",
       errorTitle: "यह फोटो साफ नहीं पढ़ी गई",
       replace: "दूसरी फोटो",
+      uploadFromAlbum: "गैलरी से अपलोड करें",
       speakProduct: "आवाज में सुनें",
       speakReceipt: "रसीद सुनें",
       askStaff: "स्टाफ से पूछें",
@@ -1004,7 +1015,8 @@ const feedbackLanguageCopy = {
   },
 };
 
-pickButton.addEventListener("click", () => imageInput.click());
+pickButton.addEventListener("click", () => cameraInput.click());
+albumButton.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
   appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "zh-Hans";
@@ -1015,6 +1027,10 @@ languageSelect.addEventListener("change", async () => {
 });
 imageInput.addEventListener("change", () => {
   const file = imageInput.files?.[0];
+  if (file) analyzeFile(file);
+});
+cameraInput.addEventListener("change", () => {
+  const file = cameraInput.files?.[0];
   if (file) analyzeFile(file);
 });
 
@@ -1621,6 +1637,7 @@ function setScanMode(mode) {
   latestResult = null;
   latestCardSvg = "";
   chatHistory = [];
+  cameraInput.value = "";
   imageInput.value = "";
   previewImage.removeAttribute("src");
   previewWrap.hidden = true;
@@ -1653,6 +1670,7 @@ function applyLanguage() {
   resultKicker.textContent = ui().resultKicker;
   errorTitle.textContent = ui().errorTitle;
   replaceButton.textContent = ui().replace;
+  albumButtonText.textContent = ui().uploadFromAlbum;
   speakButtonText.textContent = ui().speakProduct;
   receiptSpeakButtonText.textContent = ui().speakReceipt;
   clerkButton.textContent = ui().askStaff;

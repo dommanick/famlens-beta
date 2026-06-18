@@ -64,11 +64,18 @@
           </div>
 
           <div class="upload-zone" id="dropZone">
-            <input id="imageInput" class="file-input" type="file" accept="image/*" capture="environment" />
-            <button class="primary-action" id="pickButton" type="button">
-              <span class="camera-icon" aria-hidden="true"></span>
-              <span id="pickButtonText">拍商品</span>
-            </button>
+            <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
+            <input id="imageInput" class="file-input" type="file" accept="image/*" />
+            <div class="upload-actions">
+              <button class="primary-action" id="pickButton" type="button">
+                <span class="camera-icon" aria-hidden="true"></span>
+                <span id="pickButtonText">拍商品</span>
+              </button>
+              <button class="album-action" id="albumButton" type="button">
+                <span class="album-icon" aria-hidden="true"></span>
+                <span id="albumButtonText">从相册上传</span>
+              </button>
+            </div>
             <p class="upload-copy" id="uploadCopy">商品、说明、价签都可以</p>
             <p class="upload-note" id="uploadNote">结果直接显示在本页，不跳链接，不需要再聊天追问</p>
           </div>
