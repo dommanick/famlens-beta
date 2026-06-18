@@ -14,8 +14,8 @@ class LanguageTests(unittest.TestCase):
         self.assertEqual(output_language_prompt_name("hi"), "Hindi")
 
     def test_normalize_unknown_language_to_default(self) -> None:
-        self.assertEqual(normalize_output_language("pirate"), "zh-Hans")
-        self.assertEqual(output_language_prompt_name(None), "Simplified Chinese")
+        self.assertEqual(normalize_output_language("pirate"), "en")
+        self.assertEqual(output_language_prompt_name(None), "English")
 
     def test_product_prompt_reinforces_target_language(self) -> None:
         prompt = build_user_prompt(output_language="en")

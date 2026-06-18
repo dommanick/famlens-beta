@@ -35,7 +35,7 @@ async def transcribe_audio(data: bytes, content_type: str, output_language: str 
     form = {
         "model": settings.stt_model,
         "response_format": "json",
-        "language": LANGUAGE_CODES.get(language, "zh"),
+        "language": LANGUAGE_CODES.get(language, "en"),
         "prompt": "This is a short shopping assistant question from an older adult. Keep the transcript natural.",
     }
     headers = {"Authorization": f"Bearer {settings.openai_api_key}"}

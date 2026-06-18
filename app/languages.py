@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-DEFAULT_OUTPUT_LANGUAGE = "zh-Hans"
+DEFAULT_OUTPUT_LANGUAGE = "en"
 
 SUPPORTED_OUTPUT_LANGUAGES: dict[str, dict[str, str]] = {
     "zh-Hans": {"label": "中文", "prompt_name": "Simplified Chinese"},
