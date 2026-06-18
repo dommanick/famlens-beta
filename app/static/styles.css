@@ -187,6 +187,19 @@ h1 {
   text-align: center;
 }
 
+.records-open {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fffaf2;
+  color: var(--green-deep);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 900;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
@@ -963,7 +976,7 @@ h1 {
 }
 
 .records-panel {
-  margin-top: 22px;
+  margin-top: 0;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: rgba(255, 253, 248, 0.95);
@@ -978,6 +991,12 @@ h1 {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
+}
+
+.records-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .records-head p {
@@ -1003,6 +1022,18 @@ h1 {
   font-weight: 850;
   padding: 0 13px;
   white-space: nowrap;
+}
+
+.records-close {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #f0e9dd;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
 }
 
 .records-summary {
@@ -1127,6 +1158,15 @@ h1 {
   box-shadow: var(--shadow);
 }
 
+.records-dialog {
+  width: min(940px, calc(100vw - 24px));
+  max-height: min(86vh, 820px);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  overflow: auto;
+}
+
 .site-footer {
   margin-top: 20px;
   color: var(--muted);
@@ -1161,6 +1201,10 @@ h1 {
 }
 
 .clerk-dialog::backdrop {
+  background: rgba(20, 24, 22, 0.42);
+}
+
+.records-dialog::backdrop {
   background: rgba(20, 24, 22, 0.42);
 }
 
@@ -1526,8 +1570,12 @@ h1 {
     flex-direction: column;
   }
 
-  .records-clear {
+  .records-actions {
     width: 100%;
+  }
+
+  .records-clear {
+    flex: 1;
   }
 
   .invite-shell {

@@ -36,6 +36,7 @@
               <option value="hi">हिन्दी</option>
             </select>
           </label>
+          <button class="records-open" id="recordsOpenButton" type="button">家庭记录</button>
           <span class="status-dot" id="serviceStatus">在线</span>
         </div>
       </section>
@@ -233,13 +234,34 @@
         </div>
       </section>
 
+      <footer class="site-footer">
+        <span>FamLens</span>
+        <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
+        <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
+      </footer>
+    </main>
+
+    <dialog class="clerk-dialog" id="clerkDialog">
+      <div class="dialog-head">
+        <h2 id="dialogTitle">给店员看</h2>
+        <button id="closeDialogButton" type="button" aria-label="关闭">×</button>
+      </div>
+      <p class="clerk-phrase" id="clerkPhrase">Where can I find this product?</p>
+      <p class="dialog-hint" id="dialogHint">把这句话给店员看，或点复制后粘贴到翻译器。</p>
+      <button class="primary-action compact" id="copyClerkButton" type="button">复制英文</button>
+    </dialog>
+
+    <dialog class="records-dialog" id="recordsDialog">
       <section class="records-panel" id="recordsPanel" aria-label="家庭记录">
         <div class="records-head">
           <div>
             <p id="recordsKicker">家庭记录</p>
             <h2 id="recordsTitle">这个月家里买了什么</h2>
           </div>
-          <button class="records-clear" id="clearRecordsButton" type="button">清空记录</button>
+          <div class="records-actions">
+            <button class="records-clear" id="clearRecordsButton" type="button">清空记录</button>
+            <button class="records-close" id="recordsCloseButton" type="button" aria-label="关闭">×</button>
+          </div>
         </div>
 
         <div class="records-summary" aria-label="本月概览">
@@ -269,22 +291,6 @@
           </section>
         </div>
       </section>
-
-      <footer class="site-footer">
-        <span>FamLens</span>
-        <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
-        <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
-      </footer>
-    </main>
-
-    <dialog class="clerk-dialog" id="clerkDialog">
-      <div class="dialog-head">
-        <h2 id="dialogTitle">给店员看</h2>
-        <button id="closeDialogButton" type="button" aria-label="关闭">×</button>
-      </div>
-      <p class="clerk-phrase" id="clerkPhrase">Where can I find this product?</p>
-      <p class="dialog-hint" id="dialogHint">把这句话给店员看，或点复制后粘贴到翻译器。</p>
-      <button class="primary-action compact" id="copyClerkButton" type="button">复制英文</button>
     </dialog>
 
     <script src="/static/app.js"></script>

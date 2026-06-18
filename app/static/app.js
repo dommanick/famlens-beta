@@ -84,9 +84,12 @@ const chatVoiceStatus = document.querySelector("#chatVoiceStatus");
 const chatForm = document.querySelector("#chatForm");
 const chatInput = document.querySelector("#chatInput");
 const chatSubmitButton = document.querySelector("#chatSubmitButton");
+const recordsOpenButton = document.querySelector("#recordsOpenButton");
+const recordsDialog = document.querySelector("#recordsDialog");
 const recordsKicker = document.querySelector("#recordsKicker");
 const recordsTitle = document.querySelector("#recordsTitle");
 const clearRecordsButton = document.querySelector("#clearRecordsButton");
+const recordsCloseButton = document.querySelector("#recordsCloseButton");
 const monthlySpendLabel = document.querySelector("#monthlySpendLabel");
 const monthlySpend = document.querySelector("#monthlySpend");
 const monthlyReceiptLabel = document.querySelector("#monthlyReceiptLabel");
@@ -900,6 +903,8 @@ const chatLanguageCopy = {
 const recordsLanguageCopy = {
   "zh-Hans": {
     kicker: "家庭记录",
+    open: "家庭记录",
+    close: "关闭",
     title: "这个月家里买了什么",
     clear: "清空记录",
     spend: "本月小票支出",
@@ -916,6 +921,8 @@ const recordsLanguageCopy = {
   },
   en: {
     kicker: "Family records",
+    open: "Records",
+    close: "Close",
     title: "What the family bought this month",
     clear: "Clear records",
     spend: "Receipt spend",
@@ -932,6 +939,8 @@ const recordsLanguageCopy = {
   },
   es: {
     kicker: "Registro familiar",
+    open: "Registros",
+    close: "Cerrar",
     title: "Qué compró la familia este mes",
     clear: "Borrar registros",
     spend: "Gasto en recibos",
@@ -948,6 +957,8 @@ const recordsLanguageCopy = {
   },
   fr: {
     kicker: "Dossier famille",
+    open: "Dossier",
+    close: "Fermer",
     title: "Ce que la famille a acheté ce mois-ci",
     clear: "Effacer",
     spend: "Dépenses reçus",
@@ -964,6 +975,8 @@ const recordsLanguageCopy = {
   },
   ko: {
     kicker: "가족 기록",
+    open: "기록",
+    close: "닫기",
     title: "이번 달 가족이 산 것",
     clear: "기록 지우기",
     spend: "이번 달 영수증 지출",
@@ -980,6 +993,8 @@ const recordsLanguageCopy = {
   },
   ja: {
     kicker: "家族記録",
+    open: "記録",
+    close: "閉じる",
     title: "今月、家族が買ったもの",
     clear: "記録を消去",
     spend: "今月の支出",
@@ -996,6 +1011,8 @@ const recordsLanguageCopy = {
   },
   vi: {
     kicker: "Hồ sơ gia đình",
+    open: "Hồ sơ",
+    close: "Đóng",
     title: "Gia đình đã mua gì tháng này",
     clear: "Xóa hồ sơ",
     spend: "Chi từ hóa đơn",
@@ -1012,6 +1029,8 @@ const recordsLanguageCopy = {
   },
   hi: {
     kicker: "परिवार रिकॉर्ड",
+    open: "रिकॉर्ड",
+    close: "बंद करें",
     title: "इस महीने परिवार ने क्या खरीदा",
     clear: "रिकॉर्ड साफ करें",
     spend: "इस महीने रसीद खर्च",
@@ -1170,6 +1189,18 @@ clearChatButton.addEventListener("click", () => {
   renderChatMessages();
   chatVoiceStatus.textContent = chatCopy().voiceReady;
   chatVoiceStatus.classList.remove("warning");
+});
+
+recordsOpenButton.addEventListener("click", () => {
+  renderFamilyRecords();
+  recordsDialog.showModal();
+  sendClientEvent("open_family_records", { output_language: appLanguage });
+});
+
+recordsCloseButton.addEventListener("click", () => recordsDialog.close());
+
+recordsDialog.addEventListener("click", (event) => {
+  if (event.target === recordsDialog) recordsDialog.close();
 });
 
 clearRecordsButton.addEventListener("click", () => {
@@ -1783,6 +1814,8 @@ function renderFamilyRecords() {
 }
 
 function applyRecordsLanguage() {
+  recordsOpenButton.textContent = recordCopy().open;
+  recordsCloseButton.setAttribute("aria-label", recordCopy().close);
   recordsKicker.textContent = recordCopy().kicker;
   recordsTitle.textContent = recordCopy().title;
   clearRecordsButton.textContent = recordCopy().clear;
