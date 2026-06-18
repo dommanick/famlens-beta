@@ -111,7 +111,10 @@ const feedbackThanks = document.querySelector("#feedbackThanks");
 let latestResult = null;
 let latestCardSvg = "";
 let scanMode = "product";
-let appLanguage = localStorage.getItem("carecart.language") || "en";
+const languageStorageKey = "famlens.language.v2";
+const legacyLanguageStorageKey = "carecart.language";
+const supportedLanguageKeys = new Set(["zh-Hans", "en", "es", "fr", "ko", "ja", "vi", "hi"]);
+let appLanguage = getInitialLanguage();
 const clientUserId = getClientUserId();
 let serviceState = "ready";
 let currentAudio = null;
@@ -1101,7 +1104,7 @@ albumButton.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
   appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "en";
-  localStorage.setItem("carecart.language", appLanguage);
+  localStorage.setItem(languageStorageKey, appLanguage);
   stopSpeech();
   stopChatVoiceInput();
   applyLanguage();
@@ -2150,6 +2153,19 @@ function recordCopy() {
 
 function feedbackCopy() {
   return feedbackLanguageCopy[appLanguage] || feedbackLanguageCopy.en;
+}
+
+function getInitialLanguage() {
+  const savedLanguage = localStorage.getItem(languageStorageKey);
+  if (supportedLanguageKeys.has(savedLanguage)) return savedLanguage;
+
+  const legacyLanguage = localStorage.getItem(legacyLanguageStorageKey);
+  if (legacyLanguage && legacyLanguage !== "zh-Hans" && supportedLanguageKeys.has(legacyLanguage)) {
+    localStorage.setItem(languageStorageKey, legacyLanguage);
+    return legacyLanguage;
+  }
+
+  return "en";
 }
 
 function getClientUserId() {
