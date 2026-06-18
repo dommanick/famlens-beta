@@ -37,18 +37,7 @@
             </select>
           </label>
           <button class="records-open" id="recordsOpenButton" type="button">家庭记录</button>
-          <span class="status-dot" id="serviceStatus">在线</span>
-        </div>
-      </section>
-
-      <section class="product-notice" aria-label="服务说明">
-        <div>
-          <strong id="noticeTitle">给家里采购的人用</strong>
-          <p id="noticeCopy">拍商品看懂说明，扫小票记录采购，还可以用语音继续问 AI。结果仅供购物参考，不替代医生或药师建议。</p>
-        </div>
-        <div class="notice-links">
-          <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
-          <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
+          <span class="status-dot visually-hidden" id="serviceStatus" aria-live="polite">在线</span>
         </div>
       </section>
 
@@ -86,10 +75,10 @@
             <button class="secondary-action" id="replaceButton" type="button">换一张</button>
           </div>
 
-          <label class="profile-box" for="familyProfile">
-            <span id="profileLabel">家庭提醒，可选</span>
+          <details class="profile-box">
+            <summary id="profileLabel">家庭提醒，可选</summary>
             <textarea id="familyProfile" rows="3" placeholder="例如：家里有人血脂高；老人高血压；孩子8岁；想少糖少盐。"></textarea>
-          </label>
+          </details>
         </div>
 
         <div class="result-panel">

@@ -48,31 +48,6 @@ textarea {
   gap: 16px;
 }
 
-.product-notice {
-  margin: 2px 0 18px;
-  border: 1px solid #d8e4d9;
-  border-radius: 16px;
-  background: linear-gradient(135deg, rgba(232, 244, 236, 0.95), rgba(255, 247, 232, 0.95));
-  padding: 13px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.product-notice strong {
-  color: var(--green-deep);
-  font-size: 16px;
-  line-height: 1.25;
-}
-
-.product-notice p {
-  margin-top: 4px;
-  color: #4b5a52;
-  font-size: 15px;
-  line-height: 1.45;
-}
-
 .notice-links {
   display: flex;
   align-items: center;
@@ -145,6 +120,19 @@ h1 {
 
 .language-control,
 .status-dot {
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  border: 0;
   white-space: nowrap;
 }
 
@@ -226,9 +214,7 @@ h1 {
 }
 
 .panel-kicker {
-  color: var(--green);
-  font-size: 14px;
-  font-weight: 850;
+  display: none;
 }
 
 .panel-head h2 {
@@ -371,10 +357,7 @@ h1 {
 }
 
 .upload-note {
-  max-width: 260px;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.55;
+  display: none;
 }
 
 .preview-wrap {
@@ -402,6 +385,47 @@ h1 {
   display: grid;
   gap: 9px;
   margin-top: 16px;
+}
+
+.profile-box summary {
+  width: fit-content;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fffaf2;
+  padding: 10px 14px;
+  color: var(--green-deep);
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 900;
+  list-style: none;
+}
+
+.profile-box summary::-webkit-details-marker {
+  display: none;
+}
+
+.profile-box summary::after {
+  content: "+";
+  margin-left: 8px;
+  font-weight: 950;
+}
+
+.profile-box[open] summary::after {
+  content: "-";
+}
+
+.profile-box[open] {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 250, 242, 0.74);
+  padding: 12px;
+}
+
+.profile-box[open] summary {
+  border-color: transparent;
+  background: transparent;
+  padding: 0;
 }
 
 .profile-box span {
@@ -1431,11 +1455,6 @@ h1 {
 
   .workspace {
     grid-template-columns: 1fr;
-  }
-
-  .product-notice {
-    align-items: flex-start;
-    flex-direction: column;
   }
 
   .camera-panel {

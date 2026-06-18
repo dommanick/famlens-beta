@@ -100,8 +100,6 @@ const recentReceiptsTitle = document.querySelector("#recentReceiptsTitle");
 const recentProductsTitle = document.querySelector("#recentProductsTitle");
 const recentReceipts = document.querySelector("#recentReceipts");
 const recentProducts = document.querySelector("#recentProducts");
-const noticeTitle = document.querySelector("#noticeTitle");
-const noticeCopy = document.querySelector("#noticeCopy");
 const feedbackPanel = document.querySelector("#feedbackPanel");
 const feedbackKicker = document.querySelector("#feedbackKicker");
 const feedbackTitle = document.querySelector("#feedbackTitle");
@@ -176,8 +174,6 @@ const languageConfig = {
       itemUnit: "件",
       productFileError: "请选择商品照片。",
       receiptFileError: "请选择小票照片。",
-      noticeTitle: "给家里采购的人用",
-      noticeCopy: "拍商品看懂说明，扫小票记录采购，还可以用语音继续问 AI。结果仅供购物参考，不替代医生或药师建议。",
     },
     modes: {
       product: {
@@ -257,8 +253,6 @@ const languageConfig = {
       itemUnit: "items",
       productFileError: "Please choose a product photo.",
       receiptFileError: "Please choose a receipt photo.",
-      noticeTitle: "For the family shopper",
-      noticeCopy: "Scan products, record receipts, and ask AI by voice. Results are for shopping reference only, not medical advice.",
     },
     modes: {
       product: {
@@ -338,8 +332,6 @@ const languageConfig = {
       itemUnit: "art.",
       productFileError: "Elige una foto del producto.",
       receiptFileError: "Elige una foto del recibo.",
-      noticeTitle: "Para quien compra en casa",
-      noticeCopy: "Escanea productos, guarda recibos y pregunta a AI por voz. Es solo referencia de compra, no consejo médico.",
     },
     modes: {
       product: {
@@ -412,8 +404,6 @@ const languageConfig = {
       itemUnit: "art.",
       productFileError: "Choisissez une photo du produit.",
       receiptFileError: "Choisissez une photo du reçu.",
-      noticeTitle: "Pour la personne qui fait les courses",
-      noticeCopy: "Scannez les produits, enregistrez les reçus et posez vos questions à l'AI par la voix. Information pratique, pas avis médical.",
     },
     modes: {
       product: {
@@ -486,8 +476,6 @@ const languageConfig = {
       itemUnit: "개",
       productFileError: "상품 사진을 선택하세요.",
       receiptFileError: "영수증 사진을 선택하세요.",
-      noticeTitle: "가족 장보는 사람을 위해",
-      noticeCopy: "상품을 스캔하고 영수증을 기록하며 음성으로 AI에게 물어볼 수 있습니다. 쇼핑 참고용이며 의료 조언은 아닙니다.",
     },
     modes: {
       product: {
@@ -560,8 +548,6 @@ const languageConfig = {
       itemUnit: "点",
       productFileError: "商品写真を選んでください。",
       receiptFileError: "レシート写真を選んでください。",
-      noticeTitle: "家族の買い物担当に",
-      noticeCopy: "商品を読み取り、レシートを記録し、音声でAIに質問できます。買い物の参考であり、医療助言ではありません。",
     },
     modes: {
       product: {
@@ -634,8 +620,6 @@ const languageConfig = {
       itemUnit: "món",
       productFileError: "Vui lòng chọn ảnh sản phẩm.",
       receiptFileError: "Vui lòng chọn ảnh hóa đơn.",
-      noticeTitle: "Cho người đi chợ trong gia đình",
-      noticeCopy: "Quét sản phẩm, lưu hóa đơn và hỏi AI bằng giọng nói. Chỉ để tham khảo mua sắm, không phải tư vấn y tế.",
     },
     modes: {
       product: {
@@ -708,8 +692,6 @@ const languageConfig = {
       itemUnit: "आइटम",
       productFileError: "कृपया सामान की फोटो चुनें।",
       receiptFileError: "कृपया रसीद की फोटो चुनें।",
-      noticeTitle: "परिवार के खरीदारी करने वाले के लिए",
-      noticeCopy: "सामान स्कैन करें, रसीद रिकॉर्ड करें और आवाज़ से AI से पूछें। यह खरीदारी संदर्भ है, मेडिकल सलाह नहीं।",
     },
     modes: {
       product: {
@@ -2030,8 +2012,6 @@ function applyLanguage() {
   nutritionSignalLabel.textContent = ui().nutrition;
   spendingSignalLabel.textContent = ui().spending;
   familyReportNoteLabel.textContent = ui().report;
-  noticeTitle.textContent = ui().noticeTitle || "FamLens";
-  noticeCopy.textContent = ui().noticeCopy || "";
   applyFeedbackLanguage();
   applyChatLanguage();
   renderFamilyRecords();
