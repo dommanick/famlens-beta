@@ -100,6 +100,12 @@ class ClientEventRequest(BaseModel):
     user_id: str = "web-user"
 
 
+class ProfileSetupRequest(BaseModel):
+    user_id: str = "web-user"
+    output_language: str | None = None
+    members_text: str = ""
+
+
 def is_loopback_request(request: Request) -> bool:
     host = request.client.host if request.client else ""
     return host in {"127.0.0.1", "::1", "localhost"}
@@ -231,6 +237,44 @@ async def client_event(payload: ClientEventRequest) -> dict[str, str]:
         event_type = f"client_{event_type}"
     event_logger.log(event_type[:80], clean_user_id(payload.user_id), **(payload.payload or {}))
     return {"status": "ok"}
+
+
+@app.get("/api/profile/{user_id}")
+async def get_profile(user_id: str) -> dict[str, str | None]:
+    clean_id = clean_user_id(user_id)
+    profile = profile_store.get(clean_id)
+    if profile is None:
+        return {
+            "user_id": clean_id,
+            "output_language": None,
+            "members_text": None,
+            "updated_at": None,
+        }
+    return {
+        "user_id": clean_id,
+        "output_language": profile.language or None,
+        "members_text": profile.members_text or profile.notes,
+        "updated_at": profile.updated_at,
+    }
+
+
+@app.post("/api/profile")
+async def save_profile(payload: ProfileSetupRequest) -> dict[str, str | None]:
+    clean_id = clean_user_id(payload.user_id)
+    language = normalize_output_language(payload.output_language)
+    profile = profile_store.save_family_setup(clean_id, language, payload.members_text)
+    event_logger.log(
+        "web_profile_saved",
+        clean_id,
+        output_language=language,
+        members_chars=len(profile.members_text),
+    )
+    return {
+        "user_id": clean_id,
+        "output_language": profile.language,
+        "members_text": profile.members_text,
+        "updated_at": profile.updated_at,
+    }
 
 
 @app.post("/api/analyze-upload")

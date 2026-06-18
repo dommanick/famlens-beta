@@ -11,11 +11,15 @@ const previewImage = document.querySelector("#previewImage");
 const familyProfile = document.querySelector("#familyProfile");
 const languageSelect = document.querySelector("#languageSelect");
 const languageLabel = document.querySelector("#languageLabel");
+const profileOpenButton = document.querySelector("#profileOpenButton");
 const panelKicker = document.querySelector("#panelKicker");
 const panelTitle = document.querySelector("#panelTitle");
 const productTab = document.querySelector("#productTab");
 const receiptTab = document.querySelector("#receiptTab");
 const profileLabel = document.querySelector("#profileLabel");
+const profileSummary = document.querySelector("#profileSummary");
+const profileSaveButton = document.querySelector("#profileSaveButton");
+const profileSavedMessage = document.querySelector("#profileSavedMessage");
 const scanTabs = document.querySelectorAll(".scan-tab");
 const uploadCopy = document.querySelector("#uploadCopy");
 const uploadNote = document.querySelector("#uploadNote");
@@ -70,6 +74,18 @@ const clerkPhrase = document.querySelector("#clerkPhrase");
 const dialogHint = document.querySelector("#dialogHint");
 const closeDialogButton = document.querySelector("#closeDialogButton");
 const copyClerkButton = document.querySelector("#copyClerkButton");
+const profileDialog = document.querySelector("#profileDialog");
+const profileDialogKicker = document.querySelector("#profileDialogKicker");
+const profileDialogTitle = document.querySelector("#profileDialogTitle");
+const profileDialogIntro = document.querySelector("#profileDialogIntro");
+const profileDialogCloseButton = document.querySelector("#profileDialogCloseButton");
+const setupLanguageSelect = document.querySelector("#setupLanguageSelect");
+const setupLanguageLabel = document.querySelector("#setupLanguageLabel");
+const profileMembersLabel = document.querySelector("#profileMembersLabel");
+const profileMembersInput = document.querySelector("#profileMembersInput");
+const profileSetupHint = document.querySelector("#profileSetupHint");
+const profileSkipButton = document.querySelector("#profileSkipButton");
+const profileDialogSaveButton = document.querySelector("#profileDialogSaveButton");
 const serviceStatus = document.querySelector("#serviceStatus");
 const chatPanel = document.querySelector("#chatPanel");
 const chatKicker = document.querySelector("#chatKicker");
@@ -116,6 +132,13 @@ const legacyLanguageStorageKey = "carecart.language";
 const supportedLanguageKeys = new Set(["zh-Hans", "en", "es", "fr", "ko", "ja", "vi", "hi"]);
 let appLanguage = getInitialLanguage();
 const clientUserId = getClientUserId();
+const profileStorageKey = "famlens.familyProfile.v1";
+const profileSetupCompletedKey = "famlens.profileSetup.completed.v1";
+let familyProfileState = loadFamilyProfileState();
+if (familyProfileState.output_language && supportedLanguageKeys.has(familyProfileState.output_language)) {
+  appLanguage = familyProfileState.output_language;
+  localStorage.setItem(languageStorageKey, appLanguage);
+}
 let serviceState = "ready";
 let currentAudio = null;
 let currentAudioUrl = null;
@@ -1099,16 +1122,177 @@ const feedbackLanguageCopy = {
   },
 };
 
+const profileLanguageCopy = {
+  "zh-Hans": {
+    open: "家庭",
+    boxLabel: "家庭成员信息",
+    boxSummary: "设置一次家庭成员基本信息，之后商品、小票和 AI 问答都会参考它。",
+    boxPlaceholder: "例如：我给4口人买东西：爸爸68岁，妈妈65岁，孩子8岁，配偶成年人。有需要可写基础健康情况。",
+    boxSave: "保存家庭信息",
+    saved: "已保存。",
+    kicker: "家庭设置",
+    title: "设置你的家庭购物助手",
+    intro: "先选择语言。后面的问题和结果都会使用这个语言。",
+    language: "语言",
+    members: "家庭成员",
+    membersPlaceholder: "例如：我给4口人买东西：爸爸68岁，妈妈65岁，孩子8岁，配偶成年人。有需要可写基础健康情况。",
+    hint: "以后可以再修改。暂时不需要填写购物偏好。",
+    skip: "先跳过",
+    save: "保存并开始",
+    close: "关闭",
+  },
+  en: {
+    open: "Family",
+    boxLabel: "Family member basics",
+    boxSummary: "Set up household basics once. Product, receipt, and AI answers will use it later.",
+    boxPlaceholder: "Example: I shop for 4 people: father 68, mother 65, child 8, spouse adult. Add basic health notes only if useful.",
+    boxSave: "Save family profile",
+    saved: "Saved.",
+    kicker: "Family setup",
+    title: "Set up your family assistant",
+    intro: "Choose the language first. The next questions and results will use that language.",
+    language: "Language",
+    members: "Family members",
+    membersPlaceholder: "Example: I shop for 4 people: father 68, mother 65, child 8, spouse adult. Add basic health notes only if useful.",
+    hint: "You can edit this later. Shopping preferences are not required.",
+    skip: "Skip for now",
+    save: "Save and continue",
+    close: "Close",
+  },
+  es: {
+    open: "Familia",
+    boxLabel: "Datos básicos de la familia",
+    boxSummary: "Configura la familia una vez. Productos, recibos y AI lo usarán después.",
+    boxPlaceholder: "Ejemplo: compro para 4 personas: padre 68, madre 65, niño 8, pareja adulta. Añade notas de salud básicas si sirven.",
+    boxSave: "Guardar familia",
+    saved: "Guardado.",
+    kicker: "Familia",
+    title: "Configura tu asistente familiar",
+    intro: "Elige primero el idioma. Las siguientes preguntas y resultados usarán ese idioma.",
+    language: "Idioma",
+    members: "Miembros de la familia",
+    membersPlaceholder: "Ejemplo: compro para 4 personas: padre 68, madre 65, niño 8, pareja adulta. Añade notas de salud básicas si sirven.",
+    hint: "Puedes editarlo después. No pedimos preferencias de compra.",
+    skip: "Omitir por ahora",
+    save: "Guardar y continuar",
+    close: "Cerrar",
+  },
+  fr: {
+    open: "Famille",
+    boxLabel: "Infos famille",
+    boxSummary: "Configurez la famille une fois. Produits, reçus et AI l'utiliseront ensuite.",
+    boxPlaceholder: "Exemple : je fais les courses pour 4 personnes : père 68, mère 65, enfant 8, conjoint adulte. Ajoutez des notes de santé simples si utile.",
+    boxSave: "Enregistrer",
+    saved: "Enregistré.",
+    kicker: "Configuration famille",
+    title: "Configurez votre assistant familial",
+    intro: "Choisissez d'abord la langue. Les questions et résultats suivront cette langue.",
+    language: "Langue",
+    members: "Membres de la famille",
+    membersPlaceholder: "Exemple : je fais les courses pour 4 personnes : père 68, mère 65, enfant 8, conjoint adulte. Ajoutez des notes de santé simples si utile.",
+    hint: "Vous pourrez modifier plus tard. Pas besoin de préférences d'achat.",
+    skip: "Passer",
+    save: "Enregistrer et continuer",
+    close: "Fermer",
+  },
+  ko: {
+    open: "가족",
+    boxLabel: "가족 기본 정보",
+    boxSummary: "가족 정보를 한 번 설정하면 상품, 영수증, AI 답변에 반영됩니다.",
+    boxPlaceholder: "예: 4인 가족 장보기: 아버지 68세, 어머니 65세, 아이 8세, 배우자 성인. 필요하면 기본 건강 메모를 적어 주세요.",
+    boxSave: "가족 정보 저장",
+    saved: "저장됨.",
+    kicker: "가족 설정",
+    title: "가족 쇼핑 도우미 설정",
+    intro: "먼저 언어를 선택하세요. 다음 질문과 결과가 그 언어로 표시됩니다.",
+    language: "언어",
+    members: "가족 구성원",
+    membersPlaceholder: "예: 4인 가족 장보기: 아버지 68세, 어머니 65세, 아이 8세, 배우자 성인. 필요하면 기본 건강 메모를 적어 주세요.",
+    hint: "나중에 수정할 수 있습니다. 쇼핑 취향은 입력하지 않아도 됩니다.",
+    skip: "나중에",
+    save: "저장하고 시작",
+    close: "닫기",
+  },
+  ja: {
+    open: "家族",
+    boxLabel: "家族の基本情報",
+    boxSummary: "一度設定すると、商品、レシート、AI回答に反映されます。",
+    boxPlaceholder: "例：4人分を買う。父68歳、母65歳、子ども8歳、配偶者は大人。必要なら基本的な健康メモも。",
+    boxSave: "家族情報を保存",
+    saved: "保存しました。",
+    kicker: "家族設定",
+    title: "家族の買い物アシスタントを設定",
+    intro: "最初に言語を選んでください。次の質問と結果はその言語になります。",
+    language: "言語",
+    members: "家族メンバー",
+    membersPlaceholder: "例：4人分を買う。父68歳、母65歳、子ども8歳、配偶者は大人。必要なら基本的な健康メモも。",
+    hint: "あとで変更できます。買い物の好みは不要です。",
+    skip: "今はスキップ",
+    save: "保存して始める",
+    close: "閉じる",
+  },
+  vi: {
+    open: "Gia đình",
+    boxLabel: "Thông tin gia đình",
+    boxSummary: "Thiết lập một lần. Sản phẩm, hóa đơn và AI sẽ dùng thông tin này.",
+    boxPlaceholder: "Ví dụ: tôi mua cho 4 người: bố 68, mẹ 65, bé 8 tuổi, vợ/chồng là người lớn. Thêm ghi chú sức khỏe cơ bản nếu cần.",
+    boxSave: "Lưu hồ sơ",
+    saved: "Đã lưu.",
+    kicker: "Thiết lập gia đình",
+    title: "Thiết lập trợ lý gia đình",
+    intro: "Chọn ngôn ngữ trước. Câu hỏi và kết quả sau đó sẽ dùng ngôn ngữ này.",
+    language: "Ngôn ngữ",
+    members: "Thành viên gia đình",
+    membersPlaceholder: "Ví dụ: tôi mua cho 4 người: bố 68, mẹ 65, bé 8 tuổi, vợ/chồng là người lớn. Thêm ghi chú sức khỏe cơ bản nếu cần.",
+    hint: "Có thể sửa sau. Không cần nhập sở thích mua sắm.",
+    skip: "Bỏ qua",
+    save: "Lưu và bắt đầu",
+    close: "Đóng",
+  },
+  hi: {
+    open: "परिवार",
+    boxLabel: "परिवार की बुनियादी जानकारी",
+    boxSummary: "एक बार परिवार सेट करें। सामान, रसीद और AI जवाब में यह जानकारी काम आएगी।",
+    boxPlaceholder: "जैसे: मैं 4 लोगों के लिए खरीदारी करता हूं: पिता 68, मां 65, बच्चा 8, जीवनसाथी वयस्क। जरूरत हो तो छोटी health note जोड़ें।",
+    boxSave: "परिवार सेव करें",
+    saved: "सेव हो गया।",
+    kicker: "परिवार सेटअप",
+    title: "अपना परिवार assistant सेट करें",
+    intro: "पहले भाषा चुनें। आगे के सवाल और नतीजे उसी भाषा में होंगे।",
+    language: "भाषा",
+    members: "परिवार के सदस्य",
+    membersPlaceholder: "जैसे: मैं 4 लोगों के लिए खरीदारी करता हूं: पिता 68, मां 65, बच्चा 8, जीवनसाथी वयस्क। जरूरत हो तो छोटी health note जोड़ें।",
+    hint: "बाद में बदल सकते हैं। Shopping preference अभी जरूरी नहीं है।",
+    skip: "अभी छोड़ें",
+    save: "सेव करके शुरू करें",
+    close: "बंद करें",
+  },
+};
+
 pickButton.addEventListener("click", () => cameraInput.click());
 albumButton.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
-  appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "en";
-  localStorage.setItem(languageStorageKey, appLanguage);
-  stopSpeech();
-  stopChatVoiceInput();
-  applyLanguage();
-  await localizeLatestResult();
+  await changeLanguage(languageSelect.value, { localizeResult: true });
+});
+setupLanguageSelect.addEventListener("change", async () => {
+  await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
+});
+profileOpenButton.addEventListener("click", () => openProfileDialog());
+profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
+profileSkipButton.addEventListener("click", () => {
+  syncVisibleFamilyInputs();
+  localStorage.setItem(profileSetupCompletedKey, "true");
+  syncFamilyProfileToBackend();
+  closeProfileDialog();
+  sendClientEvent("profile_setup_skipped", { output_language: appLanguage });
+});
+profileDialogSaveButton.addEventListener("click", async () => {
+  await saveFamilyProfile(profileMembersInput.value);
+  closeProfileDialog();
+});
+profileSaveButton.addEventListener("click", async () => {
+  await saveFamilyProfile(familyProfile.value);
 });
 imageInput.addEventListener("change", () => {
   const file = imageInput.files?.[0];
@@ -1248,7 +1432,7 @@ async function analyzeFile(file) {
 
   const form = new FormData();
   form.append("image", file);
-  form.append("family_profile", familyProfile.value.trim());
+  form.append("family_profile", profileContextText());
   form.append("output_language", appLanguage);
   form.append("user_id", clientUserId);
 
@@ -1981,18 +2165,57 @@ function setScanMode(mode) {
   renderChatMessages();
 }
 
+async function changeLanguage(nextLanguage, options = {}) {
+  syncVisibleFamilyInputs();
+  appLanguage = supportedLanguageKeys.has(nextLanguage) ? nextLanguage : "en";
+  localStorage.setItem(languageStorageKey, appLanguage);
+  familyProfileState.output_language = appLanguage;
+  persistFamilyProfileState();
+  stopSpeech();
+  stopChatVoiceInput();
+  applyLanguage();
+  if (options.localizeResult) {
+    await localizeLatestResult();
+  }
+  if (localStorage.getItem(profileSetupCompletedKey) === "true" || profileContextText()) {
+    syncFamilyProfileToBackend();
+  }
+}
+
+function applyProfileLanguage() {
+  const copy = profileCopy();
+  profileOpenButton.textContent = copy.open;
+  profileLabel.textContent = copy.boxLabel;
+  profileSummary.textContent = copy.boxSummary;
+  familyProfile.placeholder = copy.boxPlaceholder;
+  profileSaveButton.textContent = copy.boxSave;
+  profileSavedMessage.textContent = copy.saved;
+  profileDialogKicker.textContent = copy.kicker;
+  profileDialogTitle.textContent = copy.title;
+  profileDialogIntro.textContent = copy.intro;
+  setupLanguageLabel.textContent = copy.language;
+  profileMembersLabel.textContent = copy.members;
+  profileMembersInput.placeholder = copy.membersPlaceholder;
+  profileSetupHint.textContent = copy.hint;
+  profileSkipButton.textContent = copy.skip;
+  profileDialogSaveButton.textContent = copy.save;
+  profileDialogCloseButton.setAttribute("aria-label", copy.close);
+  familyProfile.value = familyProfileState.members_text || "";
+  profileMembersInput.value = familyProfileState.members_text || "";
+}
+
 function applyLanguage() {
   appLanguage = languageConfig[appLanguage] ? appLanguage : "en";
   languageSelect.value = appLanguage;
+  setupLanguageSelect.value = appLanguage;
   document.documentElement.lang = config().htmlLang;
 
   languageLabel.textContent = ui().language;
+  applyProfileLanguage();
   panelKicker.textContent = ui().panelKicker;
   panelTitle.textContent = ui().panelTitle;
   productTab.textContent = ui().productTab;
   receiptTab.textContent = ui().receiptTab;
-  profileLabel.textContent = ui().profileLabel;
-  familyProfile.placeholder = ui().profilePlaceholder;
   resultKicker.textContent = ui().resultKicker;
   errorTitle.textContent = ui().errorTitle;
   replaceButton.textContent = ui().replace;
@@ -2155,6 +2378,125 @@ function feedbackCopy() {
   return feedbackLanguageCopy[appLanguage] || feedbackLanguageCopy.en;
 }
 
+function profileCopy() {
+  return profileLanguageCopy[appLanguage] || profileLanguageCopy.en;
+}
+
+function loadFamilyProfileState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(profileStorageKey) || "{}");
+    if (!saved || typeof saved !== "object") return {};
+    return {
+      output_language: supportedLanguageKeys.has(saved.output_language) ? saved.output_language : "",
+      members_text: String(saved.members_text || ""),
+      updated_at: String(saved.updated_at || ""),
+    };
+  } catch (error) {
+    return {};
+  }
+}
+
+function persistFamilyProfileState() {
+  localStorage.setItem(
+    profileStorageKey,
+    JSON.stringify({
+      output_language: appLanguage,
+      members_text: familyProfileState.members_text || "",
+      updated_at: familyProfileState.updated_at || new Date().toISOString(),
+    })
+  );
+}
+
+function syncVisibleFamilyInputs() {
+  const activeMembersText =
+    profileDialog?.open && profileMembersInput
+      ? profileMembersInput.value
+      : familyProfile?.value || profileMembersInput?.value || familyProfileState.members_text || "";
+  familyProfileState.members_text = activeMembersText;
+}
+
+function profileContextText() {
+  return String(familyProfileState.members_text || familyProfile.value || "").trim();
+}
+
+function openProfileDialog() {
+  if (profileDialog.open) return;
+  applyProfileLanguage();
+  if (typeof profileDialog.showModal === "function") {
+    profileDialog.showModal();
+  } else {
+    profileDialog.setAttribute("open", "");
+  }
+}
+
+function closeProfileDialog() {
+  if (typeof profileDialog.close === "function") {
+    profileDialog.close();
+  } else {
+    profileDialog.removeAttribute("open");
+  }
+}
+
+async function saveFamilyProfile(membersText) {
+  const cleanMembers = String(membersText || "").trim();
+  familyProfileState = {
+    output_language: appLanguage,
+    members_text: cleanMembers,
+    updated_at: new Date().toISOString(),
+  };
+  localStorage.setItem(profileSetupCompletedKey, "true");
+  persistFamilyProfileState();
+  applyProfileLanguage();
+  profileSavedMessage.hidden = false;
+  setTimeout(() => {
+    profileSavedMessage.hidden = true;
+  }, 1600);
+  await syncFamilyProfileToBackend();
+}
+
+async function syncFamilyProfileToBackend() {
+  try {
+    await fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: clientUserId,
+        output_language: appLanguage,
+        members_text: familyProfileState.members_text || "",
+      }),
+    });
+  } catch (error) {
+    // Local profile still works if the network is unavailable.
+  }
+}
+
+async function hydrateFamilyProfileFromBackend() {
+  try {
+    const response = await fetch(`/api/profile/${encodeURIComponent(clientUserId)}`);
+    if (!response.ok) return;
+    const data = await response.json();
+    const remoteLanguage = data.output_language;
+    const remoteMembers = String(data.members_text || "");
+    if (!remoteMembers && !supportedLanguageKeys.has(remoteLanguage)) return;
+    familyProfileState = {
+      output_language: supportedLanguageKeys.has(remoteLanguage) ? remoteLanguage : appLanguage,
+      members_text: remoteMembers || familyProfileState.members_text || "",
+      updated_at: String(data.updated_at || familyProfileState.updated_at || ""),
+    };
+    if (remoteMembers) {
+      localStorage.setItem(profileSetupCompletedKey, "true");
+    }
+    if (familyProfileState.output_language && familyProfileState.output_language !== appLanguage) {
+      appLanguage = familyProfileState.output_language;
+      localStorage.setItem(languageStorageKey, appLanguage);
+    }
+    persistFamilyProfileState();
+    applyLanguage();
+  } catch (error) {
+    // Local setup is enough for the shopping flow.
+  }
+}
+
 function getInitialLanguage() {
   const savedLanguage = localStorage.getItem(languageStorageKey);
   if (supportedLanguageKeys.has(savedLanguage)) return savedLanguage;
@@ -2190,6 +2532,11 @@ function escapeHtml(value) {
 }
 
 applyLanguage();
+hydrateFamilyProfileFromBackend().finally(() => {
+  if (localStorage.getItem(profileSetupCompletedKey) !== "true") {
+    setTimeout(() => openProfileDialog(), 450);
+  }
+});
 sendClientEvent("app_open", {
   output_language: appLanguage,
   user_agent: navigator.userAgent.slice(0, 160),

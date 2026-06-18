@@ -13,8 +13,13 @@ class FamilyProfile:
     user_id: str
     notes: str
     updated_at: str
+    language: str = ""
+    members_text: str = ""
 
     def to_prompt_context(self) -> str:
+        members = self.members_text.strip()
+        if members:
+            return f"Family members and household basics:\n{members}"
         return self.notes.strip()
 
 
@@ -28,12 +33,16 @@ class ProfileStore:
         if not isinstance(raw, dict):
             return None
         notes = str(raw.get("notes", "")).strip()
-        if not notes:
+        members_text = str(raw.get("members_text", "")).strip()
+        language = str(raw.get("language", "")).strip()
+        if not notes and not members_text and not language:
             return None
         return FamilyProfile(
             user_id=user_id,
             notes=notes,
             updated_at=str(raw.get("updated_at", "")),
+            language=language,
+            members_text=members_text,
         )
 
     def save(self, user_id: str, notes: str) -> FamilyProfile:
@@ -48,6 +57,28 @@ class ProfileStore:
             updated_at=datetime.now(UTC).isoformat(),
         )
         data[user_id] = {
+            "notes": profile.notes,
+            "updated_at": profile.updated_at,
+        }
+        self._write(data)
+        return profile
+
+    def save_family_setup(self, user_id: str, language: str, members_text: str) -> FamilyProfile:
+        clean_members = _clean_notes(members_text)
+        data = self._read()
+        previous = data.get(user_id) if isinstance(data.get(user_id), dict) else {}
+        notes = str(previous.get("notes", "")).strip() or clean_members
+        profile = FamilyProfile(
+            user_id=user_id,
+            notes=notes,
+            updated_at=datetime.now(UTC).isoformat(),
+            language=language.strip(),
+            members_text=clean_members,
+        )
+        data[user_id] = {
+            **previous,
+            "language": profile.language,
+            "members_text": profile.members_text,
             "notes": profile.notes,
             "updated_at": profile.updated_at,
         }
@@ -133,4 +164,3 @@ def parse_profile_command(text: str) -> tuple[str, str | None] | None:
             return ("append", normalized[len(prefix) :].strip())
 
     return None
-

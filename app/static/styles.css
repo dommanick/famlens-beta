@@ -175,7 +175,8 @@ h1 {
   text-align: center;
 }
 
-.records-open {
+.records-open,
+.profile-open {
   min-height: 42px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -434,6 +435,12 @@ h1 {
   font-weight: 800;
 }
 
+.profile-box p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 .profile-box textarea {
   width: 100%;
   resize: vertical;
@@ -444,6 +451,22 @@ h1 {
   color: var(--ink);
   font-size: 17px;
   line-height: 1.5;
+}
+
+.profile-save {
+  min-height: 46px;
+  border: 0;
+  border-radius: 14px;
+  background: var(--green);
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.profile-saved {
+  color: var(--green-deep) !important;
+  font-weight: 850;
 }
 
 .result-panel {
@@ -1191,6 +1214,79 @@ h1 {
   overflow: auto;
 }
 
+.profile-dialog {
+  width: min(620px, calc(100vw - 24px));
+  max-height: min(760px, calc(100dvh - 24px));
+  border: 0;
+  border-radius: 24px;
+  padding: 0;
+  background: transparent;
+  overflow: auto;
+}
+
+.profile-setup-panel {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface-strong);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: grid;
+  gap: 16px;
+}
+
+#profileDialogKicker {
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+#profileDialogTitle {
+  margin-top: 4px;
+  font-size: 30px;
+  line-height: 1.12;
+}
+
+#profileDialogIntro,
+.setup-hint {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.setup-field {
+  display: grid;
+  gap: 8px;
+}
+
+.setup-field > span {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.setup-field select,
+.setup-field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fffaf2;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.45;
+  padding: 13px 14px;
+}
+
+.setup-field textarea {
+  resize: vertical;
+  min-height: 132px;
+}
+
+.setup-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 10px;
+}
+
 .site-footer {
   margin-top: 20px;
   color: var(--muted);
@@ -1228,7 +1324,8 @@ h1 {
   background: rgba(20, 24, 22, 0.42);
 }
 
-.records-dialog::backdrop {
+.records-dialog::backdrop,
+.profile-dialog::backdrop {
   background: rgba(20, 24, 22, 0.42);
 }
 
@@ -1243,7 +1340,8 @@ h1 {
   font-size: 24px;
 }
 
-#closeDialogButton {
+#closeDialogButton,
+#profileDialogCloseButton {
   width: 40px;
   height: 40px;
   border: 0;
@@ -1579,6 +1677,19 @@ h1 {
     width: 100%;
     padding: 0 16px;
     font-size: 22px;
+  }
+
+  .profile-setup-panel {
+    border-radius: 20px;
+    padding: 18px;
+  }
+
+  #profileDialogTitle {
+    font-size: 26px;
+  }
+
+  .setup-actions {
+    grid-template-columns: 1fr;
   }
 
   .upload-copy {
