@@ -78,6 +78,9 @@ const clearChatButton = document.querySelector("#clearChatButton");
 const chatSuggestions = document.querySelector("#chatSuggestions");
 const chatMessages = document.querySelector("#chatMessages");
 const chatWelcome = document.querySelector("#chatWelcome");
+const chatMicButton = document.querySelector("#chatMicButton");
+const chatMicButtonText = document.querySelector("#chatMicButtonText");
+const chatVoiceStatus = document.querySelector("#chatVoiceStatus");
 const chatForm = document.querySelector("#chatForm");
 const chatInput = document.querySelector("#chatInput");
 const chatSubmitButton = document.querySelector("#chatSubmitButton");
@@ -114,6 +117,11 @@ let currentAudio = null;
 let currentAudioUrl = null;
 let localizationRequestId = 0;
 let chatHistory = [];
+let speechRecognition = null;
+let mediaRecorder = null;
+let mediaStream = null;
+let cancelChatVoice = false;
+let isChatListening = false;
 const recordsStorageKey = "carecart.familyRecords.v1";
 let familyRecords = loadFamilyRecords();
 
@@ -734,6 +742,15 @@ const chatLanguageCopy = {
     send: "发送",
     sending: "正在回答",
     placeholder: "输入你想问的问题",
+    voiceAsk: "点一下，说问题",
+    voiceListening: "正在听，请直接说问题",
+    voiceStop: "说完了，点这里",
+    voiceReady: "老人可以直接说：“这个怎么用？”",
+    voiceTranscribing: "正在听懂这段语音",
+    voiceHeard: "听到了，正在问 AI",
+    voicePermission: "需要允许麦克风权限，才能语音提问。",
+    voiceUnsupported: "这个浏览器暂时不支持语音输入，可以先用文字；正式 App 会接入稳定语音。",
+    voiceError: "这次没听清，请再说一次。",
     welcome: "可以问我：这个适合老人吗？怎么用？有没有要注意的地方？",
     error: "这次没有回答成功，请换个问法再试一次。",
     suggestions: ["这个适合老人吗？", "怎么用最简单？", "有什么要注意？"],
@@ -745,6 +762,15 @@ const chatLanguageCopy = {
     send: "Send",
     sending: "Answering",
     placeholder: "Type your question",
+    voiceAsk: "Tap to speak",
+    voiceListening: "Listening. Ask your question.",
+    voiceStop: "Done speaking",
+    voiceReady: "Speak naturally, for example: How do I use this?",
+    voiceTranscribing: "Understanding this voice question",
+    voiceHeard: "Got it. Asking AI.",
+    voicePermission: "Please allow microphone access to ask by voice.",
+    voiceUnsupported: "Voice input is not supported in this browser yet. Please type for now.",
+    voiceError: "I could not hear that clearly. Please try again.",
     welcome: "You can ask: Is this good for seniors? How do I use it? What should I watch out for?",
     error: "I could not answer that. Please try asking another way.",
     suggestions: ["Is this senior-friendly?", "How do I use it?", "What should I watch out for?"],
@@ -756,6 +782,15 @@ const chatLanguageCopy = {
     send: "Enviar",
     sending: "Respondiendo",
     placeholder: "Escribe tu pregunta",
+    voiceAsk: "Toca para hablar",
+    voiceListening: "Escuchando. Haz tu pregunta.",
+    voiceStop: "Terminé de hablar",
+    voiceReady: "Puede hablar, por ejemplo: ¿Cómo se usa?",
+    voiceTranscribing: "Entendiendo la pregunta de voz",
+    voiceHeard: "Entendido. Preguntando a AI.",
+    voicePermission: "Permite el acceso al micrófono para preguntar por voz.",
+    voiceUnsupported: "Este navegador aún no permite voz. Escribe por ahora.",
+    voiceError: "No escuché bien. Inténtalo otra vez.",
     welcome: "Puedes preguntar: ¿Sirve para personas mayores? ¿Cómo se usa? ¿Qué debo cuidar?",
     error: "No pude responder. Intenta preguntarlo de otra forma.",
     suggestions: ["¿Sirve para mayores?", "¿Cómo se usa?", "¿Qué debo cuidar?"],
@@ -767,6 +802,15 @@ const chatLanguageCopy = {
     send: "Envoyer",
     sending: "Réponse",
     placeholder: "Écrivez votre question",
+    voiceAsk: "Appuyer pour parler",
+    voiceListening: "J'écoute. Posez la question.",
+    voiceStop: "J'ai fini",
+    voiceReady: "Parlez simplement, par exemple : Comment l'utiliser ?",
+    voiceTranscribing: "Je comprends la question vocale",
+    voiceHeard: "Bien reçu. Question envoyée à l'AI.",
+    voicePermission: "Autorisez le micro pour poser une question vocale.",
+    voiceUnsupported: "La voix n'est pas prise en charge par ce navigateur. Écrivez pour l'instant.",
+    voiceError: "Je n'ai pas bien entendu. Réessayez.",
     welcome: "Vous pouvez demander : Est-ce adapté aux personnes âgées ? Comment l'utiliser ? À quoi faire attention ?",
     error: "Je n'ai pas pu répondre. Essayez autrement.",
     suggestions: ["Adapté aux aînés ?", "Comment l'utiliser ?", "À quoi faire attention ?"],
@@ -778,6 +822,15 @@ const chatLanguageCopy = {
     send: "보내기",
     sending: "답변 중",
     placeholder: "질문을 입력하세요",
+    voiceAsk: "눌러서 말하기",
+    voiceListening: "듣고 있어요. 질문하세요.",
+    voiceStop: "말 끝났어요",
+    voiceReady: "예: 이거 어떻게 써요? 라고 말해 보세요.",
+    voiceTranscribing: "음성 질문을 이해하는 중입니다.",
+    voiceHeard: "들었어요. AI에게 묻는 중입니다.",
+    voicePermission: "음성 질문을 하려면 마이크 권한을 허용해 주세요.",
+    voiceUnsupported: "이 브라우저는 음성 입력을 지원하지 않습니다. 우선 글자로 입력해 주세요.",
+    voiceError: "잘 듣지 못했어요. 다시 말해 주세요.",
     welcome: "이렇게 물어볼 수 있어요: 어르신에게 괜찮나요? 어떻게 쓰나요? 주의할 점은?",
     error: "답변하지 못했습니다. 다른 말로 다시 물어보세요.",
     suggestions: ["어르신에게 괜찮나요?", "어떻게 쓰나요?", "주의할 점은?"],
@@ -789,6 +842,15 @@ const chatLanguageCopy = {
     send: "送信",
     sending: "回答中",
     placeholder: "質問を入力",
+    voiceAsk: "タップして話す",
+    voiceListening: "聞いています。質問してください。",
+    voiceStop: "話し終わり",
+    voiceReady: "例：「これはどう使うの？」と話せます。",
+    voiceTranscribing: "音声の質問を理解しています",
+    voiceHeard: "聞き取りました。AIに聞いています。",
+    voicePermission: "音声で質問するにはマイクを許可してください。",
+    voiceUnsupported: "このブラウザは音声入力に対応していません。今は文字で入力してください。",
+    voiceError: "うまく聞き取れませんでした。もう一度話してください。",
     welcome: "質問できます：高齢者に向いていますか？使い方は？注意点は？",
     error: "回答できませんでした。別の聞き方で試してください。",
     suggestions: ["高齢者向けですか？", "使い方は？", "注意点は？"],
@@ -800,6 +862,15 @@ const chatLanguageCopy = {
     send: "Gửi",
     sending: "Đang trả lời",
     placeholder: "Nhập câu hỏi",
+    voiceAsk: "Bấm để nói",
+    voiceListening: "Đang nghe. Hãy hỏi.",
+    voiceStop: "Nói xong",
+    voiceReady: "Có thể nói: Cái này dùng thế nào?",
+    voiceTranscribing: "Đang hiểu câu hỏi bằng giọng nói",
+    voiceHeard: "Đã nghe. Đang hỏi AI.",
+    voicePermission: "Hãy cho phép dùng mic để hỏi bằng giọng nói.",
+    voiceUnsupported: "Trình duyệt này chưa hỗ trợ nhập giọng nói. Hãy nhập chữ trước.",
+    voiceError: "Chưa nghe rõ. Vui lòng nói lại.",
     welcome: "Bạn có thể hỏi: Có hợp với người lớn tuổi không? Dùng thế nào? Cần chú ý gì?",
     error: "Tôi chưa trả lời được. Hãy hỏi theo cách khác.",
     suggestions: ["Hợp với người lớn tuổi?", "Dùng thế nào?", "Cần chú ý gì?"],
@@ -811,6 +882,15 @@ const chatLanguageCopy = {
     send: "भेजें",
     sending: "जवाब दे रहा है",
     placeholder: "अपना सवाल लिखें",
+    voiceAsk: "बोलने के लिए दबाएं",
+    voiceListening: "सुन रहा हूं। अपना सवाल बोलें।",
+    voiceStop: "बोलना खत्म",
+    voiceReady: "बोलकर पूछें: इसे कैसे इस्तेमाल करें?",
+    voiceTranscribing: "आवाज़ वाला सवाल समझ रहा हूं",
+    voiceHeard: "सुन लिया। AI से पूछ रहा हूं।",
+    voicePermission: "आवाज़ से पूछने के लिए microphone की अनुमति दें।",
+    voiceUnsupported: "इस ब्राउज़र में आवाज़ से सवाल अभी नहीं चल रहा। फिलहाल लिखकर पूछें।",
+    voiceError: "साफ सुनाई नहीं दिया। कृपया फिर से बोलें।",
     welcome: "आप पूछ सकते हैं: क्या यह बुजुर्गों के लिए ठीक है? कैसे इस्तेमाल करें? क्या सावधानी रखें?",
     error: "मैं जवाब नहीं दे पाया। कृपया दूसरे तरीके से पूछें।",
     suggestions: ["बुजुर्गों के लिए ठीक?", "कैसे इस्तेमाल करें?", "क्या सावधानी रखें?"],
@@ -1022,6 +1102,7 @@ languageSelect.addEventListener("change", async () => {
   appLanguage = languageConfig[languageSelect.value] ? languageSelect.value : "zh-Hans";
   localStorage.setItem("carecart.language", appLanguage);
   stopSpeech();
+  stopChatVoiceInput();
   applyLanguage();
   await localizeLatestResult();
 });
@@ -1078,9 +1159,17 @@ chatInput.addEventListener("keydown", async (event) => {
   await askChat(chatInput.value);
 });
 
+chatMicButton.addEventListener("click", () => {
+  toggleChatVoiceInput();
+});
+
 clearChatButton.addEventListener("click", () => {
+  stopChatVoiceInput();
   chatHistory = [];
+  chatInput.value = "";
   renderChatMessages();
+  chatVoiceStatus.textContent = chatCopy().voiceReady;
+  chatVoiceStatus.classList.remove("warning");
 });
 
 clearRecordsButton.addEventListener("click", () => {
@@ -1295,7 +1384,7 @@ async function localizeLatestResult() {
   }
 }
 
-async function askChat(rawQuestion) {
+async function askChat(rawQuestion, options = {}) {
   const question = String(rawQuestion || "").trim();
   if (!question || chatSubmitButton.disabled) return;
 
@@ -1318,12 +1407,226 @@ async function askChat(rawQuestion) {
     });
     if (!response.ok) throw new Error("chat failed");
     const data = await response.json();
-    chatHistory.push({ role: "assistant", text: data.answer || chatCopy().error });
+    const answer = data.answer || chatCopy().error;
+    chatHistory.push({ role: "assistant", text: answer });
+    if (options.speakAnswer && answer) {
+      await speak(answer);
+    }
   } catch (error) {
     chatHistory.push({ role: "assistant", text: chatCopy().error });
   } finally {
     setChatBusy(false);
     renderChatMessages();
+  }
+}
+
+function getSpeechRecognitionConstructor() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function canRecordVoice() {
+  return Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+}
+
+function preferredAudioMimeType() {
+  const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/aac"];
+  return candidates.find((type) => window.MediaRecorder?.isTypeSupported?.(type)) || "";
+}
+
+function finishChatVoiceInput() {
+  cancelChatVoice = false;
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+    return;
+  }
+  if (speechRecognition && isChatListening) {
+    speechRecognition.stop();
+  }
+}
+
+function stopChatVoiceInput() {
+  cancelChatVoice = true;
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+  }
+  if (speechRecognition && isChatListening) {
+    speechRecognition.stop();
+  }
+}
+
+function cleanupChatVoiceStream() {
+  mediaStream?.getTracks?.().forEach((track) => track.stop());
+  mediaStream = null;
+  mediaRecorder = null;
+}
+
+function setChatListeningState(isListening) {
+  isChatListening = isListening;
+  chatMicButton.classList.toggle("listening", isListening);
+  chatMicButtonText.textContent = isListening ? chatCopy().voiceStop : chatCopy().voiceAsk;
+}
+
+async function toggleChatVoiceInput() {
+  if (chatSubmitButton.disabled) return;
+  if (isChatListening) {
+    finishChatVoiceInput();
+    return;
+  }
+  if (canRecordVoice()) {
+    await startRecordedChatVoiceInput();
+    return;
+  }
+  startBrowserSpeechRecognition();
+}
+
+async function startRecordedChatVoiceInput() {
+  stopSpeech();
+  cancelChatVoice = false;
+  let chunks = [];
+
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (error) {
+    chatVoiceStatus.textContent = chatCopy().voicePermission;
+    chatVoiceStatus.classList.add("warning");
+    return;
+  }
+
+  try {
+    const mimeType = preferredAudioMimeType();
+    mediaRecorder = new MediaRecorder(mediaStream, mimeType ? { mimeType } : undefined);
+  } catch (error) {
+    cleanupChatVoiceStream();
+    startBrowserSpeechRecognition();
+    return;
+  }
+
+  mediaRecorder.onstart = () => {
+    setChatListeningState(true);
+    chatVoiceStatus.textContent = chatCopy().voiceListening;
+    chatVoiceStatus.classList.remove("warning");
+  };
+
+  mediaRecorder.ondataavailable = (event) => {
+    if (event.data?.size) chunks.push(event.data);
+  };
+
+  mediaRecorder.onerror = () => {
+    chatVoiceStatus.textContent = chatCopy().voiceError;
+    chatVoiceStatus.classList.add("warning");
+  };
+
+  mediaRecorder.onstop = async () => {
+    const shouldCancel = cancelChatVoice;
+    const mimeType = mediaRecorder?.mimeType || chunks[0]?.type || "audio/webm";
+    const audioBlob = new Blob(chunks, { type: mimeType });
+    chunks = [];
+    cleanupChatVoiceStream();
+    setChatListeningState(false);
+    if (shouldCancel) return;
+    if (!audioBlob.size) {
+      chatVoiceStatus.textContent = chatCopy().voiceError;
+      chatVoiceStatus.classList.add("warning");
+      return;
+    }
+
+    chatVoiceStatus.textContent = chatCopy().voiceTranscribing;
+    chatVoiceStatus.classList.remove("warning");
+    try {
+      const transcript = await transcribeVoiceBlob(audioBlob);
+      chatInput.value = transcript;
+      chatVoiceStatus.textContent = chatCopy().voiceHeard;
+      await askChat(transcript, { speakAnswer: true });
+      chatVoiceStatus.textContent = chatCopy().voiceReady;
+    } catch (error) {
+      chatVoiceStatus.textContent = chatCopy().voiceError;
+      chatVoiceStatus.classList.add("warning");
+    }
+  };
+
+  mediaRecorder.start();
+}
+
+async function transcribeVoiceBlob(audioBlob) {
+  const form = new FormData();
+  form.append("audio", audioBlob, audioBlob.type.includes("mp4") ? "question.m4a" : "question.webm");
+  form.append("output_language", appLanguage);
+  form.append("user_id", clientUserId);
+  const response = await fetch("/api/transcribe", {
+    method: "POST",
+    body: form,
+  });
+  if (!response.ok) throw new Error("transcription failed");
+  const data = await response.json();
+  const text = String(data.text || "").trim();
+  if (!text) throw new Error("empty transcription");
+  return text;
+}
+
+function startBrowserSpeechRecognition() {
+  const SpeechRecognition = getSpeechRecognitionConstructor();
+  if (!SpeechRecognition) {
+    chatVoiceStatus.textContent = chatCopy().voiceUnsupported;
+    chatVoiceStatus.classList.add("warning");
+    return;
+  }
+
+  stopSpeech();
+  cancelChatVoice = false;
+  let finalTranscript = "";
+  speechRecognition = new SpeechRecognition();
+  speechRecognition.lang = config().speech || "zh-CN";
+  speechRecognition.interimResults = true;
+  speechRecognition.continuous = false;
+  speechRecognition.maxAlternatives = 1;
+
+  speechRecognition.onstart = () => {
+    setChatListeningState(true);
+    chatVoiceStatus.textContent = chatCopy().voiceListening;
+    chatVoiceStatus.classList.remove("warning");
+  };
+
+  speechRecognition.onresult = (event) => {
+    let interimTranscript = "";
+    for (let index = event.resultIndex; index < event.results.length; index += 1) {
+      const transcript = event.results[index][0]?.transcript || "";
+      if (event.results[index].isFinal) {
+        finalTranscript += transcript;
+      } else {
+        interimTranscript += transcript;
+      }
+    }
+    const heardText = `${finalTranscript} ${interimTranscript}`.trim();
+    if (heardText) {
+      chatInput.value = heardText;
+      chatVoiceStatus.textContent = heardText;
+    }
+  };
+
+  speechRecognition.onerror = () => {
+    chatVoiceStatus.textContent = chatCopy().voiceError;
+    chatVoiceStatus.classList.add("warning");
+  };
+
+  speechRecognition.onend = async () => {
+    setChatListeningState(false);
+    if (cancelChatVoice) return;
+    const question = (finalTranscript || chatInput.value || "").trim();
+    if (!question) {
+      chatVoiceStatus.textContent = chatCopy().voiceError;
+      chatVoiceStatus.classList.add("warning");
+      return;
+    }
+    chatVoiceStatus.textContent = chatCopy().voiceHeard;
+    await askChat(question, { speakAnswer: true });
+    chatVoiceStatus.textContent = chatCopy().voiceReady;
+  };
+
+  try {
+    speechRecognition.start();
+  } catch (error) {
+    chatVoiceStatus.textContent = chatCopy().voiceUnsupported;
+    chatVoiceStatus.classList.add("warning");
   }
 }
 
@@ -1382,6 +1685,9 @@ function applyChatLanguage() {
   clearChatButton.textContent = chatCopy().clear;
   chatSubmitButton.textContent = chatCopy().send;
   chatInput.placeholder = chatCopy().placeholder;
+  chatMicButtonText.textContent = isChatListening ? chatCopy().voiceStop : chatCopy().voiceAsk;
+  chatVoiceStatus.textContent = chatCopy().voiceReady;
+  chatVoiceStatus.classList.remove("warning");
   renderChatSuggestions();
   renderChatMessages();
 }
@@ -1389,6 +1695,7 @@ function applyChatLanguage() {
 function setChatBusy(isBusy) {
   chatSubmitButton.disabled = isBusy;
   chatInput.disabled = isBusy;
+  chatMicButton.disabled = isBusy;
   chatSubmitButton.textContent = isBusy ? chatCopy().sending : chatCopy().send;
 }
 
@@ -1637,6 +1944,7 @@ function setScanMode(mode) {
   latestResult = null;
   latestCardSvg = "";
   chatHistory = [];
+  stopChatVoiceInput();
   cameraInput.value = "";
   imageInput.value = "";
   previewImage.removeAttribute("src");

@@ -37,6 +37,15 @@ class InvitePageTests(unittest.TestCase):
         self.assertIn("FamLens", response.text)
         self.assertIn("application/manifest+json", response.headers["content-type"])
 
+    def test_transcribe_rejects_empty_audio(self) -> None:
+        response = self.client.post(
+            "/api/transcribe",
+            files={"audio": ("empty.webm", b"", "audio/webm")},
+            data={"output_language": "zh-Hans", "user_id": "test-user"},
+        )
+
+        self.assertEqual(response.status_code, 400)
+
 
 if __name__ == "__main__":
     unittest.main()

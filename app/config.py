@@ -17,6 +17,7 @@ class Settings:
     wechat_token: str = os.getenv("WECHAT_TOKEN", "change-me")
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     ai_model: str = os.getenv("AI_MODEL", "gpt-4.1-mini")
+    stt_model: str = os.getenv("STT_MODEL", "gpt-4o-mini-transcribe")
     tts_model: str = os.getenv("TTS_MODEL", "gpt-4o-mini-tts")
     tts_voice: str = os.getenv("TTS_VOICE", "coral")
     admin_username: str = os.getenv("ADMIN_USERNAME", "admin")

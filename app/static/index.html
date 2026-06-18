@@ -218,6 +218,13 @@
             <div class="chat-messages" id="chatMessages" aria-live="polite">
               <div class="chat-message assistant" id="chatWelcome">可以问我：这个适合老人吗？怎么用？有没有要注意的地方？</div>
             </div>
+            <div class="chat-voice-box">
+              <button class="chat-mic" id="chatMicButton" type="button">
+                <span class="mic-icon" aria-hidden="true"></span>
+                <span id="chatMicButtonText">点一下，说问题</span>
+              </button>
+              <p id="chatVoiceStatus">老人可以直接说：“这个怎么用？”</p>
+            </div>
             <form class="chat-form" id="chatForm">
               <textarea id="chatInput" rows="2" placeholder="输入你想问的问题"></textarea>
               <button class="chat-submit" id="chatSubmitButton" type="submit">发送</button>

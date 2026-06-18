@@ -30,10 +30,11 @@ from app.config import settings
 from app.events import EventLogger, event_to_dict
 from app.feedback import feedback_help_text, parse_feedback
 from app.jobs import AnalysisJobStore, format_latest_result
-from app.languages import normalize_output_language
+from app.languages import DEFAULT_OUTPUT_LANGUAGE, normalize_output_language
 from app.product import format_product_reply, format_wechat_reply, parse_product_judgement
 from app.profiles import ProfileStore, format_profile, parse_profile_command
 from app.receipt import parse_receipt_analysis
+from app.transcription import TranscriptionError, transcribe_audio
 from app.tts import SpeechError, synthesize_speech
 from app.uploads import card_thumbnail_data_url, image_data_url, normalize_image_upload, save_uploaded_image
 from app.wechat import help_text, is_valid_signature, parse_message, text_reply
@@ -368,6 +369,34 @@ async def speech(payload: SpeechRequest) -> Response:
     except SpeechError as error:
         raise HTTPException(status_code=502, detail=str(error)) from error
     return Response(content=audio, media_type="audio/mpeg")
+
+
+@app.post("/api/transcribe")
+async def transcribe(
+    audio: UploadFile = File(...),
+    output_language: str = Form(DEFAULT_OUTPUT_LANGUAGE),
+    user_id: str = Form("web-user"),
+) -> dict[str, object]:
+    language = normalize_output_language(output_language)
+    content_type = audio.content_type or "application/octet-stream"
+    if not content_type.startswith("audio/") and content_type != "application/octet-stream":
+        raise HTTPException(status_code=400, detail="Please upload an audio file.")
+
+    data = await audio.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="Audio is empty.")
+    if len(data) > 8 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Audio is too large.")
+
+    clean_id = clean_user_id(user_id)
+    try:
+        text = await transcribe_audio(data, content_type, language)
+    except TranscriptionError as error:
+        event_logger.log("voice_transcription_failed", clean_id, output_language=language, error=str(error))
+        raise HTTPException(status_code=502, detail=str(error)) from error
+
+    event_logger.log("voice_transcription_succeeded", clean_id, output_language=language, text_chars=len(text))
+    return {"text": text, "output_language": language}
 
 
 @app.post("/api/chat")
