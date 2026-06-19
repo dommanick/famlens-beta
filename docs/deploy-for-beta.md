@@ -78,6 +78,26 @@ PUBLIC_BASE_URL=https://famlens.onrender.com
 
 9. Redeploy。
 
+## 3.1. 建议打开自动部署
+
+当前 Render 如果是 `Manual Deploy` 模式，GitHub 推送后不会自动上线。项目里已经加了 GitHub Actions 工作流模板：
+
+```text
+docs/render-deploy.workflow.yml
+```
+
+推荐在 GitHub 仓库里添加这个 Repository secret：
+
+```text
+RENDER_DEPLOY_HOOK_URL=Render 的 Deploy Hook URL
+```
+
+添加后，以后推送到 `main` 会自动触发 Render 部署。详细步骤见：
+
+```text
+docs/render-auto-deploy.md
+```
+
 ## 4. 发布后检查
 
 打开：
