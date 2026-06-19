@@ -1112,6 +1112,60 @@ h1 {
   line-height: 1.08;
 }
 
+.monthly-insight {
+  border: 1px solid #d9e4d9;
+  border-radius: 16px;
+  background: #fffaf2;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.monthly-insight h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.monthly-insight p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.monthly-category-list {
+  display: grid;
+  gap: 8px;
+}
+
+.monthly-category {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid #e5dccd;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px 12px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.monthly-category span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.monthly-category span:last-child {
+  color: var(--green-deep);
+  white-space: nowrap;
+}
+
 .records-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1603,6 +1657,7 @@ h1 {
   }
 
   .records-summary,
+  .monthly-insight,
   .records-grid {
     grid-template-columns: 1fr;
   }

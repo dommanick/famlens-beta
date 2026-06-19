@@ -24,6 +24,7 @@ class Settings:
     admin_password: str = os.getenv("ADMIN_PASSWORD", "")
     request_timeout_seconds: float = float(os.getenv("REQUEST_TIMEOUT_SECONDS", "30"))
     profile_store_path: str = os.getenv("PROFILE_STORE_PATH", "data/profiles.json")
+    family_record_store_path: str = os.getenv("FAMILY_RECORD_STORE_PATH", "data/family_records.json")
     event_log_path: str = os.getenv("EVENT_LOG_PATH", "data/events.jsonl")
     card_output_dir: str = os.getenv("CARD_OUTPUT_DIR", "data/cards")
     upload_output_dir: str = os.getenv("UPLOAD_OUTPUT_DIR", "data/uploads")

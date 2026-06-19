@@ -112,6 +112,9 @@ const monthlyReceiptLabel = document.querySelector("#monthlyReceiptLabel");
 const monthlyReceiptCount = document.querySelector("#monthlyReceiptCount");
 const monthlyProductLabel = document.querySelector("#monthlyProductLabel");
 const monthlyProductCount = document.querySelector("#monthlyProductCount");
+const monthlyInsightTitle = document.querySelector("#monthlyInsightTitle");
+const monthlyInsightText = document.querySelector("#monthlyInsightText");
+const monthlyCategoryList = document.querySelector("#monthlyCategoryList");
 const recentReceiptsTitle = document.querySelector("#recentReceiptsTitle");
 const recentProductsTitle = document.querySelector("#recentProductsTitle");
 const recentReceipts = document.querySelector("#recentReceipts");
@@ -920,6 +923,9 @@ const recordsLanguageCopy = {
     products: "看过商品",
     recentReceipts: "最近小票",
     recentProducts: "最近商品",
+    monthlyInsight: "本月家庭洞察",
+    insightEmpty: "扫几张小票后，这里会自动总结家庭饮食结构和支出变化。",
+    topCategoryPrefix: "主要花在",
     receiptUnit: "张",
     productUnit: "件",
     noReceipts: "还没有小票记录。买完东西后扫小票，就能慢慢看到家庭采购和支出结构。",
@@ -938,6 +944,9 @@ const recordsLanguageCopy = {
     products: "Products viewed",
     recentReceipts: "Recent receipts",
     recentProducts: "Recent products",
+    monthlyInsight: "Monthly family insight",
+    insightEmpty: "Scan a few receipts and FamLens will summarize family diet and spending patterns here.",
+    topCategoryPrefix: "Mostly spent on",
     receiptUnit: "",
     productUnit: "",
     noReceipts: "No receipt records yet. Scan receipts after shopping to build family spending and diet patterns.",
@@ -956,6 +965,9 @@ const recordsLanguageCopy = {
     products: "Productos vistos",
     recentReceipts: "Recibos recientes",
     recentProducts: "Productos recientes",
+    monthlyInsight: "Resumen familiar del mes",
+    insightEmpty: "Escanea algunos recibos y FamLens resumirá alimentación y gastos familiares.",
+    topCategoryPrefix: "Más gasto en",
     receiptUnit: "",
     productUnit: "",
     noReceipts: "Aún no hay recibos. Escanea recibos para ver gasto y alimentación familiar.",
@@ -974,6 +986,9 @@ const recordsLanguageCopy = {
     products: "Produits vus",
     recentReceipts: "Reçus récents",
     recentProducts: "Produits récents",
+    monthlyInsight: "Aperçu familial du mois",
+    insightEmpty: "Scannez quelques reçus et FamLens résumera alimentation et dépenses.",
+    topCategoryPrefix: "Surtout dépensé en",
     receiptUnit: "",
     productUnit: "",
     noReceipts: "Aucun reçu pour l'instant. Scannez les reçus pour suivre dépenses et alimentation.",
@@ -992,6 +1007,9 @@ const recordsLanguageCopy = {
     products: "확인한 상품",
     recentReceipts: "최근 영수증",
     recentProducts: "최근 상품",
+    monthlyInsight: "이번 달 가족 요약",
+    insightEmpty: "영수증을 몇 장 스캔하면 가족 식단과 지출 흐름을 요약합니다.",
+    topCategoryPrefix: "주요 지출",
     receiptUnit: "장",
     productUnit: "개",
     noReceipts: "아직 영수증 기록이 없습니다. 쇼핑 후 영수증을 스캔하면 가족 지출과 식단을 볼 수 있습니다.",
@@ -1010,6 +1028,9 @@ const recordsLanguageCopy = {
     products: "見た商品",
     recentReceipts: "最近のレシート",
     recentProducts: "最近の商品",
+    monthlyInsight: "今月の家族メモ",
+    insightEmpty: "レシートを数枚スキャンすると、食事と支出の傾向をまとめます。",
+    topCategoryPrefix: "主な支出",
     receiptUnit: "枚",
     productUnit: "点",
     noReceipts: "まだレシート記録がありません。買い物後にスキャンすると支出と食生活を見られます。",
@@ -1028,6 +1049,9 @@ const recordsLanguageCopy = {
     products: "Sản phẩm đã xem",
     recentReceipts: "Hóa đơn gần đây",
     recentProducts: "Sản phẩm gần đây",
+    monthlyInsight: "Nhận xét gia đình tháng này",
+    insightEmpty: "Quét vài hóa đơn để FamLens tóm tắt ăn uống và chi tiêu gia đình.",
+    topCategoryPrefix: "Chi nhiều cho",
     receiptUnit: "",
     productUnit: "",
     noReceipts: "Chưa có hóa đơn. Quét hóa đơn sau khi mua để theo dõi chi tiêu và ăn uống.",
@@ -1046,6 +1070,9 @@ const recordsLanguageCopy = {
     products: "देखे गए सामान",
     recentReceipts: "हाल की रसीदें",
     recentProducts: "हाल के सामान",
+    monthlyInsight: "मासिक परिवार जानकारी",
+    insightEmpty: "कुछ रसीद स्कैन करें, FamLens परिवार के भोजन और खर्च को संक्षेप में दिखाएगा।",
+    topCategoryPrefix: "सबसे ज्यादा खर्च",
     receiptUnit: "",
     productUnit: "",
     noReceipts: "अभी कोई रसीद रिकॉर्ड नहीं है। खरीदारी के बाद रसीद स्कैन करें।",
@@ -1372,11 +1399,16 @@ recordsDialog.addEventListener("click", (event) => {
   if (event.target === recordsDialog) recordsDialog.close();
 });
 
-clearRecordsButton.addEventListener("click", () => {
-  familyRecords = { products: [], receipts: [] };
+clearRecordsButton.addEventListener("click", async () => {
+  familyRecords = emptyFamilyRecords();
   saveFamilyRecords();
   renderFamilyRecords();
   sendClientEvent("clear_family_records");
+  try {
+    await fetch(`/api/records/${encodeURIComponent(clientUserId)}`, { method: "DELETE" });
+  } catch (error) {
+    // Local clear should still feel instant.
+  }
 });
 
 [feedbackHelpful, feedbackInaccurate, feedbackConfusing].forEach((button) => {
@@ -1831,19 +1863,24 @@ function startBrowserSpeechRecognition() {
 }
 
 function buildChatContext() {
+  const baseContext = {
+    type: latestResult?.receipt ? "receipt" : latestResult?.judgement ? "product" : scanMode,
+    output_language: appLanguage,
+    family_profile: profileContextText(),
+    family_records: buildFamilyRecordsContext(),
+    monthly_report: familyRecords.monthlyReport || null,
+  };
   if (!latestResult) {
-    return { type: scanMode, output_language: appLanguage };
+    return baseContext;
   }
   if (latestResult.receipt) {
     return {
-      type: "receipt",
-      output_language: appLanguage,
+      ...baseContext,
       receipt: latestResult.receipt,
     };
   }
   return {
-    type: "product",
-    output_language: appLanguage,
+    ...baseContext,
     judgement: latestResult.judgement,
   };
 }
@@ -1905,10 +1942,15 @@ function loadFamilyRecords() {
     return {
       products: Array.isArray(data.products) ? data.products : [],
       receipts: Array.isArray(data.receipts) ? data.receipts : [],
+      monthlyReport: data.monthlyReport && typeof data.monthlyReport === "object" ? data.monthlyReport : null,
     };
   } catch (error) {
-    return { products: [], receipts: [] };
+    return emptyFamilyRecords();
   }
+}
+
+function emptyFamilyRecords() {
+  return { products: [], receipts: [], monthlyReport: null };
 }
 
 function saveFamilyRecords() {
@@ -1918,16 +1960,19 @@ function saveFamilyRecords() {
 function addProductRecord(data) {
   const judgement = data?.judgement || {};
   const itemName = judgement.item_name || recordCopy().unknownProduct;
-  const record = {
+  const serverRecord = normalizeProductRecord(data?.record);
+  const record = serverRecord || {
     id: createRecordId("product", itemName),
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
     itemName,
+    item_name: itemName,
     category: judgement.category || "",
     verdict: judgement.verdict || "",
     subtitle: judgement.subtitle || "",
     warning: judgement.warning || "",
-    thumbnail: data.card_image_data_url || "",
   };
+  record.thumbnail = data.card_image_data_url || findExistingProductThumbnail(record.id) || "";
+  if (data?.monthly_report) familyRecords.monthlyReport = data.monthly_report;
   familyRecords.products = [record, ...familyRecords.products.filter((item) => item.id !== record.id)].slice(0, 80);
   saveFamilyRecords();
   renderFamilyRecords();
@@ -1940,18 +1985,29 @@ function addProductRecord(data) {
 
 function addReceiptRecord(data) {
   const receipt = data?.receipt || {};
-  const record = {
+  const serverRecord = normalizeReceiptRecord(data?.record);
+  const record = serverRecord || {
     id: createRecordId("receipt", `${receipt.store_name || ""}-${receipt.purchase_date || ""}-${receipt.total_amount || ""}`),
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
     storeName: receipt.store_name || recordCopy().unknownStore,
+    store_name: receipt.store_name || recordCopy().unknownStore,
     purchaseDate: receipt.purchase_date || "",
+    purchase_date: receipt.purchase_date || "",
     currency: receipt.currency || "CAD",
     totalAmount: receipt.total_amount ?? null,
+    total_amount: receipt.total_amount ?? null,
     itemCount: receipt.item_count ?? null,
+    item_count: receipt.item_count ?? null,
     nutritionSignal: receipt.nutrition_signal || "",
+    nutrition_signal: receipt.nutrition_signal || "",
     spendingSignal: receipt.spending_signal || "",
+    spending_signal: receipt.spending_signal || "",
+    family_report_note: receipt.family_report_note || "",
     categories: Array.isArray(receipt.category_summary) ? receipt.category_summary.slice(0, 6) : [],
+    category_summary: Array.isArray(receipt.category_summary) ? receipt.category_summary.slice(0, 6) : [],
+    items: Array.isArray(receipt.items) ? receipt.items.slice(0, 12) : [],
   };
+  if (data?.monthly_report) familyRecords.monthlyReport = data.monthly_report;
   familyRecords.receipts = [record, ...familyRecords.receipts.filter((item) => item.id !== record.id)].slice(0, 120);
   saveFamilyRecords();
   renderFamilyRecords();
@@ -1967,17 +2023,90 @@ function createRecordId(type, key) {
   return `${type}:${day}:${String(key || "").trim().toLowerCase().slice(0, 80)}`;
 }
 
+function normalizeProductRecord(record) {
+  if (!record || typeof record !== "object") return null;
+  const itemName = record.item_name || record.itemName || recordCopy().unknownProduct;
+  return {
+    ...record,
+    id: record.id || createRecordId("product", itemName),
+    created_at: record.created_at || record.createdAt || new Date().toISOString(),
+    itemName,
+    item_name: itemName,
+    category: record.category || "",
+    verdict: record.verdict || "",
+    subtitle: record.subtitle || "",
+    warning: record.warning || "",
+  };
+}
+
+function normalizeReceiptRecord(record) {
+  if (!record || typeof record !== "object") return null;
+  const storeName = record.store_name || record.storeName || recordCopy().unknownStore;
+  return {
+    ...record,
+    id: record.id || createRecordId("receipt", `${storeName}-${record.purchase_date || record.purchaseDate || ""}-${record.total_amount || record.totalAmount || ""}`),
+    created_at: record.created_at || record.createdAt || new Date().toISOString(),
+    storeName,
+    store_name: storeName,
+    purchaseDate: record.purchase_date || record.purchaseDate || "",
+    purchase_date: record.purchase_date || record.purchaseDate || "",
+    totalAmount: record.total_amount ?? record.totalAmount ?? null,
+    total_amount: record.total_amount ?? record.totalAmount ?? null,
+    itemCount: record.item_count ?? record.itemCount ?? null,
+    item_count: record.item_count ?? record.itemCount ?? null,
+    nutritionSignal: record.nutrition_signal || record.nutritionSignal || "",
+    nutrition_signal: record.nutrition_signal || record.nutritionSignal || "",
+    spendingSignal: record.spending_signal || record.spendingSignal || "",
+    spending_signal: record.spending_signal || record.spendingSignal || "",
+    categories: Array.isArray(record.category_summary) ? record.category_summary : Array.isArray(record.categories) ? record.categories : [],
+    category_summary: Array.isArray(record.category_summary) ? record.category_summary : Array.isArray(record.categories) ? record.categories : [],
+    items: Array.isArray(record.items) ? record.items : [],
+  };
+}
+
+function findExistingProductThumbnail(id) {
+  const existing = familyRecords.products.find((record) => record.id === id);
+  return existing?.thumbnail || "";
+}
+
+function buildFamilyRecordsContext() {
+  const recentReceipts = familyRecords.receipts.slice(0, 8).map((record) => ({
+    store_name: record.store_name || record.storeName || "",
+    purchase_date: record.purchase_date || record.purchaseDate || "",
+    total_amount: record.total_amount ?? record.totalAmount ?? null,
+    currency: record.currency || "CAD",
+    item_count: record.item_count ?? record.itemCount ?? null,
+    nutrition_signal: record.nutrition_signal || record.nutritionSignal || "",
+    spending_signal: record.spending_signal || record.spendingSignal || "",
+    category_summary: Array.isArray(record.category_summary) ? record.category_summary.slice(0, 5) : [],
+  }));
+  const recentProducts = familyRecords.products.slice(0, 8).map((record) => ({
+    item_name: record.item_name || record.itemName || "",
+    category: record.category || "",
+    verdict: record.verdict || "",
+    warning: record.warning || "",
+  }));
+  return {
+    receipt_count: familyRecords.receipts.length,
+    product_count: familyRecords.products.length,
+    recent_receipts: recentReceipts,
+    recent_products: recentProducts,
+  };
+}
+
 function renderFamilyRecords() {
   applyRecordsLanguage();
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const monthReceipts = familyRecords.receipts.filter((record) => String(record.createdAt || "").startsWith(currentMonth));
-  const monthProducts = familyRecords.products.filter((record) => String(record.createdAt || "").startsWith(currentMonth));
-  const spend = monthReceipts.reduce((sum, record) => sum + safeNumber(record.totalAmount), 0);
+  const monthReceipts = familyRecords.receipts.filter((record) => String(record.created_at || record.createdAt || "").startsWith(currentMonth));
+  const monthProducts = familyRecords.products.filter((record) => String(record.created_at || record.createdAt || "").startsWith(currentMonth));
+  const spend = monthReceipts.reduce((sum, record) => sum + safeNumber(record.totalAmount ?? record.total_amount), 0);
+  const serverReport = familyRecords.monthlyReport;
 
-  monthlySpend.textContent = formatAmount(spend, monthReceipts[0]?.currency || "CAD");
-  monthlyReceiptCount.textContent = formatRecordCount(monthReceipts.length, recordCopy().receiptUnit);
-  monthlyProductCount.textContent = formatRecordCount(monthProducts.length, recordCopy().productUnit);
+  monthlySpend.textContent = formatAmount(serverReport?.total_spend ?? spend, serverReport?.currency || monthReceipts[0]?.currency || "CAD");
+  monthlyReceiptCount.textContent = formatRecordCount(serverReport?.receipt_count ?? monthReceipts.length, recordCopy().receiptUnit);
+  monthlyProductCount.textContent = formatRecordCount(serverReport?.product_count ?? monthProducts.length, recordCopy().productUnit);
 
+  renderMonthlyInsight(monthReceipts);
   renderReceiptRecords();
   renderProductRecords();
 }
@@ -1991,8 +2120,59 @@ function applyRecordsLanguage() {
   monthlySpendLabel.textContent = recordCopy().spend;
   monthlyReceiptLabel.textContent = recordCopy().receipts;
   monthlyProductLabel.textContent = recordCopy().products;
+  monthlyInsightTitle.textContent = recordCopy().monthlyInsight;
   recentReceiptsTitle.textContent = recordCopy().recentReceipts;
   recentProductsTitle.textContent = recordCopy().recentProducts;
+}
+
+function renderMonthlyInsight(monthReceipts) {
+  const report = familyRecords.monthlyReport || {};
+  const topCategories = Array.isArray(report.top_categories) ? report.top_categories.slice(0, 4) : deriveTopCategories(monthReceipts);
+  const notes = [
+    ...(Array.isArray(report.nutrition_signals) ? report.nutrition_signals : []),
+    ...(Array.isArray(report.spending_signals) ? report.spending_signals : []),
+    ...(Array.isArray(report.family_report_notes) ? report.family_report_notes : []),
+  ].filter(Boolean);
+  const firstCategory = topCategories[0]?.category;
+  const firstAmount = topCategories[0]?.estimated_amount;
+  const categoryLine = firstCategory
+    ? `${recordCopy().topCategoryPrefix}: ${firstCategory}${firstAmount ? ` ${formatAmount(firstAmount, report.currency || monthReceipts[0]?.currency || "CAD")}` : ""}.`
+    : "";
+  monthlyInsightText.textContent = [categoryLine, notes[0] || ""].filter(Boolean).join(" ") || recordCopy().insightEmpty;
+
+  monthlyCategoryList.innerHTML = "";
+  topCategories.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "monthly-category";
+    row.innerHTML = `
+      <span>${escapeHtml(item.category || "")}</span>
+      <span>${escapeHtml(formatAmount(item.estimated_amount, report.currency || monthReceipts[0]?.currency || "CAD"))}</span>
+    `;
+    monthlyCategoryList.appendChild(row);
+  });
+  if (!monthlyCategoryList.children.length) {
+    monthlyCategoryList.innerHTML = `<div class="record-empty">${escapeHtml(recordCopy().insightEmpty)}</div>`;
+  }
+}
+
+function deriveTopCategories(receipts) {
+  const totals = new Map();
+  receipts.forEach((record) => {
+    const categories = Array.isArray(record.category_summary)
+      ? record.category_summary
+      : Array.isArray(record.categories)
+        ? record.categories
+        : [];
+    categories.forEach((item) => {
+      const category = item.category || "";
+      if (!category) return;
+      totals.set(category, (totals.get(category) || 0) + safeNumber(item.estimated_amount));
+    });
+  });
+  return Array.from(totals.entries())
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, 4)
+    .map(([category, estimated_amount]) => ({ category, estimated_amount }));
 }
 
 function renderReceiptRecords() {
@@ -2000,13 +2180,16 @@ function renderReceiptRecords() {
   familyRecords.receipts.slice(0, 5).forEach((record) => {
     const card = document.createElement("article");
     card.className = "record-card";
-    const date = formatRecordDate(record.purchaseDate || record.createdAt);
+    const storeName = record.storeName || record.store_name || recordCopy().unknownStore;
+    const date = formatRecordDate(record.purchaseDate || record.purchase_date || record.created_at || record.createdAt);
+    const amount = record.totalAmount ?? record.total_amount;
+    const count = record.itemCount ?? record.item_count;
     card.innerHTML = `
       <div class="record-main">
-        <strong>${escapeHtml(record.storeName || recordCopy().unknownStore)}</strong>
-        <span>${escapeHtml(date)} · ${escapeHtml(formatItemCount(record.itemCount))}</span>
+        <strong>${escapeHtml(storeName)}</strong>
+        <span>${escapeHtml(date)} · ${escapeHtml(formatItemCount(count))}</span>
       </div>
-      <div class="record-side">${escapeHtml(formatAmount(record.totalAmount, record.currency || "CAD"))}</div>
+      <div class="record-side">${escapeHtml(formatAmount(amount, record.currency || "CAD"))}</div>
     `;
     recentReceipts.appendChild(card);
   });
@@ -2021,10 +2204,11 @@ function renderProductRecords() {
     const card = document.createElement("article");
     card.className = `record-card${record.thumbnail ? " with-thumb" : ""}`;
     const thumb = record.thumbnail ? `<img class="record-thumb" src="${escapeHtml(record.thumbnail)}" alt="" />` : "";
+    const productName = record.itemName || record.item_name || recordCopy().unknownProduct;
     card.innerHTML = `
       ${thumb}
       <div class="record-main">
-        <strong>${escapeHtml(record.itemName || recordCopy().unknownProduct)}</strong>
+        <strong>${escapeHtml(productName)}</strong>
         <span>${escapeHtml(record.subtitle || record.category || "")}</span>
       </div>
       <div class="record-side">${escapeHtml(record.verdict || "")}</div>
@@ -2497,6 +2681,32 @@ async function hydrateFamilyProfileFromBackend() {
   }
 }
 
+async function hydrateFamilyRecordsFromBackend() {
+  try {
+    const response = await fetch(`/api/records/${encodeURIComponent(clientUserId)}`);
+    if (!response.ok) return;
+    const data = await response.json();
+    const remoteProducts = Array.isArray(data.products) ? data.products.map(normalizeProductRecord).filter(Boolean) : [];
+    const remoteReceipts = Array.isArray(data.receipts) ? data.receipts.map(normalizeReceiptRecord).filter(Boolean) : [];
+    const hasRemoteRecords = remoteProducts.length || remoteReceipts.length;
+    if (hasRemoteRecords || data.monthly_report) {
+      const localThumbnails = new Map(familyRecords.products.map((record) => [record.id, record.thumbnail || ""]));
+      remoteProducts.forEach((record) => {
+        record.thumbnail = localThumbnails.get(record.id) || record.thumbnail || "";
+      });
+      familyRecords = {
+        products: hasRemoteRecords ? remoteProducts : familyRecords.products,
+        receipts: hasRemoteRecords ? remoteReceipts : familyRecords.receipts,
+        monthlyReport: data.monthly_report || familyRecords.monthlyReport || null,
+      };
+      saveFamilyRecords();
+      renderFamilyRecords();
+    }
+  } catch (error) {
+    // Local records are still useful if the network is unavailable.
+  }
+}
+
 function getInitialLanguage() {
   const savedLanguage = localStorage.getItem(languageStorageKey);
   if (supportedLanguageKeys.has(savedLanguage)) return savedLanguage;
@@ -2532,6 +2742,7 @@ function escapeHtml(value) {
 }
 
 applyLanguage();
+hydrateFamilyRecordsFromBackend();
 hydrateFamilyProfileFromBackend().finally(() => {
   if (localStorage.getItem(profileSetupCompletedKey) !== "true") {
     setTimeout(() => openProfileDialog(), 450);

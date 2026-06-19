@@ -14,6 +14,11 @@ class ChatTests(unittest.TestCase):
                     "item_name": "Systane eye drops",
                     "warning": "Ask a pharmacist if symptoms continue.",
                 },
+                "family_profile": "Father has high blood pressure.",
+                "monthly_report": {
+                    "total_spend": 88.5,
+                    "top_categories": [{"category": "Vegetables", "estimated_amount": 32.0}],
+                },
                 "ignored": "do not include",
             },
             history=[{"role": "user", "text": "What is it?"}],
@@ -23,6 +28,8 @@ class ChatTests(unittest.TestCase):
 
         self.assertIn("Hindi", payload["input"][0]["content"][0]["text"])
         self.assertIn("Systane eye drops", prompt)
+        self.assertIn("Father has high blood pressure", prompt)
+        self.assertIn("Vegetables", prompt)
         self.assertIn("Can my father use this?", prompt)
         self.assertNotIn("do not include", prompt)
 

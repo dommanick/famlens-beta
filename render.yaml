@@ -4,6 +4,10 @@ services:
     env: docker
     plan: starter
     healthCheckPath: /health
+    disk:
+      name: famlens-data
+      mountPath: /var/data/famlens
+      sizeGB: 1
     envVars:
       - key: APP_NAME
         value: FamLens
@@ -16,13 +20,15 @@ services:
       - key: REQUEST_TIMEOUT_SECONDS
         value: 30
       - key: PROFILE_STORE_PATH
-        value: data/profiles.json
+        value: /var/data/famlens/profiles.json
+      - key: FAMILY_RECORD_STORE_PATH
+        value: /var/data/famlens/family_records.json
       - key: EVENT_LOG_PATH
-        value: data/events.jsonl
+        value: /var/data/famlens/events.jsonl
       - key: CARD_OUTPUT_DIR
-        value: data/cards
+        value: /var/data/famlens/cards
       - key: UPLOAD_OUTPUT_DIR
-        value: data/uploads
+        value: /var/data/famlens/uploads
       - key: ADMIN_USERNAME
         value: admin
       - key: ADMIN_PASSWORD

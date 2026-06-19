@@ -33,6 +33,7 @@ from app.jobs import AnalysisJobStore, format_latest_result
 from app.languages import DEFAULT_OUTPUT_LANGUAGE, normalize_output_language
 from app.product import format_product_reply, format_wechat_reply, parse_product_judgement
 from app.profiles import ProfileStore, format_profile, parse_profile_command
+from app.records import FamilyRecordStore
 from app.receipt import parse_receipt_analysis
 from app.transcription import TranscriptionError, transcribe_audio
 from app.tts import SpeechError, synthesize_speech
@@ -50,6 +51,7 @@ app.mount("/cards", StaticFiles(directory=str(card_output_dir)), name="cards")
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 profile_store = ProfileStore(settings.profile_store_path)
+family_record_store = FamilyRecordStore(settings.family_record_store_path)
 event_logger = EventLogger(settings.event_log_path)
 analysis_jobs = AnalysisJobStore()
 
@@ -104,6 +106,18 @@ class ProfileSetupRequest(BaseModel):
     user_id: str = "web-user"
     output_language: str | None = None
     members_text: str = ""
+
+
+class ProductRecordRequest(BaseModel):
+    user_id: str = "web-user"
+    output_language: str | None = None
+    judgement: dict[str, object]
+
+
+class ReceiptRecordRequest(BaseModel):
+    user_id: str = "web-user"
+    output_language: str | None = None
+    receipt: dict[str, object]
 
 
 def is_loopback_request(request: Request) -> bool:
@@ -277,6 +291,58 @@ async def save_profile(payload: ProfileSetupRequest) -> dict[str, str | None]:
     }
 
 
+@app.get("/api/records/{user_id}")
+async def get_family_records(user_id: str) -> dict[str, object]:
+    clean_id = clean_user_id(user_id)
+    return family_record_store.get_user_records(clean_id)
+
+
+@app.post("/api/records/product")
+async def save_product_record(payload: ProductRecordRequest) -> dict[str, object]:
+    clean_id = clean_user_id(payload.user_id)
+    language = normalize_output_language(payload.output_language)
+    record = family_record_store.save_product(clean_id, payload.judgement, language)
+    report = family_record_store.monthly_report(clean_id)
+    event_logger.log(
+        "server_product_record_saved",
+        clean_id,
+        output_language=language,
+        category=record.get("category"),
+        verdict=record.get("verdict"),
+    )
+    return {"user_id": clean_id, "record": record, "monthly_report": report}
+
+
+@app.post("/api/records/receipt")
+async def save_receipt_record(payload: ReceiptRecordRequest) -> dict[str, object]:
+    clean_id = clean_user_id(payload.user_id)
+    language = normalize_output_language(payload.output_language)
+    record = family_record_store.save_receipt(clean_id, payload.receipt, language)
+    report = family_record_store.monthly_report(clean_id)
+    event_logger.log(
+        "server_receipt_record_saved",
+        clean_id,
+        output_language=language,
+        store_name=record.get("store_name"),
+        total_amount=record.get("total_amount"),
+    )
+    return {"user_id": clean_id, "record": record, "monthly_report": report}
+
+
+@app.delete("/api/records/{user_id}")
+async def clear_family_records(user_id: str) -> dict[str, object]:
+    clean_id = clean_user_id(user_id)
+    cleared = family_record_store.clear(clean_id)
+    event_logger.log("server_family_records_cleared", clean_id, cleared=cleared)
+    return {
+        "user_id": clean_id,
+        "cleared": cleared,
+        "products": [],
+        "receipts": [],
+        "monthly_report": family_record_store.monthly_report(clean_id),
+    }
+
+
 @app.post("/api/analyze-upload")
 async def analyze_upload(
     image: UploadFile = File(...),
@@ -310,6 +376,8 @@ async def analyze_upload(
         verdict=judgement.verdict,
         output_language=language,
     )
+    clean_id = clean_user_id(user_id)
+    product_record = family_record_store.save_product(clean_id, judgement.to_dict(), language)
     return {
         "reply": reply,
         "judgement": judgement.to_dict(),
@@ -318,6 +386,8 @@ async def analyze_upload(
         "card_svg": card_svg,
         "card_url": public_card_url(card_path),
         "card_image_data_url": card_image_data_url,
+        "record": product_record,
+        "monthly_report": family_record_store.monthly_report(clean_id),
     }
 
 
@@ -351,10 +421,14 @@ async def analyze_receipt_upload(
         item_count=receipt.item_count,
         output_language=language,
     )
+    clean_id = clean_user_id(user_id)
+    receipt_record = family_record_store.save_receipt(clean_id, receipt.to_dict(), language)
     return {
         "receipt": receipt.to_dict(),
         "output_language": language,
         "voice_summary": receipt.voice_summary,
+        "record": receipt_record,
+        "monthly_report": family_record_store.monthly_report(clean_id),
     }
 
 

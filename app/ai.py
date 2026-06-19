@@ -262,8 +262,18 @@ def _chat_system_prompt(target_language: str) -> str:
 
 
 def _compact_context(context: dict[str, Any]) -> dict[str, Any]:
-    allowed_top = {"type", "output_language", "judgement", "receipt"}
+    allowed_top = {
+        "type",
+        "output_language",
+        "judgement",
+        "receipt",
+        "family_profile",
+        "family_records",
+        "monthly_report",
+    }
     compact = {key: value for key, value in context.items() if key in allowed_top}
+    if isinstance(compact.get("family_profile"), str):
+        compact["family_profile"] = compact["family_profile"][:1000]
     if "judgement" in compact and isinstance(compact["judgement"], dict):
         compact["judgement"] = _trim_dict(compact["judgement"], 12)
     if "receipt" in compact and isinstance(compact["receipt"], dict):
@@ -273,6 +283,34 @@ def _compact_context(context: dict[str, Any]) -> dict[str, Any]:
         if isinstance(receipt.get("category_summary"), list):
             receipt["category_summary"] = receipt["category_summary"][:8]
         compact["receipt"] = receipt
+    if "monthly_report" in compact and isinstance(compact["monthly_report"], dict):
+        compact["monthly_report"] = _compact_monthly_report(compact["monthly_report"])
+    if "family_records" in compact and isinstance(compact["family_records"], dict):
+        records = _trim_dict(compact["family_records"], 8)
+        if isinstance(records.get("recent_products"), list):
+            records["recent_products"] = [_trim_dict(item, 8) for item in records["recent_products"][:6] if isinstance(item, dict)]
+        if isinstance(records.get("recent_receipts"), list):
+            records["recent_receipts"] = [_trim_dict(item, 10) for item in records["recent_receipts"][:6] if isinstance(item, dict)]
+        compact["family_records"] = records
+    return compact
+
+
+def _compact_monthly_report(report: dict[str, Any]) -> dict[str, Any]:
+    compact = _trim_dict(report, 10)
+    for key, limit in {
+        "top_categories": 8,
+        "nutrition_signals": 4,
+        "spending_signals": 4,
+        "family_report_notes": 4,
+        "recent_products": 5,
+        "recent_receipts": 5,
+    }.items():
+        value = compact.get(key)
+        if isinstance(value, list):
+            compact[key] = [
+                _trim_dict(item, 8) if isinstance(item, dict) else str(item)[:280]
+                for item in value[:limit]
+            ]
     return compact
 
 
