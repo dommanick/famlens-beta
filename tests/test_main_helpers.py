@@ -30,6 +30,12 @@ class InvitePageTests(unittest.TestCase):
         self.assertEqual(response.headers["content-type"], "image/svg+xml")
         self.assertIn("<svg", response.text)
 
+    def test_family_invite_qr_embeds_join_code(self) -> None:
+        response = self.client.get("/api/invite/qr.svg?family_code=AB12CD")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("<svg", response.text)
+
     def test_manifest_json_compatibility_route(self) -> None:
         response = self.client.get("/manifest.json")
 

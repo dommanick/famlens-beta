@@ -18,7 +18,7 @@
         <div class="brand">
           <div class="brand-mark" aria-hidden="true">F</div>
           <div>
-            <p class="eyebrow">Family grocery care</p>
+            <p class="eyebrow" id="brandEyebrow">Family health shopping AI</p>
             <h1>FamLens</h1>
           </div>
         </div>
@@ -46,13 +46,22 @@
         <div class="camera-panel">
           <div class="panel-head">
             <p class="panel-kicker" id="panelKicker">For the family shopper</p>
-            <h2 id="panelTitle">Snap it. Understand it.</h2>
+            <h2 id="panelTitle">Your family health shopping AI.</h2>
+            <p class="panel-intro" id="panelIntro">Understand products and receipts. Build a health-aware shopping memory for the whole family.</p>
           </div>
 
           <div class="scan-tabs" aria-label="选择拍照类型">
-            <button class="scan-tab active" id="productTab" type="button" data-mode="product">Product</button>
-            <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt">Receipt</button>
+            <button class="scan-tab active" id="productTab" type="button" data-mode="product" data-subtitle="Know what it is, how to use it, and who it suits.">Product</button>
+            <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt" data-subtitle="Save today’s shopping to your family memory.">Receipt</button>
           </div>
+
+          <button class="voice-home-action" id="homeVoiceButton" type="button">
+            <span class="mic-icon" aria-hidden="true"></span>
+            <span>
+              <strong id="homeVoiceTitle">Ask AI by voice</strong>
+              <small id="homeVoiceSub">Speak naturally in your language</small>
+            </span>
+          </button>
 
           <div class="upload-zone" id="dropZone">
             <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
@@ -83,6 +92,18 @@
             <button class="profile-save" id="profileSaveButton" type="button">Save profile</button>
             <p class="profile-saved" id="profileSavedMessage" hidden>Saved.</p>
           </details>
+
+          <section class="receipt-habit-card" aria-label="Receipt habit">
+            <div class="receipt-habit-head">
+              <div>
+                <span id="homeReceiptKicker">Family memory</span>
+                <strong id="homeReceiptProgressTitle">Your first family report is forming</strong>
+              </div>
+              <em id="homeReceiptProgressCount">0 / 8</em>
+            </div>
+            <div class="receipt-progress" aria-hidden="true"><span id="homeReceiptProgressFill"></span></div>
+            <p id="homeReceiptProgressCopy">Scan receipts after shopping. FamLens will learn your family’s eating and spending patterns.</p>
+          </section>
         </div>
 
         <div class="result-panel">
@@ -227,6 +248,65 @@
         </div>
       </section>
 
+      <section class="home-insights" aria-label="Family shopping intelligence">
+        <article class="sample-report-card">
+          <div class="sample-report-head">
+            <div>
+              <p id="homeSampleKicker">Why scan receipts</p>
+              <h2 id="homeSampleTitle">Unlock a monthly family report</h2>
+            </div>
+            <a id="homeSampleLink" href="/static/family-health-snapshot-sample.html" target="_blank" rel="noreferrer">View sample</a>
+          </div>
+          <div class="sample-report-grid">
+            <div>
+              <strong id="homeSampleNutrition">Nutrition</strong>
+              <span id="homeSampleNutritionCopy">Vegetables, protein, sugar, calcium, processed food trends.</span>
+            </div>
+            <div>
+              <strong id="homeSampleSpending">Spending</strong>
+              <span id="homeSampleSpendingCopy">Groceries, restaurants, personal care, household supplies.</span>
+            </div>
+            <div>
+              <strong id="homeSampleFamily">Family</strong>
+              <span id="homeSampleFamilyCopy">Personalized notes for seniors, children, and health concerns.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="home-records-card">
+          <div class="home-section-head">
+            <div>
+              <p id="homeRecentKicker">Family memory</p>
+              <h2 id="homeRecentTitle">Recent scans</h2>
+            </div>
+          </div>
+          <div class="home-recent-list" id="homeRecentList"></div>
+        </article>
+
+        <article class="home-family-card">
+          <div class="home-section-head">
+            <div>
+              <p id="homeFamilyKicker">Personalized for household</p>
+              <h2 id="homeFamilyTitle">Family basics</h2>
+            </div>
+          </div>
+          <div class="home-family-summary">
+            <span id="homeFamilyTileSenior">Senior<br />health notes</span>
+            <span id="homeFamilyTileAdult">Adult<br />health goals</span>
+            <span id="homeFamilyTileChild">Child<br />growth</span>
+            <span id="homeFamilyTileLanguage">Language<br />preference</span>
+          </div>
+          <p id="homeFamilyNote">Set this once. Product answers, receipt reports, and AI suggestions will become more relevant to this household.</p>
+        </article>
+      </section>
+
+      <nav class="home-bottom-nav" aria-label="Primary navigation">
+        <button class="active" id="homeScanButton" type="button">Scan</button>
+        <button id="homeRecordsButton" type="button">Records</button>
+        <button id="homeFamilyButton" type="button">Family</button>
+        <button id="homeAiButton" type="button">AI</button>
+      </nav>
+
       <footer class="site-footer">
         <span>FamLens</span>
         <a href="/privacy" target="_blank" rel="noreferrer">Privacy</a>
@@ -276,6 +356,23 @@
           <input id="profileRecoveryInput" type="text" inputmode="email" autocomplete="email" placeholder="Optional: email or phone for future recovery" />
         </label>
         <p class="setup-hint" id="profileIdentityHint">Family code will be saved on this device.</p>
+        <section class="family-invite-card" aria-label="Family invite">
+          <div class="family-invite-code">
+            <span id="familyInviteCodeLabel">Family code</span>
+            <strong id="familyInviteCode">------</strong>
+          </div>
+          <img id="familyInviteQr" alt="Family invite QR code" />
+          <div class="family-invite-actions">
+            <button class="secondary-action compact" id="copyInviteLinkButton" type="button">Copy invite link</button>
+            <button class="secondary-action compact" id="copyFamilyCodeButton" type="button">Copy code</button>
+          </div>
+        </section>
+        <label class="setup-field" for="joinFamilyCodeInput">
+          <span id="joinFamilyCodeLabel">Join an existing family</span>
+          <input id="joinFamilyCodeInput" type="text" inputmode="text" autocomplete="off" placeholder="Enter family code" />
+        </label>
+        <button class="secondary-action join-family-button" id="joinFamilyButton" type="button">Join family</button>
+        <p class="setup-hint" id="joinFamilyStatus" aria-live="polite"></p>
         <p class="setup-hint" id="profileSetupHint">You can edit this later. Shopping preferences are not required.</p>
         <div class="setup-actions">
           <button class="secondary-action" id="profileSkipButton" type="button">Skip for now</button>

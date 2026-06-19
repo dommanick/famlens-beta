@@ -35,6 +35,21 @@ class IdentityStoreTests(unittest.TestCase):
             self.assertEqual(saved.recovery_contact, "parent@example.com")
             self.assertEqual(store.overview()["recovery_contacts"], 1)
 
+    def test_join_device_by_family_code_links_second_device(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            store = IdentityStore(str(Path(directory) / "identities.json"))
+            owner = store.bootstrap_device("owner-device", "en")
+            joiner = store.bootstrap_device("joiner-device", "zh-Hans")
+
+            joined = store.join_device_by_family_code("joiner-device", owner.family_code.lower(), "zh-Hans")
+
+            self.assertIsNotNone(joined)
+            identity, previous_household_id = joined
+            self.assertEqual(previous_household_id, joiner.household_id)
+            self.assertEqual(identity.household_id, owner.household_id)
+            self.assertEqual(identity.family_code, owner.family_code)
+            self.assertEqual(store.overview()["devices"], 2)
+
 
 class IdentityApiTests(unittest.TestCase):
     def setUp(self) -> None:
@@ -70,6 +85,44 @@ class IdentityApiTests(unittest.TestCase):
         self.assertIsNone(main.profile_store.get("device-abc"))
         self.assertEqual(main.profile_store.get(household_id).members_text, "father 68")
         self.assertEqual(main.family_record_store.get_user_records(household_id)["products"][0]["item_name"], "Olive oil")
+
+    def test_join_api_migrates_joiner_records_to_owner_household(self) -> None:
+        owner_response = self.client.post(
+            "/api/identity/bootstrap",
+            json={"device_id": "owner-device", "output_language": "en"},
+        )
+        self.assertEqual(owner_response.status_code, 200)
+        owner = owner_response.json()
+        joiner_response = self.client.post(
+            "/api/identity/bootstrap",
+            json={"device_id": "joiner-device", "output_language": "en"},
+        )
+        self.assertEqual(joiner_response.status_code, 200)
+        joiner_household = joiner_response.json()["household_id"]
+        main.family_record_store.save_product(joiner_household, {"item_name": "Vitamin C"}, "en")
+
+        response = self.client.post(
+            "/api/identity/join",
+            json={
+                "device_id": "joiner-device",
+                "family_code": owner["family_code"],
+                "output_language": "en",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["household_id"], owner["household_id"])
+        self.assertTrue(response.json()["migrated_records"])
+        records = main.family_record_store.get_user_records(owner["household_id"])
+        self.assertEqual(records["products"][0]["item_name"], "Vitamin C")
+
+    def test_join_api_rejects_unknown_family_code(self) -> None:
+        response = self.client.post(
+            "/api/identity/join",
+            json={"device_id": "joiner-device", "family_code": "NOPE00", "output_language": "en"},
+        )
+
+        self.assertEqual(response.status_code, 404)
 
 
 if __name__ == "__main__":

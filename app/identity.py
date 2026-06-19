@@ -121,6 +121,73 @@ class IdentityStore:
             is_new_household=False,
         )
 
+    def join_device_by_family_code(
+        self,
+        device_id: str,
+        family_code: str,
+        language: str,
+    ) -> tuple[HouseholdIdentity, str] | None:
+        clean_device_id = _clean_id(device_id, "device")
+        clean_code = _clean_family_code(family_code)
+        if not clean_code:
+            return None
+
+        clean_language = (language or "en").strip()[:24]
+        now = datetime.now(UTC).isoformat()
+        data = self._read()
+        devices = _dict(data.setdefault("devices", {}))
+        households = _dict(data.setdefault("households", {}))
+        target_household_id = ""
+        target_household: dict[str, Any] | None = None
+
+        for household_id, household in households.items():
+            if not isinstance(household, dict):
+                continue
+            if _clean_family_code(str(household.get("family_code") or "")) == clean_code:
+                target_household_id = str(household_id)
+                target_household = household
+                break
+
+        if not target_household_id or target_household is None:
+            return None
+
+        device = _dict(devices.get(clean_device_id))
+        previous_household_id = str(device.get("household_id") or "")
+        target_household["updated_at"] = now
+        target_household.setdefault("plan", "free")
+        target_household.setdefault("recovery_contact", "")
+        target_household.setdefault("family_code", clean_code)
+        target_household.setdefault("linked_accounts", [])
+        if clean_language and not target_household.get("language"):
+            target_household["language"] = clean_language
+        households[target_household_id] = target_household
+
+        devices[clean_device_id] = {
+            **device,
+            "device_id": clean_device_id,
+            "household_id": target_household_id,
+            "last_seen_at": now,
+            "created_at": device.get("created_at") or now,
+            "language": clean_language,
+        }
+
+        data["devices"] = devices
+        data["households"] = households
+        self._write(data)
+
+        return (
+            HouseholdIdentity(
+                device_id=clean_device_id,
+                household_id=target_household_id,
+                family_code=str(target_household.get("family_code") or clean_code),
+                language=str(target_household.get("language") or clean_language),
+                plan=str(target_household.get("plan") or "free"),
+                recovery_contact=str(target_household.get("recovery_contact") or ""),
+                is_new_household=False,
+            ),
+            previous_household_id,
+        )
+
     def get_household(self, household_id: str) -> dict[str, Any] | None:
         household = _dict(self._read().get("households")).get(_clean_id(household_id, "hh"))
         return household if isinstance(household, dict) else None
@@ -193,6 +260,10 @@ def _new_family_code(households: dict[str, Any]) -> str:
         code = secrets.token_hex(3).upper()
         if code not in existing:
             return code
+
+
+def _clean_family_code(value: str) -> str:
+    return "".join(char for char in str(value or "").upper() if char.isalnum())[:12]
 
 
 def _first_device_for_household(devices: dict[str, Any], household_id: str) -> str:

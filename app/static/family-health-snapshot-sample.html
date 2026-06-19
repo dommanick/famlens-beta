@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Family Health Snapshot Sample</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17221d;
+        --muted: #68766f;
+        --paper: #fffdf8;
+        --cream: #f7efe4;
+        --green: #123f34;
+        --green-2: #1d6b50;
+        --mint: #e5f4eb;
+        --amber: #bd7447;
+        --amber-soft: #f7e1d2;
+        --blue: #185d78;
+        --line: rgba(23, 34, 29, 0.12);
+        --shadow: 0 34px 90px rgba(29, 42, 35, 0.2);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 12% 8%, rgba(229, 244, 235, 0.92), transparent 32%),
+          radial-gradient(circle at 90% 18%, rgba(247, 225, 210, 0.9), transparent 30%),
+          linear-gradient(180deg, #faf7ef 0%, #ece6dc 100%);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .page {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 34px 0 52px;
+        display: grid;
+        grid-template-columns: minmax(360px, 520px) minmax(0, 1fr);
+        gap: 34px;
+        align-items: start;
+      }
+
+      .poster {
+        border-radius: 38px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(23, 34, 29, 0.1);
+        overflow: hidden;
+      }
+
+      .poster-head {
+        padding: 28px;
+        background:
+          radial-gradient(circle at 88% 0%, rgba(189, 116, 71, 0.25), transparent 34%),
+          linear-gradient(145deg, var(--green) 0%, #1b624c 100%);
+        color: white;
+      }
+
+      .poster-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 26px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 950;
+      }
+
+      .mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.14);
+        display: grid;
+        place-items: center;
+      }
+
+      .sample {
+        min-height: 34px;
+        padding: 0 13px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+        display: grid;
+        place-items: center;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .poster-head h1 {
+        max-width: 390px;
+        font-size: 43px;
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .poster-head p {
+        max-width: 410px;
+        margin-top: 12px;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .score-row {
+        display: grid;
+        grid-template-columns: 128px 1fr;
+        gap: 18px;
+        align-items: center;
+        margin-top: 28px;
+      }
+
+      .score-ring {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        background: conic-gradient(#f2ce87 0 74%, rgba(255, 255, 255, 0.18) 74% 100%);
+        padding: 13px;
+      }
+
+      .score-ring div {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--green);
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .score-ring b {
+        display: block;
+        font-size: 35px;
+        line-height: 1;
+      }
+
+      .score-ring span {
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 11px;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+
+      .score-copy b {
+        display: block;
+        font-size: 20px;
+      }
+
+      .score-copy span {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 14px;
+        line-height: 1.36;
+      }
+
+      .poster-body {
+        padding: 24px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      .metric {
+        min-height: 92px;
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: #fbf7ef;
+        padding: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 24px;
+        color: var(--green);
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .section {
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: white;
+        padding: 18px;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .section-title h2 {
+        font-size: 20px;
+        line-height: 1.08;
+      }
+
+      .section-title span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .bar-list {
+        display: grid;
+        gap: 13px;
+      }
+
+      .bar-line {
+        display: grid;
+        grid-template-columns: 116px 1fr 46px;
+        gap: 10px;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 850;
+        color: #31483f;
+      }
+
+      .bar {
+        height: 10px;
+        border-radius: 999px;
+        background: #ebe6dc;
+        overflow: hidden;
+      }
+
+      .bar i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--green-2);
+      }
+
+      .bar.warn i {
+        background: var(--amber);
+      }
+
+      .insights {
+        display: grid;
+        gap: 10px;
+      }
+
+      .insight {
+        border-radius: 18px;
+        padding: 14px;
+        background: var(--mint);
+      }
+
+      .insight.warn {
+        background: var(--amber-soft);
+      }
+
+      .insight b {
+        display: block;
+        color: #173f33;
+        font-size: 15px;
+      }
+
+      .insight p {
+        margin-top: 6px;
+        color: #5a6860;
+        font-size: 13px;
+        line-height: 1.38;
+      }
+
+      .spend-grid {
+        display: grid;
+        grid-template-columns: 132px 1fr;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .donut {
+        width: 132px;
+        height: 132px;
+        border-radius: 50%;
+        background: conic-gradient(var(--green-2) 0 42%, var(--blue) 42% 61%, var(--amber) 61% 78%, #d8c7ad 78% 100%);
+        padding: 14px;
+      }
+
+      .donut div {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: white;
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+
+      .donut b {
+        font-size: 21px;
+        color: var(--green);
+      }
+
+      .legend {
+        display: grid;
+        gap: 9px;
+      }
+
+      .legend div {
+        display: grid;
+        grid-template-columns: 12px 1fr auto;
+        gap: 9px;
+        align-items: center;
+        color: #52625a;
+        font-size: 13px;
+        font-weight: 820;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: var(--green-2);
+      }
+
+      .dot.blue {
+        background: var(--blue);
+      }
+
+      .dot.amber {
+        background: var(--amber);
+      }
+
+      .dot.tan {
+        background: #d8c7ad;
+      }
+
+      .footnote {
+        margin-top: 18px;
+        border-radius: 22px;
+        background: #f4eee4;
+        padding: 15px;
+        color: #6f665c;
+        font-size: 12px;
+        line-height: 1.42;
+      }
+
+      .explainer {
+        padding-top: 12px;
+      }
+
+      .explainer-tag {
+        display: inline-flex;
+        min-height: 34px;
+        align-items: center;
+        padding: 0 13px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        color: #285142;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .explainer h2 {
+        max-width: 600px;
+        margin-top: 14px;
+        font-size: clamp(38px, 5vw, 70px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .explainer > p {
+        max-width: 640px;
+        margin-top: 18px;
+        color: #59675f;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .why-list {
+        display: grid;
+        gap: 13px;
+        margin-top: 28px;
+      }
+
+      .why {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 253, 248, 0.74);
+        padding: 18px;
+      }
+
+      .why b {
+        display: block;
+        color: var(--green);
+        font-size: 18px;
+      }
+
+      .why p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.46;
+      }
+
+      @media (max-width: 980px) {
+        .page {
+          grid-template-columns: 1fr;
+        }
+
+        .poster {
+          width: min(100%, 560px);
+          margin: 0 auto;
+        }
+
+        .explainer {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page {
+          width: min(100% - 18px, 1180px);
+          padding: 18px 0 34px;
+        }
+
+        .poster {
+          border-radius: 30px;
+        }
+
+        .poster-head,
+        .poster-body {
+          padding: 18px;
+        }
+
+        .poster-topline,
+        .score-row,
+        .spend-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .poster-head h1 {
+          font-size: 34px;
+        }
+
+        .metric-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-line {
+          grid-template-columns: 94px 1fr 42px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <article class="poster" aria-label="Sample monthly family health report">
+        <header class="poster-head">
+          <div class="poster-topline">
+            <div class="brand"><span class="mark">F</span>FamLens</div>
+            <span class="sample">Sample report</span>
+          </div>
+          <h1>Family Health Snapshot</h1>
+          <p>Estimated from 24 product scans and 8 receipts this month. This is a trend report, not medical advice.</p>
+
+          <div class="score-row">
+            <div class="score-ring">
+              <div><span>Score</span><b>74</b></div>
+            </div>
+            <div class="score-copy">
+              <b>Balanced, with two areas to improve.</b>
+              <span>Protein and calcium sources look steady. Vegetables and high-sugar items need attention next month.</span>
+            </div>
+          </div>
+        </header>
+
+        <section class="poster-body">
+          <div class="metric-grid">
+            <div class="metric"><strong>8</strong><span>Receipts saved this month</span></div>
+            <div class="metric"><strong>24</strong><span>Products understood by AI</span></div>
+            <div class="metric"><strong>$684</strong><span>Estimated household shopping spend</span></div>
+          </div>
+
+          <section class="section" aria-label="Nutrition pattern">
+            <div class="section-title">
+              <h2>Nutrition Pattern</h2>
+              <span>Estimated trend</span>
+            </div>
+            <div class="bar-list">
+              <div class="bar-line"><span>Vegetables</span><div class="bar"><i style="width: 46%"></i></div><span>Low</span></div>
+              <div class="bar-line"><span>Fruit</span><div class="bar"><i style="width: 52%"></i></div><span>Fair</span></div>
+              <div class="bar-line"><span>Protein</span><div class="bar"><i style="width: 76%"></i></div><span>Good</span></div>
+              <div class="bar-line"><span>Calcium</span><div class="bar"><i style="width: 72%"></i></div><span>Good</span></div>
+              <div class="bar-line"><span>Sugary items</span><div class="bar warn"><i style="width: 66%"></i></div><span>High</span></div>
+            </div>
+          </section>
+
+          <section class="section" aria-label="Family insights">
+            <div class="section-title">
+              <h2>Family Insights</h2>
+              <span>AI notes</span>
+            </div>
+            <div class="insights">
+              <div class="insight">
+                <b>Good foundation</b>
+                <p>Dairy, eggs, and lean protein appear regularly. This supports children, seniors, and busy adults.</p>
+              </div>
+              <div class="insight warn">
+                <b>Watch next month</b>
+                <p>Sweet drinks, snacks, and processed foods appeared more often than last month.</p>
+              </div>
+              <div class="insight">
+                <b>Simple shopping goal</b>
+                <p>Add two more green vegetables and one fruit choice to each weekly shopping trip.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" aria-label="Spending mix">
+            <div class="section-title">
+              <h2>Shopping Mix</h2>
+              <span>Household view</span>
+            </div>
+            <div class="spend-grid">
+              <div class="donut"><div><b>$684</b></div></div>
+              <div class="legend">
+                <div><span class="dot"></span><span>Groceries and fresh food</span><b>42%</b></div>
+                <div><span class="dot blue"></span><span>Personal care and health</span><b>19%</b></div>
+                <div><span class="dot amber"></span><span>Restaurants and prepared food</span><b>17%</b></div>
+                <div><span class="dot tan"></span><span>Household supplies</span><b>22%</b></div>
+              </div>
+            </div>
+          </section>
+
+          <p class="footnote">
+            FamLens estimates household shopping patterns from receipts and product photos. It can highlight trends and family reminders, but it does not replace medical advice or precise nutrition tracking.
+          </p>
+        </section>
+      </article>
+
+      <aside class="explainer">
+        <span class="explainer-tag">Full report preview</span>
+        <h2>Show users the reward before asking for the habit.</h2>
+        <p>
+          This is the poster-style monthly report that users could receive after scanning enough receipts and product photos. It gives a clear reason to keep using FamLens beyond one-time translation.
+        </p>
+        <div class="why-list">
+          <div class="why">
+            <b>Why it helps activation</b>
+            <p>Receipt scanning has delayed value. A sample report makes the future payoff visible immediately.</p>
+          </div>
+          <div class="why">
+            <b>Why it supports paid plans</b>
+            <p>The complete report, historical comparison, and family-specific recommendations can become premium features.</p>
+          </div>
+          <div class="why">
+            <b>Why it protects positioning</b>
+            <p>It keeps FamLens focused on family health shopping intelligence, not generic expense tracking.</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </body>
+</html>

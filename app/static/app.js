@@ -11,11 +11,44 @@ const previewImage = document.querySelector("#previewImage");
 const familyProfile = document.querySelector("#familyProfile");
 const languageSelect = document.querySelector("#languageSelect");
 const languageLabel = document.querySelector("#languageLabel");
+const brandEyebrow = document.querySelector("#brandEyebrow");
 const profileOpenButton = document.querySelector("#profileOpenButton");
 const panelKicker = document.querySelector("#panelKicker");
 const panelTitle = document.querySelector("#panelTitle");
+const panelIntro = document.querySelector("#panelIntro");
 const productTab = document.querySelector("#productTab");
 const receiptTab = document.querySelector("#receiptTab");
+const homeVoiceButton = document.querySelector("#homeVoiceButton");
+const homeVoiceTitle = document.querySelector("#homeVoiceTitle");
+const homeVoiceSub = document.querySelector("#homeVoiceSub");
+const homeReceiptKicker = document.querySelector("#homeReceiptKicker");
+const homeReceiptProgressTitle = document.querySelector("#homeReceiptProgressTitle");
+const homeReceiptProgressCount = document.querySelector("#homeReceiptProgressCount");
+const homeReceiptProgressFill = document.querySelector("#homeReceiptProgressFill");
+const homeReceiptProgressCopy = document.querySelector("#homeReceiptProgressCopy");
+const homeSampleKicker = document.querySelector("#homeSampleKicker");
+const homeSampleTitle = document.querySelector("#homeSampleTitle");
+const homeSampleLink = document.querySelector("#homeSampleLink");
+const homeSampleNutrition = document.querySelector("#homeSampleNutrition");
+const homeSampleNutritionCopy = document.querySelector("#homeSampleNutritionCopy");
+const homeSampleSpending = document.querySelector("#homeSampleSpending");
+const homeSampleSpendingCopy = document.querySelector("#homeSampleSpendingCopy");
+const homeSampleFamily = document.querySelector("#homeSampleFamily");
+const homeSampleFamilyCopy = document.querySelector("#homeSampleFamilyCopy");
+const homeRecentKicker = document.querySelector("#homeRecentKicker");
+const homeRecentTitle = document.querySelector("#homeRecentTitle");
+const homeRecentList = document.querySelector("#homeRecentList");
+const homeFamilyKicker = document.querySelector("#homeFamilyKicker");
+const homeFamilyTitle = document.querySelector("#homeFamilyTitle");
+const homeFamilyTileSenior = document.querySelector("#homeFamilyTileSenior");
+const homeFamilyTileAdult = document.querySelector("#homeFamilyTileAdult");
+const homeFamilyTileChild = document.querySelector("#homeFamilyTileChild");
+const homeFamilyTileLanguage = document.querySelector("#homeFamilyTileLanguage");
+const homeFamilyNote = document.querySelector("#homeFamilyNote");
+const homeScanButton = document.querySelector("#homeScanButton");
+const homeRecordsButton = document.querySelector("#homeRecordsButton");
+const homeFamilyButton = document.querySelector("#homeFamilyButton");
+const homeAiButton = document.querySelector("#homeAiButton");
 const profileLabel = document.querySelector("#profileLabel");
 const profileSummary = document.querySelector("#profileSummary");
 const profileSaveButton = document.querySelector("#profileSaveButton");
@@ -86,6 +119,15 @@ const profileMembersInput = document.querySelector("#profileMembersInput");
 const profileRecoveryLabel = document.querySelector("#profileRecoveryLabel");
 const profileRecoveryInput = document.querySelector("#profileRecoveryInput");
 const profileIdentityHint = document.querySelector("#profileIdentityHint");
+const familyInviteCodeLabel = document.querySelector("#familyInviteCodeLabel");
+const familyInviteCode = document.querySelector("#familyInviteCode");
+const familyInviteQr = document.querySelector("#familyInviteQr");
+const copyInviteLinkButton = document.querySelector("#copyInviteLinkButton");
+const copyFamilyCodeButton = document.querySelector("#copyFamilyCodeButton");
+const joinFamilyCodeLabel = document.querySelector("#joinFamilyCodeLabel");
+const joinFamilyCodeInput = document.querySelector("#joinFamilyCodeInput");
+const joinFamilyButton = document.querySelector("#joinFamilyButton");
+const joinFamilyStatus = document.querySelector("#joinFamilyStatus");
 const profileSetupHint = document.querySelector("#profileSetupHint");
 const profileSkipButton = document.querySelector("#profileSkipButton");
 const profileDialogSaveButton = document.querySelector("#profileDialogSaveButton");
@@ -1325,6 +1367,436 @@ const profileLanguageCopy = {
   },
 };
 
+const homeLanguageCopy = {
+  en: {
+    brandEyebrow: "Family health shopping AI",
+    panelKicker: "For the whole household",
+    panelTitle: "Your family health shopping AI.",
+    panelIntro: "Understand products and receipts. Build a health-aware shopping memory for the whole family.",
+    productSub: "Know what it is, how to use it, and who it suits.",
+    receiptSub: "Save today’s shopping to your family memory.",
+    voiceTitle: "Ask AI by voice",
+    voiceSub: "Speak naturally in your language",
+    receiptKicker: "Family memory",
+    progressTitle: "Your first family report is forming",
+    progressCopy: "Scan receipts after shopping. FamLens will learn your family’s eating and spending patterns.",
+    receiptProgress: "{count} / 8 receipts",
+    sampleKicker: "Why scan receipts",
+    sampleTitle: "Unlock a monthly family report",
+    sampleLink: "View sample",
+    sampleNutrition: "Nutrition",
+    sampleNutritionCopy: "Vegetables, protein, sugar, calcium, processed food trends.",
+    sampleSpending: "Spending",
+    sampleSpendingCopy: "Groceries, restaurants, personal care, household supplies.",
+    sampleFamily: "Family",
+    sampleFamilyCopy: "Personalized notes for seniors, children, and health concerns.",
+    recentKicker: "Family memory",
+    recentTitle: "Recent scans",
+    noRecent: "No records yet. Scan a product or receipt to start your family shopping memory.",
+    familyKicker: "Personalized for household",
+    familyTitle: "Family basics",
+    familySenior: "Senior<br />health notes",
+    familyAdult: "Adult<br />health goals",
+    familyChild: "Child<br />growth",
+    familyLanguage: "Language<br />preference",
+    familyNote: "Set this once. Product answers, receipt reports, and AI suggestions will become more relevant to this household.",
+    navScan: "Scan",
+    navRecords: "Records",
+    navFamily: "Family",
+    navAi: "AI",
+    receiptShort: "Receipt",
+    productShort: "Product",
+  },
+  "zh-Hans": {
+    brandEyebrow: "家庭健康购物 AI",
+    panelKicker: "给全家使用",
+    panelTitle: "全家的健康购物 AI 管家",
+    panelIntro: "看懂商品和小票，慢慢建立全家的健康购物记忆。",
+    productSub: "看懂是什么、怎么用、适合谁。",
+    receiptSub: "把今天购物保存到家庭记录。",
+    voiceTitle: "语音问 AI",
+    voiceSub: "用你熟悉的语言直接说",
+    receiptKicker: "家庭记忆",
+    progressTitle: "你的第一份家庭报告正在形成",
+    progressCopy: "购物后扫小票，FamLens 会学习你家的饮食和支出结构。",
+    receiptProgress: "{count} / 8 张小票",
+    sampleKicker: "为什么要扫小票",
+    sampleTitle: "解锁月度家庭报告",
+    sampleLink: "看样例",
+    sampleNutrition: "营养",
+    sampleNutritionCopy: "蔬菜、蛋白质、糖、钙、加工食品趋势。",
+    sampleSpending: "支出",
+    sampleSpendingCopy: "超市、餐厅、个人护理、家庭用品。",
+    sampleFamily: "家庭",
+    sampleFamilyCopy: "针对老人、孩子和健康关注点给建议。",
+    recentKicker: "家庭记忆",
+    recentTitle: "最近记录",
+    noRecent: "还没有记录。先拍商品或扫小票，开始建立家庭购物记忆。",
+    familyKicker: "按家庭定制",
+    familyTitle: "家庭基础信息",
+    familySenior: "老人<br />健康关注",
+    familyAdult: "成人<br />健康目标",
+    familyChild: "孩子<br />成长",
+    familyLanguage: "语言<br />偏好",
+    familyNote: "只需设置一次。商品、小票报告和 AI 建议会更贴合这个家庭。",
+    navScan: "扫描",
+    navRecords: "记录",
+    navFamily: "家庭",
+    navAi: "AI",
+    receiptShort: "小票",
+    productShort: "商品",
+  },
+  es: {
+    brandEyebrow: "AI de compras saludables para la familia",
+    panelKicker: "Para todo el hogar",
+    panelTitle: "AI de compras saludables para tu familia.",
+    panelIntro: "Entiende productos y recibos. Crea una memoria de compras saludable para la familia.",
+    productSub: "Qué es, cómo usarlo y para quién conviene.",
+    receiptSub: "Guarda la compra de hoy en la memoria familiar.",
+    voiceTitle: "Pregunta por voz",
+    voiceSub: "Habla naturalmente en tu idioma",
+    receiptKicker: "Memoria familiar",
+    progressTitle: "Tu primer informe familiar se está formando",
+    progressCopy: "Escanea recibos después de comprar. FamLens aprenderá patrones de dieta y gasto.",
+    receiptProgress: "{count} / 8 recibos",
+    sampleKicker: "Por qué escanear recibos",
+    sampleTitle: "Desbloquea un informe mensual",
+    sampleLink: "Ver ejemplo",
+    sampleNutrition: "Nutrición",
+    sampleNutritionCopy: "Verduras, proteína, azúcar, calcio y procesados.",
+    sampleSpending: "Gastos",
+    sampleSpendingCopy: "Supermercado, restaurantes, cuidado personal y hogar.",
+    sampleFamily: "Familia",
+    sampleFamilyCopy: "Notas para mayores, niños y salud familiar.",
+    recentKicker: "Memoria familiar",
+    recentTitle: "Escaneos recientes",
+    noRecent: "Aún no hay registros. Escanea un producto o recibo para empezar.",
+    familyKicker: "Personalizado para el hogar",
+    familyTitle: "Datos familiares",
+    familySenior: "Mayor<br />salud",
+    familyAdult: "Adulto<br />metas",
+    familyChild: "Niño<br />crecimiento",
+    familyLanguage: "Idioma<br />preferido",
+    familyNote: "Configúralo una vez. Las respuestas e informes serán más relevantes.",
+    navScan: "Escanear",
+    navRecords: "Registros",
+    navFamily: "Familia",
+    navAi: "AI",
+    receiptShort: "Recibo",
+    productShort: "Producto",
+  },
+  fr: {
+    brandEyebrow: "AI d’achats santé pour la famille",
+    panelKicker: "Pour tout le foyer",
+    panelTitle: "Votre AI d’achats santé familiale.",
+    panelIntro: "Comprenez produits et reçus. Créez une mémoire d’achats santé pour la famille.",
+    productSub: "Ce que c’est, comment l’utiliser, pour qui.",
+    receiptSub: "Ajoutez les achats du jour à la mémoire familiale.",
+    voiceTitle: "Demander à l’AI par voix",
+    voiceSub: "Parlez naturellement dans votre langue",
+    receiptKicker: "Mémoire familiale",
+    progressTitle: "Votre premier rapport familial se prépare",
+    progressCopy: "Scannez les reçus après les courses. FamLens apprendra alimentation et dépenses.",
+    receiptProgress: "{count} / 8 reçus",
+    sampleKicker: "Pourquoi scanner les reçus",
+    sampleTitle: "Débloquer un rapport mensuel",
+    sampleLink: "Voir exemple",
+    sampleNutrition: "Nutrition",
+    sampleNutritionCopy: "Légumes, protéines, sucre, calcium, aliments transformés.",
+    sampleSpending: "Dépenses",
+    sampleSpendingCopy: "Épicerie, restaurants, soins personnels, maison.",
+    sampleFamily: "Famille",
+    sampleFamilyCopy: "Notes pour seniors, enfants et points de santé.",
+    recentKicker: "Mémoire familiale",
+    recentTitle: "Scans récents",
+    noRecent: "Aucun enregistrement. Scannez un produit ou un reçu pour commencer.",
+    familyKicker: "Personnalisé pour le foyer",
+    familyTitle: "Infos famille",
+    familySenior: "Senior<br />santé",
+    familyAdult: "Adulte<br />objectifs",
+    familyChild: "Enfant<br />croissance",
+    familyLanguage: "Langue<br />préférée",
+    familyNote: "À configurer une fois. Les réponses et rapports seront plus pertinents.",
+    navScan: "Scan",
+    navRecords: "Dossiers",
+    navFamily: "Famille",
+    navAi: "AI",
+    receiptShort: "Reçu",
+    productShort: "Produit",
+  },
+  ko: {
+    brandEyebrow: "가족 건강 쇼핑 AI",
+    panelKicker: "온 가족을 위해",
+    panelTitle: "가족 건강 쇼핑 AI.",
+    panelIntro: "상품과 영수증을 이해하고 가족 쇼핑 건강 기록을 만듭니다.",
+    productSub: "무엇인지, 사용법, 누구에게 맞는지 확인.",
+    receiptSub: "오늘 쇼핑을 가족 기록에 저장.",
+    voiceTitle: "음성으로 AI에게 묻기",
+    voiceSub: "익숙한 언어로 자연스럽게 말하세요",
+    receiptKicker: "가족 메모리",
+    progressTitle: "첫 가족 리포트가 만들어지는 중",
+    progressCopy: "쇼핑 후 영수증을 스캔하면 식단과 지출 패턴을 배웁니다.",
+    receiptProgress: "{count} / 8 영수증",
+    sampleKicker: "영수증 스캔 이유",
+    sampleTitle: "월간 가족 리포트 열기",
+    sampleLink: "샘플 보기",
+    sampleNutrition: "영양",
+    sampleNutritionCopy: "채소, 단백질, 당, 칼슘, 가공식품 추세.",
+    sampleSpending: "지출",
+    sampleSpendingCopy: "식료품, 외식, 개인 케어, 생활용품.",
+    sampleFamily: "가족",
+    sampleFamilyCopy: "노인, 아이, 건강 관심사에 맞춘 메모.",
+    recentKicker: "가족 메모리",
+    recentTitle: "최근 스캔",
+    noRecent: "아직 기록이 없습니다. 상품이나 영수증을 스캔하세요.",
+    familyKicker: "가구 맞춤",
+    familyTitle: "가족 기본 정보",
+    familySenior: "노인<br />건강",
+    familyAdult: "성인<br />목표",
+    familyChild: "아이<br />성장",
+    familyLanguage: "언어<br />선호",
+    familyNote: "한 번 설정하면 답변과 리포트가 가족에 더 맞춰집니다.",
+    navScan: "스캔",
+    navRecords: "기록",
+    navFamily: "가족",
+    navAi: "AI",
+    receiptShort: "영수증",
+    productShort: "상품",
+  },
+  ja: {
+    brandEyebrow: "家族の健康ショッピング AI",
+    panelKicker: "家族みんなのために",
+    panelTitle: "家族の健康ショッピング AI。",
+    panelIntro: "商品とレシートを理解し、家族の健康的な買い物記録を作ります。",
+    productSub: "何か、使い方、誰に合うかを確認。",
+    receiptSub: "今日の買い物を家族記録に保存。",
+    voiceTitle: "音声で AI に質問",
+    voiceSub: "使いやすい言語で自然に話せます",
+    receiptKicker: "家族メモリー",
+    progressTitle: "最初の家族レポートを作成中",
+    progressCopy: "買い物後にレシートをスキャンすると、食事と支出の傾向を学習します。",
+    receiptProgress: "{count} / 8 枚",
+    sampleKicker: "レシートをスキャンする理由",
+    sampleTitle: "月次家族レポートを見る",
+    sampleLink: "サンプル",
+    sampleNutrition: "栄養",
+    sampleNutritionCopy: "野菜、タンパク質、糖、カルシウム、加工食品の傾向。",
+    sampleSpending: "支出",
+    sampleSpendingCopy: "食料品、外食、ケア用品、日用品。",
+    sampleFamily: "家族",
+    sampleFamilyCopy: "高齢者、子ども、健康関心に合わせたメモ。",
+    recentKicker: "家族メモリー",
+    recentTitle: "最近のスキャン",
+    noRecent: "まだ記録がありません。商品かレシートをスキャンしてください。",
+    familyKicker: "家庭に合わせる",
+    familyTitle: "家族基本情報",
+    familySenior: "高齢者<br />健康",
+    familyAdult: "大人<br />目標",
+    familyChild: "子ども<br />成長",
+    familyLanguage: "言語<br />設定",
+    familyNote: "一度設定すると、回答とレポートが家族に合いやすくなります。",
+    navScan: "スキャン",
+    navRecords: "記録",
+    navFamily: "家族",
+    navAi: "AI",
+    receiptShort: "レシート",
+    productShort: "商品",
+  },
+  vi: {
+    brandEyebrow: "AI mua sắm sức khỏe gia đình",
+    panelKicker: "Cho cả gia đình",
+    panelTitle: "AI mua sắm sức khỏe gia đình.",
+    panelIntro: "Hiểu sản phẩm và hóa đơn. Xây dựng ký ức mua sắm sức khỏe cho gia đình.",
+    productSub: "Biết là gì, dùng thế nào, hợp với ai.",
+    receiptSub: "Lưu mua sắm hôm nay vào ký ức gia đình.",
+    voiceTitle: "Hỏi AI bằng giọng nói",
+    voiceSub: "Nói tự nhiên bằng ngôn ngữ của bạn",
+    receiptKicker: "Ký ức gia đình",
+    progressTitle: "Báo cáo gia đình đầu tiên đang hình thành",
+    progressCopy: "Quét hóa đơn sau khi mua. FamLens sẽ học thói quen ăn uống và chi tiêu.",
+    receiptProgress: "{count} / 8 hóa đơn",
+    sampleKicker: "Vì sao quét hóa đơn",
+    sampleTitle: "Mở báo cáo gia đình hàng tháng",
+    sampleLink: "Xem mẫu",
+    sampleNutrition: "Dinh dưỡng",
+    sampleNutritionCopy: "Rau, đạm, đường, canxi, thực phẩm chế biến.",
+    sampleSpending: "Chi tiêu",
+    sampleSpendingCopy: "Tạp hóa, nhà hàng, chăm sóc cá nhân, đồ gia đình.",
+    sampleFamily: "Gia đình",
+    sampleFamilyCopy: "Gợi ý cho người lớn tuổi, trẻ em và sức khỏe.",
+    recentKicker: "Ký ức gia đình",
+    recentTitle: "Lần quét gần đây",
+    noRecent: "Chưa có ghi chép. Hãy quét sản phẩm hoặc hóa đơn để bắt đầu.",
+    familyKicker: "Cá nhân hóa cho gia đình",
+    familyTitle: "Thông tin gia đình",
+    familySenior: "Người lớn tuổi<br />sức khỏe",
+    familyAdult: "Người lớn<br />mục tiêu",
+    familyChild: "Trẻ em<br />phát triển",
+    familyLanguage: "Ngôn ngữ<br />ưa thích",
+    familyNote: "Thiết lập một lần. Câu trả lời và báo cáo sẽ phù hợp hơn.",
+    navScan: "Quét",
+    navRecords: "Ghi chép",
+    navFamily: "Gia đình",
+    navAi: "AI",
+    receiptShort: "Hóa đơn",
+    productShort: "Sản phẩm",
+  },
+  hi: {
+    brandEyebrow: "परिवार हेल्थ शॉपिंग AI",
+    panelKicker: "पूरे परिवार के लिए",
+    panelTitle: "आपके परिवार का हेल्थ शॉपिंग AI.",
+    panelIntro: "प्रोडक्ट और रसीद समझें। पूरे परिवार की हेल्थ-aware shopping memory बनाएं।",
+    productSub: "क्या है, कैसे उपयोग करें, किसके लिए सही है।",
+    receiptSub: "आज की shopping को family memory में सेव करें।",
+    voiceTitle: "आवाज़ से AI से पूछें",
+    voiceSub: "अपनी भाषा में स्वाभाविक बोलें",
+    receiptKicker: "Family memory",
+    progressTitle: "आपकी पहली family report बन रही है",
+    progressCopy: "Shopping के बाद receipts scan करें। FamLens eating और spending patterns सीखेगा।",
+    receiptProgress: "{count} / 8 receipts",
+    sampleKicker: "Receipt scan क्यों करें",
+    sampleTitle: "Monthly family report unlock करें",
+    sampleLink: "Sample देखें",
+    sampleNutrition: "Nutrition",
+    sampleNutritionCopy: "सब्ज़ी, protein, sugar, calcium, processed food trends.",
+    sampleSpending: "Spending",
+    sampleSpendingCopy: "Groceries, restaurants, personal care, household supplies.",
+    sampleFamily: "Family",
+    sampleFamilyCopy: "Seniors, children और health concerns के लिए notes.",
+    recentKicker: "Family memory",
+    recentTitle: "Recent scans",
+    noRecent: "अभी records नहीं हैं। Product या receipt scan करके शुरू करें।",
+    familyKicker: "Household के लिए personalized",
+    familyTitle: "Family basics",
+    familySenior: "Senior<br />health",
+    familyAdult: "Adult<br />goals",
+    familyChild: "Child<br />growth",
+    familyLanguage: "Language<br />preference",
+    familyNote: "एक बार सेट करें। Answers और reports परिवार के लिए अधिक relevant होंगे।",
+    navScan: "Scan",
+    navRecords: "Records",
+    navFamily: "Family",
+    navAi: "AI",
+    receiptShort: "Receipt",
+    productShort: "Product",
+  },
+};
+
+const familyJoinLanguageCopy = {
+  en: {
+    inviteCodeLabel: "Family code",
+    copyInviteLink: "Copy invite link",
+    copyCode: "Copy code",
+    copied: "Copied.",
+    joinLabel: "Join an existing family",
+    joinPlaceholder: "Enter family code",
+    joinButton: "Join family",
+    joinPrompt: "Invite code detected. Tap Join family to use the same family records on this device.",
+    joining: "Joining family...",
+    joinSuccess: "Joined. This device now uses the shared family records.",
+    joinError: "Could not join. Please check the family code.",
+    noCode: "Enter a family code first.",
+  },
+  "zh-Hans": {
+    inviteCodeLabel: "家庭码",
+    copyInviteLink: "复制邀请链接",
+    copyCode: "复制家庭码",
+    copied: "已复制。",
+    joinLabel: "加入已有家庭",
+    joinPlaceholder: "输入家庭码",
+    joinButton: "加入家庭",
+    joinPrompt: "检测到家庭邀请。点击加入家庭后，这台设备会使用同一个家庭记录。",
+    joining: "正在加入家庭...",
+    joinSuccess: "已加入。这台设备现在会使用共享家庭记录。",
+    joinError: "加入失败，请检查家庭码。",
+    noCode: "请先输入家庭码。",
+  },
+  es: {
+    inviteCodeLabel: "Código familiar",
+    copyInviteLink: "Copiar enlace",
+    copyCode: "Copiar código",
+    copied: "Copiado.",
+    joinLabel: "Unirse a una familia",
+    joinPlaceholder: "Ingresa el código",
+    joinButton: "Unirse",
+    joinPrompt: "Código de invitación detectado. Toca Unirse para usar los mismos registros familiares.",
+    joining: "Uniendo...",
+    joinSuccess: "Listo. Este dispositivo usa los registros familiares compartidos.",
+    joinError: "No se pudo unir. Revisa el código familiar.",
+    noCode: "Ingresa un código familiar primero.",
+  },
+  fr: {
+    inviteCodeLabel: "Code famille",
+    copyInviteLink: "Copier le lien",
+    copyCode: "Copier le code",
+    copied: "Copié.",
+    joinLabel: "Rejoindre une famille",
+    joinPlaceholder: "Entrez le code",
+    joinButton: "Rejoindre",
+    joinPrompt: "Invitation détectée. Appuyez sur Rejoindre pour utiliser les mêmes dossiers familiaux.",
+    joining: "Connexion...",
+    joinSuccess: "Rejoint. Cet appareil utilise les dossiers familiaux partagés.",
+    joinError: "Impossible de rejoindre. Vérifiez le code.",
+    noCode: "Entrez d'abord un code famille.",
+  },
+  ko: {
+    inviteCodeLabel: "가족 코드",
+    copyInviteLink: "초대 링크 복사",
+    copyCode: "코드 복사",
+    copied: "복사됨.",
+    joinLabel: "기존 가족 참여",
+    joinPlaceholder: "가족 코드 입력",
+    joinButton: "가족 참여",
+    joinPrompt: "초대 코드가 감지되었습니다. 가족 참여를 누르면 같은 가족 기록을 사용합니다.",
+    joining: "참여 중...",
+    joinSuccess: "참여 완료. 이 기기는 공유 가족 기록을 사용합니다.",
+    joinError: "참여하지 못했습니다. 가족 코드를 확인하세요.",
+    noCode: "먼저 가족 코드를 입력하세요.",
+  },
+  ja: {
+    inviteCodeLabel: "家族コード",
+    copyInviteLink: "招待リンクをコピー",
+    copyCode: "コードをコピー",
+    copied: "コピーしました。",
+    joinLabel: "既存の家族に参加",
+    joinPlaceholder: "家族コードを入力",
+    joinButton: "参加",
+    joinPrompt: "招待コードを検出しました。参加すると同じ家族記録を使えます。",
+    joining: "参加中...",
+    joinSuccess: "参加しました。この端末は共有家族記録を使います。",
+    joinError: "参加できません。家族コードを確認してください。",
+    noCode: "先に家族コードを入力してください。",
+  },
+  vi: {
+    inviteCodeLabel: "Mã gia đình",
+    copyInviteLink: "Sao chép link",
+    copyCode: "Sao chép mã",
+    copied: "Đã sao chép.",
+    joinLabel: "Tham gia gia đình",
+    joinPlaceholder: "Nhập mã gia đình",
+    joinButton: "Tham gia",
+    joinPrompt: "Đã phát hiện lời mời. Bấm Tham gia để dùng chung hồ sơ gia đình.",
+    joining: "Đang tham gia...",
+    joinSuccess: "Đã tham gia. Thiết bị này dùng hồ sơ gia đình chung.",
+    joinError: "Không thể tham gia. Vui lòng kiểm tra mã.",
+    noCode: "Hãy nhập mã gia đình trước.",
+  },
+  hi: {
+    inviteCodeLabel: "Family code",
+    copyInviteLink: "Invite link copy करें",
+    copyCode: "Code copy करें",
+    copied: "Copy हो गया.",
+    joinLabel: "Existing family join करें",
+    joinPlaceholder: "Family code डालें",
+    joinButton: "Join family",
+    joinPrompt: "Invite code मिला है। Join family दबाकर इसी family record का उपयोग करें।",
+    joining: "Family join हो रही है...",
+    joinSuccess: "Joined. यह device shared family records इस्तेमाल करेगा।",
+    joinError: "Join नहीं हुआ। Family code check करें।",
+    noCode: "पहले family code डालें.",
+  },
+};
+
 pickButton.addEventListener("click", () => cameraInput.click());
 albumButton.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
@@ -1335,6 +1807,7 @@ setupLanguageSelect.addEventListener("change", async () => {
   await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
 });
 profileOpenButton.addEventListener("click", () => openProfileDialog());
+homeFamilyButton?.addEventListener("click", () => openProfileDialog());
 profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
 profileSkipButton.addEventListener("click", () => {
   syncVisibleFamilyInputs();
@@ -1349,6 +1822,27 @@ profileDialogSaveButton.addEventListener("click", async () => {
 });
 profileSaveButton.addEventListener("click", async () => {
   await saveFamilyProfile(familyProfile.value);
+});
+copyInviteLinkButton?.addEventListener("click", async () => {
+  const code = currentFamilyCode();
+  if (!code) {
+    setJoinFamilyStatus(familyJoinCopy().noCode, "warning");
+    return;
+  }
+  await copyText(buildFamilyInviteUrl(code));
+  setJoinFamilyStatus(familyJoinCopy().copied, "success");
+});
+copyFamilyCodeButton?.addEventListener("click", async () => {
+  const code = currentFamilyCode();
+  if (!code) {
+    setJoinFamilyStatus(familyJoinCopy().noCode, "warning");
+    return;
+  }
+  await copyText(code);
+  setJoinFamilyStatus(familyJoinCopy().copied, "success");
+});
+joinFamilyButton?.addEventListener("click", async () => {
+  await joinFamilyByCode(joinFamilyCodeInput?.value || "");
 });
 imageInput.addEventListener("change", () => {
   const file = imageInput.files?.[0];
@@ -1421,6 +1915,19 @@ recordsOpenButton.addEventListener("click", () => {
   recordsDialog.showModal();
   sendClientEvent("open_family_records", { output_language: appLanguage });
 });
+
+homeRecordsButton?.addEventListener("click", () => {
+  renderFamilyRecords();
+  recordsDialog.showModal();
+  sendClientEvent("open_family_records", { source: "home_nav", output_language: appLanguage });
+});
+
+homeScanButton?.addEventListener("click", () => {
+  document.querySelector(".camera-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+homeAiButton?.addEventListener("click", () => focusChatPanel());
+homeVoiceButton?.addEventListener("click", () => focusChatPanel());
 
 recordsCloseButton.addEventListener("click", () => recordsDialog.close());
 
@@ -1643,6 +2150,12 @@ async function localizeLatestResult() {
   } catch (error) {
     setServiceStatus("retry");
   }
+}
+
+function focusChatPanel() {
+  chatPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+  chatInput?.focus({ preventScroll: true });
+  sendClientEvent("home_ai_entry_clicked", { output_language: appLanguage });
 }
 
 async function askChat(rawQuestion, options = {}) {
@@ -2138,6 +2651,65 @@ function renderFamilyRecords() {
   renderMonthlyInsight(monthReceipts);
   renderReceiptRecords();
   renderProductRecords();
+  renderHomeRecordsSummary(monthReceipts, monthProducts, spend, serverReport);
+}
+
+function renderHomeRecordsSummary(monthReceipts, monthProducts, spend, serverReport) {
+  const copy = homeCopy();
+  const receiptCount = serverReport?.receipt_count ?? monthReceipts.length;
+  const progressCount = Math.min(8, Math.max(0, Number(receiptCount) || 0));
+  if (homeReceiptProgressCount) {
+    homeReceiptProgressCount.textContent = copy.receiptProgress.replace("{count}", progressCount);
+  }
+  if (homeReceiptProgressFill) {
+    homeReceiptProgressFill.style.width = `${Math.min(100, (progressCount / 8) * 100)}%`;
+  }
+  renderHomeRecentList();
+}
+
+function renderHomeRecentList() {
+  if (!homeRecentList) return;
+  const copy = homeCopy();
+  const receipts = familyRecords.receipts.slice(0, 4).map((record) => ({
+    type: copy.receiptShort,
+    title: record.storeName || record.store_name || recordCopy().unknownStore,
+    detail: [
+      formatRecordDate(record.purchaseDate || record.purchase_date || record.created_at || record.createdAt),
+      formatAmount(record.totalAmount ?? record.total_amount, record.currency || "CAD"),
+    ].filter(Boolean).join(" · "),
+    createdAt: record.created_at || record.createdAt || "",
+    thumbnail: "",
+  }));
+  const products = familyRecords.products.slice(0, 4).map((record) => ({
+    type: copy.productShort,
+    title: record.itemName || record.item_name || recordCopy().unknownProduct,
+    detail: [record.verdict || "", record.category || record.subtitle || ""].filter(Boolean).join(" · "),
+    createdAt: record.created_at || record.createdAt || "",
+    thumbnail: record.thumbnail || "",
+  }));
+  const items = [...receipts, ...products]
+    .sort((left, right) => new Date(right.createdAt || 0) - new Date(left.createdAt || 0))
+    .slice(0, 3);
+
+  if (!items.length) {
+    homeRecentList.innerHTML = `<div class="record-empty">${escapeHtml(copy.noRecent)}</div>`;
+    return;
+  }
+
+  homeRecentList.innerHTML = items.map((item) => {
+    const thumb = item.thumbnail
+      ? `<img src="${escapeHtml(item.thumbnail)}" alt="" />`
+      : `<span>${escapeHtml(item.type.slice(0, 1))}</span>`;
+    return `
+      <article class="home-recent-item">
+        <div class="home-recent-thumb">${thumb}</div>
+        <div>
+          <strong>${escapeHtml(item.title)}</strong>
+          <span>${escapeHtml(item.detail || item.type)}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 function applyRecordsLanguage() {
@@ -2397,6 +2969,7 @@ async function changeLanguage(nextLanguage, options = {}) {
 
 function applyProfileLanguage() {
   const copy = profileCopy();
+  const joinCopy = familyJoinCopy();
   const familyCode = familyProfileState.family_code || "------";
   profileOpenButton.textContent = copy.open;
   profileLabel.textContent = copy.boxLabel;
@@ -2413,6 +2986,17 @@ function applyProfileLanguage() {
   profileRecoveryLabel.textContent = copy.recovery || profileLanguageCopy.en.recovery;
   profileRecoveryInput.placeholder = copy.recoveryPlaceholder || profileLanguageCopy.en.recoveryPlaceholder;
   profileIdentityHint.textContent = (copy.identityHint || profileLanguageCopy.en.identityHint).replace("{code}", familyCode);
+  if (familyInviteCodeLabel) familyInviteCodeLabel.textContent = joinCopy.inviteCodeLabel;
+  if (familyInviteCode) familyInviteCode.textContent = familyCode;
+  if (familyInviteQr) {
+    const qrCode = currentFamilyCode();
+    familyInviteQr.src = qrCode ? `/api/invite/qr.svg?family_code=${encodeURIComponent(qrCode)}` : "/api/invite/qr.svg";
+  }
+  if (copyInviteLinkButton) copyInviteLinkButton.textContent = joinCopy.copyInviteLink;
+  if (copyFamilyCodeButton) copyFamilyCodeButton.textContent = joinCopy.copyCode;
+  if (joinFamilyCodeLabel) joinFamilyCodeLabel.textContent = joinCopy.joinLabel;
+  if (joinFamilyCodeInput) joinFamilyCodeInput.placeholder = joinCopy.joinPlaceholder;
+  if (joinFamilyButton) joinFamilyButton.textContent = joinCopy.joinButton;
   profileSetupHint.textContent = copy.hint;
   profileSkipButton.textContent = copy.skip;
   profileDialogSaveButton.textContent = copy.save;
@@ -2432,6 +3016,7 @@ function applyLanguage() {
   applyProfileLanguage();
   panelKicker.textContent = ui().panelKicker;
   panelTitle.textContent = ui().panelTitle;
+  applyHomeLanguage();
   productTab.textContent = ui().productTab;
   receiptTab.textContent = ui().receiptTab;
   resultKicker.textContent = ui().resultKicker;
@@ -2468,6 +3053,43 @@ function applyLanguage() {
   if (!receiptState.hidden && latestResult?.receipt) {
     renderReceiptResult(latestResult);
   }
+}
+
+function applyHomeLanguage() {
+  const copy = homeCopy();
+  if (brandEyebrow) brandEyebrow.textContent = copy.brandEyebrow;
+  if (panelKicker) panelKicker.textContent = copy.panelKicker;
+  if (panelTitle) panelTitle.textContent = copy.panelTitle;
+  if (panelIntro) panelIntro.textContent = copy.panelIntro;
+  if (productTab) productTab.dataset.subtitle = copy.productSub;
+  if (receiptTab) receiptTab.dataset.subtitle = copy.receiptSub;
+  if (homeVoiceTitle) homeVoiceTitle.textContent = copy.voiceTitle;
+  if (homeVoiceSub) homeVoiceSub.textContent = copy.voiceSub;
+  if (homeReceiptKicker) homeReceiptKicker.textContent = copy.receiptKicker;
+  if (homeReceiptProgressTitle) homeReceiptProgressTitle.textContent = copy.progressTitle;
+  if (homeReceiptProgressCopy) homeReceiptProgressCopy.textContent = copy.progressCopy;
+  if (homeSampleKicker) homeSampleKicker.textContent = copy.sampleKicker;
+  if (homeSampleTitle) homeSampleTitle.textContent = copy.sampleTitle;
+  if (homeSampleLink) homeSampleLink.textContent = copy.sampleLink;
+  if (homeSampleNutrition) homeSampleNutrition.textContent = copy.sampleNutrition;
+  if (homeSampleNutritionCopy) homeSampleNutritionCopy.textContent = copy.sampleNutritionCopy;
+  if (homeSampleSpending) homeSampleSpending.textContent = copy.sampleSpending;
+  if (homeSampleSpendingCopy) homeSampleSpendingCopy.textContent = copy.sampleSpendingCopy;
+  if (homeSampleFamily) homeSampleFamily.textContent = copy.sampleFamily;
+  if (homeSampleFamilyCopy) homeSampleFamilyCopy.textContent = copy.sampleFamilyCopy;
+  if (homeRecentKicker) homeRecentKicker.textContent = copy.recentKicker;
+  if (homeRecentTitle) homeRecentTitle.textContent = copy.recentTitle;
+  if (homeFamilyKicker) homeFamilyKicker.textContent = copy.familyKicker;
+  if (homeFamilyTitle) homeFamilyTitle.textContent = copy.familyTitle;
+  if (homeFamilyTileSenior) homeFamilyTileSenior.innerHTML = copy.familySenior;
+  if (homeFamilyTileAdult) homeFamilyTileAdult.innerHTML = copy.familyAdult;
+  if (homeFamilyTileChild) homeFamilyTileChild.innerHTML = copy.familyChild;
+  if (homeFamilyTileLanguage) homeFamilyTileLanguage.innerHTML = copy.familyLanguage;
+  if (homeFamilyNote) homeFamilyNote.textContent = copy.familyNote;
+  if (homeScanButton) homeScanButton.textContent = copy.navScan;
+  if (homeRecordsButton) homeRecordsButton.textContent = copy.navRecords;
+  if (homeFamilyButton) homeFamilyButton.textContent = copy.navFamily;
+  if (homeAiButton) homeAiButton.textContent = copy.navAi;
 }
 
 function applyFeedbackLanguage() {
@@ -2592,12 +3214,20 @@ function recordCopy() {
   return recordsLanguageCopy[appLanguage] || recordsLanguageCopy.en;
 }
 
+function homeCopy() {
+  return homeLanguageCopy[appLanguage] || homeLanguageCopy.en;
+}
+
 function feedbackCopy() {
   return feedbackLanguageCopy[appLanguage] || feedbackLanguageCopy.en;
 }
 
 function profileCopy() {
   return profileLanguageCopy[appLanguage] || profileLanguageCopy.en;
+}
+
+function familyJoinCopy() {
+  return familyJoinLanguageCopy[appLanguage] || familyJoinLanguageCopy.en;
 }
 
 function loadFamilyProfileState() {
@@ -2641,6 +3271,103 @@ function syncVisibleFamilyInputs() {
 
 function profileContextText() {
   return String(familyProfileState.members_text || familyProfile.value || "").trim();
+}
+
+function currentFamilyCode() {
+  return String(familyProfileState.family_code || "").trim();
+}
+
+function buildFamilyInviteUrl(code = currentFamilyCode()) {
+  const url = new URL(window.location.href);
+  url.pathname = "/";
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("join", code);
+  return url.toString();
+}
+
+function inviteCodeFromUrl() {
+  try {
+    const code = new URL(window.location.href).searchParams.get("join");
+    return cleanFamilyCode(code || "");
+  } catch (error) {
+    return "";
+  }
+}
+
+function cleanFamilyCode(value) {
+  return String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 12);
+}
+
+function clearJoinQueryParam() {
+  try {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("join")) return;
+    url.searchParams.delete("join");
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  } catch (error) {
+    // A stale invite parameter is harmless.
+  }
+}
+
+function setJoinFamilyStatus(message, variant = "") {
+  if (!joinFamilyStatus) return;
+  joinFamilyStatus.textContent = message || "";
+  joinFamilyStatus.classList.toggle("success", variant === "success");
+  joinFamilyStatus.classList.toggle("warning", variant === "warning");
+}
+
+function handleJoinInviteFromUrl() {
+  const code = inviteCodeFromUrl();
+  if (!code) return false;
+  if (joinFamilyCodeInput) joinFamilyCodeInput.value = code;
+  setJoinFamilyStatus(familyJoinCopy().joinPrompt, "");
+  openProfileDialog();
+  return true;
+}
+
+async function joinFamilyByCode(codeValue) {
+  const code = cleanFamilyCode(codeValue);
+  if (!code) {
+    setJoinFamilyStatus(familyJoinCopy().noCode, "warning");
+    return;
+  }
+  if (joinFamilyButton) joinFamilyButton.disabled = true;
+  setJoinFamilyStatus(familyJoinCopy().joining, "");
+  try {
+    const response = await fetch("/api/identity/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceUserId,
+        family_code: code,
+        output_language: appLanguage,
+      }),
+    });
+    if (!response.ok) throw new Error("join failed");
+    const identity = await response.json();
+    if (!identity.household_id) throw new Error("missing household");
+    clientUserId = String(identity.household_id);
+    persistIdentityState(identity);
+    familyProfileState = {
+      ...familyProfileState,
+      household_id: clientUserId,
+      family_code: String(identity.family_code || code),
+      recovery_contact: String(identity.recovery_contact || familyProfileState.recovery_contact || ""),
+      updated_at: new Date().toISOString(),
+    };
+    persistFamilyProfileState();
+    clearJoinQueryParam();
+    await hydrateFamilyRecordsFromBackend();
+    await hydrateFamilyProfileFromBackend();
+    applyLanguage();
+    setJoinFamilyStatus(familyJoinCopy().joinSuccess, "success");
+    sendClientEvent("joined_family_by_code", { output_language: appLanguage });
+  } catch (error) {
+    setJoinFamilyStatus(familyJoinCopy().joinError, "warning");
+  } finally {
+    if (joinFamilyButton) joinFamilyButton.disabled = false;
+  }
 }
 
 function openProfileDialog() {
@@ -2851,9 +3578,10 @@ function persistIdentityState(identity) {
 async function initializeApp() {
   applyLanguage();
   await bootstrapIdentity();
+  const hasJoinInvite = handleJoinInviteFromUrl();
   await hydrateFamilyRecordsFromBackend();
   await hydrateFamilyProfileFromBackend();
-  if (localStorage.getItem(profileSetupCompletedKey) !== "true") {
+  if (!hasJoinInvite && localStorage.getItem(profileSetupCompletedKey) !== "true") {
     setTimeout(() => openProfileDialog(), 450);
   }
   sendClientEvent("app_open", {

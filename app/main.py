@@ -116,6 +116,12 @@ class IdentityBootstrapRequest(BaseModel):
     output_language: str | None = None
 
 
+class IdentityJoinRequest(BaseModel):
+    device_id: str
+    family_code: str
+    output_language: str | None = None
+
+
 class ProductRecordRequest(BaseModel):
     user_id: str = "web-user"
     output_language: str | None = None
@@ -208,9 +214,11 @@ async def web_manifest() -> FileResponse:
 
 
 @app.get("/api/invite/qr.svg")
-async def invite_qr(request: Request) -> Response:
+async def invite_qr(request: Request, family_code: str | None = None) -> Response:
     base_url = settings.public_base_url or str(request.base_url).rstrip("/")
     invite_url = f"{base_url.rstrip('/')}/"
+    if family_code:
+        invite_url = f"{invite_url}?join={quote(family_code.strip().upper())}"
     image_factory = qrcode.image.svg.SvgPathImage
     qr = qrcode.make(invite_url, image_factory=image_factory)
     output = io.BytesIO()
@@ -279,6 +287,40 @@ async def bootstrap_identity(payload: IdentityBootstrapRequest) -> dict[str, obj
     )
     return {
         **identity.to_dict(),
+        "migrated_profile": migrated_profile,
+        "migrated_records": migrated_records,
+    }
+
+
+@app.post("/api/identity/join")
+async def join_identity(payload: IdentityJoinRequest) -> dict[str, object]:
+    device_id = clean_user_id(payload.device_id)
+    language = normalize_output_language(payload.output_language)
+    joined = identity_store.join_device_by_family_code(device_id, payload.family_code, language)
+    if joined is None:
+        raise HTTPException(status_code=404, detail="Family code not found.")
+
+    identity, previous_household_id = joined
+    migrated_profile = False
+    migrated_records = False
+    if previous_household_id and previous_household_id != identity.household_id:
+        migrated_profile = profile_store.migrate_user(previous_household_id, identity.household_id)
+        migrated_records = family_record_store.migrate_user(previous_household_id, identity.household_id)
+    migrated_profile = profile_store.migrate_user(device_id, identity.household_id) or migrated_profile
+    migrated_records = family_record_store.migrate_user(device_id, identity.household_id) or migrated_records
+    event_logger.log(
+        "identity_joined_household",
+        identity.household_id,
+        device_id=device_id,
+        previous_household_id=previous_household_id,
+        family_code=identity.family_code,
+        output_language=language,
+        migrated_profile=migrated_profile,
+        migrated_records=migrated_records,
+    )
+    return {
+        **identity.to_dict(),
+        "previous_household_id": previous_household_id,
         "migrated_profile": migrated_profile,
         "migrated_records": migrated_records,
     }
