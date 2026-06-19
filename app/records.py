@@ -55,6 +55,21 @@ class FamilyRecordStore:
         self._write(data)
         return existed
 
+    def migrate_user(self, source_user_id: str, target_user_id: str) -> bool:
+        if source_user_id == target_user_id:
+            return False
+        data = self._read()
+        source = data.get(source_user_id)
+        if not isinstance(source, dict):
+            return False
+        target = data.setdefault(target_user_id, {"products": [], "receipts": []})
+        target["products"] = _merge_records(_list(target.get("products")), _list(source.get("products")), PRODUCT_LIMIT)
+        target["receipts"] = _merge_records(_list(target.get("receipts")), _list(source.get("receipts")), RECEIPT_LIMIT)
+        data[target_user_id] = target
+        data.pop(source_user_id, None)
+        self._write(data)
+        return True
+
     def monthly_report(
         self,
         user_id: str,
@@ -209,6 +224,16 @@ def _category_totals(receipts: list[dict[str, Any]]) -> dict[str, float]:
 
 def _upsert(records: list[dict[str, Any]], record: dict[str, Any], limit: int) -> list[dict[str, Any]]:
     return [record, *[item for item in records if item.get("id") != record["id"]]][:limit]
+
+
+def _merge_records(target: list[dict[str, Any]], source: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
+    merged: dict[str, dict[str, Any]] = {}
+    for record in [*source, *target]:
+        if not isinstance(record, dict):
+            continue
+        record_id = str(record.get("id") or _record_id("legacy", str(record)))
+        merged[record_id] = record
+    return sorted(merged.values(), key=lambda item: str(item.get("created_at", "")), reverse=True)[:limit]
 
 
 def _record_id(record_type: str, key: str) -> str:

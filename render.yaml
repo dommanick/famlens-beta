@@ -20,9 +20,11 @@ services:
       - key: REQUEST_TIMEOUT_SECONDS
         value: 30
       - key: PROFILE_STORE_PATH
-        value: /var/data/famlens/profiles.json
-      - key: FAMILY_RECORD_STORE_PATH
-        value: /var/data/famlens/family_records.json
+      value: /var/data/famlens/profiles.json
+    - key: IDENTITY_STORE_PATH
+      value: /var/data/famlens/identities.json
+    - key: FAMILY_RECORD_STORE_PATH
+      value: /var/data/famlens/family_records.json
       - key: EVENT_LOG_PATH
         value: /var/data/famlens/events.jsonl
       - key: CARD_OUTPUT_DIR

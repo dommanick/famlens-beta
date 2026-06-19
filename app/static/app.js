@@ -83,6 +83,9 @@ const setupLanguageSelect = document.querySelector("#setupLanguageSelect");
 const setupLanguageLabel = document.querySelector("#setupLanguageLabel");
 const profileMembersLabel = document.querySelector("#profileMembersLabel");
 const profileMembersInput = document.querySelector("#profileMembersInput");
+const profileRecoveryLabel = document.querySelector("#profileRecoveryLabel");
+const profileRecoveryInput = document.querySelector("#profileRecoveryInput");
+const profileIdentityHint = document.querySelector("#profileIdentityHint");
 const profileSetupHint = document.querySelector("#profileSetupHint");
 const profileSkipButton = document.querySelector("#profileSkipButton");
 const profileDialogSaveButton = document.querySelector("#profileDialogSaveButton");
@@ -134,7 +137,9 @@ const languageStorageKey = "famlens.language.v2";
 const legacyLanguageStorageKey = "carecart.language";
 const supportedLanguageKeys = new Set(["zh-Hans", "en", "es", "fr", "ko", "ja", "vi", "hi"]);
 let appLanguage = getInitialLanguage();
-const clientUserId = getClientUserId();
+const identityStorageKey = "famlens.identity.v1";
+const deviceUserId = getDeviceUserId();
+let clientUserId = getStoredHouseholdId() || deviceUserId;
 const profileStorageKey = "famlens.familyProfile.v1";
 const profileSetupCompletedKey = "famlens.profileSetup.completed.v1";
 let familyProfileState = loadFamilyProfileState();
@@ -1163,6 +1168,9 @@ const profileLanguageCopy = {
     language: "语言",
     members: "家庭成员",
     membersPlaceholder: "例如：我给4口人买东西：爸爸68岁，妈妈65岁，孩子8岁，配偶成年人。有需要可写基础健康情况。",
+    recovery: "保存家庭记录",
+    recoveryPlaceholder: "可选：邮箱或手机号，未来换手机时找回记录",
+    identityHint: "家庭码：{code}。以后可用于家人加入同一个家庭记录。",
     hint: "以后可以再修改。暂时不需要填写购物偏好。",
     skip: "先跳过",
     save: "保存并开始",
@@ -1181,6 +1189,9 @@ const profileLanguageCopy = {
     language: "Language",
     members: "Family members",
     membersPlaceholder: "Example: I shop for 4 people: father 68, mother 65, child 8, spouse adult. Add basic health notes only if useful.",
+    recovery: "Save family records",
+    recoveryPlaceholder: "Optional: email or phone for future recovery",
+    identityHint: "Family code: {code}. Later, family members can use it to join the same household record.",
     hint: "You can edit this later. Shopping preferences are not required.",
     skip: "Skip for now",
     save: "Save and continue",
@@ -1199,6 +1210,9 @@ const profileLanguageCopy = {
     language: "Idioma",
     members: "Miembros de la familia",
     membersPlaceholder: "Ejemplo: compro para 4 personas: padre 68, madre 65, niño 8, pareja adulta. Añade notas de salud básicas si sirven.",
+    recovery: "Guardar registros",
+    recoveryPlaceholder: "Opcional: email o teléfono para recuperar datos",
+    identityHint: "Código familiar: {code}. Más adelante permitirá unir a la familia al mismo registro.",
     hint: "Puedes editarlo después. No pedimos preferencias de compra.",
     skip: "Omitir por ahora",
     save: "Guardar y continuar",
@@ -1217,6 +1231,9 @@ const profileLanguageCopy = {
     language: "Langue",
     members: "Membres de la famille",
     membersPlaceholder: "Exemple : je fais les courses pour 4 personnes : père 68, mère 65, enfant 8, conjoint adulte. Ajoutez des notes de santé simples si utile.",
+    recovery: "Sauvegarder les dossiers",
+    recoveryPlaceholder: "Optionnel : email ou téléphone pour récupérer",
+    identityHint: "Code famille : {code}. Plus tard, les proches pourront rejoindre le même dossier.",
     hint: "Vous pourrez modifier plus tard. Pas besoin de préférences d'achat.",
     skip: "Passer",
     save: "Enregistrer et continuer",
@@ -1235,6 +1252,9 @@ const profileLanguageCopy = {
     language: "언어",
     members: "가족 구성원",
     membersPlaceholder: "예: 4인 가족 장보기: 아버지 68세, 어머니 65세, 아이 8세, 배우자 성인. 필요하면 기본 건강 메모를 적어 주세요.",
+    recovery: "가족 기록 저장",
+    recoveryPlaceholder: "선택: 나중에 복구할 이메일 또는 전화번호",
+    identityHint: "가족 코드: {code}. 나중에 가족이 같은 기록에 참여할 수 있습니다.",
     hint: "나중에 수정할 수 있습니다. 쇼핑 취향은 입력하지 않아도 됩니다.",
     skip: "나중에",
     save: "저장하고 시작",
@@ -1253,6 +1273,9 @@ const profileLanguageCopy = {
     language: "言語",
     members: "家族メンバー",
     membersPlaceholder: "例：4人分を買う。父68歳、母65歳、子ども8歳、配偶者は大人。必要なら基本的な健康メモも。",
+    recovery: "家族記録を保存",
+    recoveryPlaceholder: "任意：復元用のメールまたは電話番号",
+    identityHint: "家族コード：{code}。後で家族が同じ記録に参加できます。",
     hint: "あとで変更できます。買い物の好みは不要です。",
     skip: "今はスキップ",
     save: "保存して始める",
@@ -1271,6 +1294,9 @@ const profileLanguageCopy = {
     language: "Ngôn ngữ",
     members: "Thành viên gia đình",
     membersPlaceholder: "Ví dụ: tôi mua cho 4 người: bố 68, mẹ 65, bé 8 tuổi, vợ/chồng là người lớn. Thêm ghi chú sức khỏe cơ bản nếu cần.",
+    recovery: "Lưu hồ sơ gia đình",
+    recoveryPlaceholder: "Tùy chọn: email hoặc số điện thoại để khôi phục",
+    identityHint: "Mã gia đình: {code}. Sau này người nhà có thể dùng để tham gia cùng hồ sơ.",
     hint: "Có thể sửa sau. Không cần nhập sở thích mua sắm.",
     skip: "Bỏ qua",
     save: "Lưu và bắt đầu",
@@ -1289,6 +1315,9 @@ const profileLanguageCopy = {
     language: "भाषा",
     members: "परिवार के सदस्य",
     membersPlaceholder: "जैसे: मैं 4 लोगों के लिए खरीदारी करता हूं: पिता 68, मां 65, बच्चा 8, जीवनसाथी वयस्क। जरूरत हो तो छोटी health note जोड़ें।",
+    recovery: "परिवार रिकॉर्ड सेव करें",
+    recoveryPlaceholder: "वैकल्पिक: भविष्य में restore के लिए email या phone",
+    identityHint: "Family code: {code}. बाद में परिवार इसी household record से जुड़ सकता है।",
     hint: "बाद में बदल सकते हैं। Shopping preference अभी जरूरी नहीं है।",
     skip: "अभी छोड़ें",
     save: "सेव करके शुरू करें",
@@ -2368,6 +2397,7 @@ async function changeLanguage(nextLanguage, options = {}) {
 
 function applyProfileLanguage() {
   const copy = profileCopy();
+  const familyCode = familyProfileState.family_code || "------";
   profileOpenButton.textContent = copy.open;
   profileLabel.textContent = copy.boxLabel;
   profileSummary.textContent = copy.boxSummary;
@@ -2380,12 +2410,16 @@ function applyProfileLanguage() {
   setupLanguageLabel.textContent = copy.language;
   profileMembersLabel.textContent = copy.members;
   profileMembersInput.placeholder = copy.membersPlaceholder;
+  profileRecoveryLabel.textContent = copy.recovery || profileLanguageCopy.en.recovery;
+  profileRecoveryInput.placeholder = copy.recoveryPlaceholder || profileLanguageCopy.en.recoveryPlaceholder;
+  profileIdentityHint.textContent = (copy.identityHint || profileLanguageCopy.en.identityHint).replace("{code}", familyCode);
   profileSetupHint.textContent = copy.hint;
   profileSkipButton.textContent = copy.skip;
   profileDialogSaveButton.textContent = copy.save;
   profileDialogCloseButton.setAttribute("aria-label", copy.close);
   familyProfile.value = familyProfileState.members_text || "";
   profileMembersInput.value = familyProfileState.members_text || "";
+  profileRecoveryInput.value = familyProfileState.recovery_contact || "";
 }
 
 function applyLanguage() {
@@ -2573,6 +2607,9 @@ function loadFamilyProfileState() {
     return {
       output_language: supportedLanguageKeys.has(saved.output_language) ? saved.output_language : "",
       members_text: String(saved.members_text || ""),
+      recovery_contact: String(saved.recovery_contact || ""),
+      household_id: String(saved.household_id || ""),
+      family_code: String(saved.family_code || ""),
       updated_at: String(saved.updated_at || ""),
     };
   } catch (error) {
@@ -2586,6 +2623,9 @@ function persistFamilyProfileState() {
     JSON.stringify({
       output_language: appLanguage,
       members_text: familyProfileState.members_text || "",
+      recovery_contact: familyProfileState.recovery_contact || "",
+      household_id: familyProfileState.household_id || clientUserId,
+      family_code: familyProfileState.family_code || "",
       updated_at: familyProfileState.updated_at || new Date().toISOString(),
     })
   );
@@ -2624,8 +2664,11 @@ function closeProfileDialog() {
 async function saveFamilyProfile(membersText) {
   const cleanMembers = String(membersText || "").trim();
   familyProfileState = {
+    ...familyProfileState,
     output_language: appLanguage,
     members_text: cleanMembers,
+    recovery_contact: String(profileRecoveryInput?.value || familyProfileState.recovery_contact || "").trim(),
+    household_id: familyProfileState.household_id || clientUserId,
     updated_at: new Date().toISOString(),
   };
   localStorage.setItem(profileSetupCompletedKey, "true");
@@ -2647,6 +2690,7 @@ async function syncFamilyProfileToBackend() {
         user_id: clientUserId,
         output_language: appLanguage,
         members_text: familyProfileState.members_text || "",
+        recovery_contact: familyProfileState.recovery_contact || "",
       }),
     });
   } catch (error) {
@@ -2663,8 +2707,10 @@ async function hydrateFamilyProfileFromBackend() {
     const remoteMembers = String(data.members_text || "");
     if (!remoteMembers && !supportedLanguageKeys.has(remoteLanguage)) return;
     familyProfileState = {
+      ...familyProfileState,
       output_language: supportedLanguageKeys.has(remoteLanguage) ? remoteLanguage : appLanguage,
       members_text: remoteMembers || familyProfileState.members_text || "",
+      household_id: data.household_id || familyProfileState.household_id || clientUserId,
       updated_at: String(data.updated_at || familyProfileState.updated_at || ""),
     };
     if (remoteMembers) {
@@ -2707,6 +2753,44 @@ async function hydrateFamilyRecordsFromBackend() {
   }
 }
 
+async function bootstrapIdentity() {
+  const cachedIdentity = loadIdentityState();
+  if (cachedIdentity.household_id) {
+    clientUserId = cachedIdentity.household_id;
+    familyProfileState = {
+      ...familyProfileState,
+      household_id: cachedIdentity.household_id,
+      family_code: cachedIdentity.family_code || familyProfileState.family_code || "",
+      recovery_contact: cachedIdentity.recovery_contact || familyProfileState.recovery_contact || "",
+    };
+  }
+  try {
+    const response = await fetch("/api/identity/bootstrap", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        device_id: deviceUserId,
+        output_language: appLanguage,
+      }),
+    });
+    if (!response.ok) return;
+    const identity = await response.json();
+    if (!identity.household_id) return;
+    clientUserId = String(identity.household_id);
+    persistIdentityState(identity);
+    familyProfileState = {
+      ...familyProfileState,
+      household_id: clientUserId,
+      family_code: String(identity.family_code || familyProfileState.family_code || ""),
+      recovery_contact: String(identity.recovery_contact || familyProfileState.recovery_contact || ""),
+    };
+    persistFamilyProfileState();
+    applyProfileLanguage();
+  } catch (error) {
+    // Anonymous device use still works if identity bootstrap is unavailable.
+  }
+}
+
 function getInitialLanguage() {
   const savedLanguage = localStorage.getItem(languageStorageKey);
   if (supportedLanguageKeys.has(savedLanguage)) return savedLanguage;
@@ -2720,7 +2804,7 @@ function getInitialLanguage() {
   return "en";
 }
 
-function getClientUserId() {
+function getDeviceUserId() {
   const key = "famlens.userId.v1";
   const existing = localStorage.getItem(key);
   if (existing) return existing;
@@ -2732,6 +2816,53 @@ function getClientUserId() {
   return id;
 }
 
+function getStoredHouseholdId() {
+  return loadIdentityState().household_id || "";
+}
+
+function loadIdentityState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(identityStorageKey) || "{}");
+    if (!saved || typeof saved !== "object") return {};
+    return {
+      household_id: String(saved.household_id || ""),
+      family_code: String(saved.family_code || ""),
+      plan: String(saved.plan || "free"),
+      recovery_contact: String(saved.recovery_contact || ""),
+    };
+  } catch (error) {
+    return {};
+  }
+}
+
+function persistIdentityState(identity) {
+  localStorage.setItem(
+    identityStorageKey,
+    JSON.stringify({
+      household_id: String(identity.household_id || clientUserId),
+      family_code: String(identity.family_code || ""),
+      plan: String(identity.plan || "free"),
+      recovery_contact: String(identity.recovery_contact || ""),
+      updated_at: new Date().toISOString(),
+    })
+  );
+}
+
+async function initializeApp() {
+  applyLanguage();
+  await bootstrapIdentity();
+  await hydrateFamilyRecordsFromBackend();
+  await hydrateFamilyProfileFromBackend();
+  if (localStorage.getItem(profileSetupCompletedKey) !== "true") {
+    setTimeout(() => openProfileDialog(), 450);
+  }
+  sendClientEvent("app_open", {
+    output_language: appLanguage,
+    user_agent: navigator.userAgent.slice(0, 160),
+    device_id: deviceUserId,
+  });
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -2741,17 +2872,7 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-applyLanguage();
-hydrateFamilyRecordsFromBackend();
-hydrateFamilyProfileFromBackend().finally(() => {
-  if (localStorage.getItem(profileSetupCompletedKey) !== "true") {
-    setTimeout(() => openProfileDialog(), 450);
-  }
-});
-sendClientEvent("app_open", {
-  output_language: appLanguage,
-  user_agent: navigator.userAgent.slice(0, 160),
-});
+initializeApp();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

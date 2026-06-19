@@ -13,7 +13,8 @@ CHAT_EVENTS = {"ai_chat_answered"}
 FAILED_EVENTS = {"image_analysis_failed", "ai_chat_failed", "web_image_analysis_failed", "web_receipt_analysis_failed"}
 
 
-def build_admin_overview(events: list[Event]) -> dict[str, Any]:
+def build_admin_overview(events: list[Event], identity_summary: dict[str, int] | None = None) -> dict[str, Any]:
+    identity_summary = identity_summary or {}
     today = datetime.now(UTC).date()
     today_events = [_event for _event in events if _event_date(_event) == today]
     product_events = [_event for _event in events if _event.event_type in PRODUCT_SCAN_EVENTS]
@@ -28,6 +29,9 @@ def build_admin_overview(events: list[Event]) -> dict[str, Any]:
             "total_events": len(events),
             "today_events": len(today_events),
             "active_users": len({event.user_id for event in events if event.user_id}),
+            "households": identity_summary.get("households", 0),
+            "devices": identity_summary.get("devices", 0),
+            "recovery_contacts": identity_summary.get("recovery_contacts", 0),
             "product_scans": len(product_events),
             "receipt_scans": len(receipt_events),
             "ai_chats": len(chat_events),
@@ -35,7 +39,7 @@ def build_admin_overview(events: list[Event]) -> dict[str, Any]:
             "failure_rate": _ratio(len(failed_events), total_ai_actions + len(failed_events)),
         },
         "modules": {
-            "user_management": _user_management(events),
+            "user_management": _user_management(events, identity_summary),
             "data_analysis": _data_analysis(events),
             "finance": _finance(receipt_events, total_ai_actions),
             "product_management": _product_management(product_events, failed_events),
@@ -52,7 +56,7 @@ def build_admin_overview(events: list[Event]) -> dict[str, Any]:
     }
 
 
-def _user_management(events: list[Event]) -> dict[str, Any]:
+def _user_management(events: list[Event], identity_summary: dict[str, int]) -> dict[str, Any]:
     users = {event.user_id for event in events if event.user_id}
     profile_events = [event for event in events if event.event_type in {"profile_saved", "profile_appended"}]
     feedback_events = [event for event in events if event.event_type in {"feedback_received", "client_feedback_submitted"}]
@@ -60,6 +64,10 @@ def _user_management(events: list[Event]) -> dict[str, Any]:
         "title": "用户与家庭",
         "status": "beta",
         "total_users": len(users),
+        "households": identity_summary.get("households", 0),
+        "devices": identity_summary.get("devices", 0),
+        "recovery_contacts": identity_summary.get("recovery_contacts", 0),
+        "linked_accounts": identity_summary.get("linked_accounts", 0),
         "family_profiles": len(profile_events),
         "feedback_count": len(feedback_events),
         "next_capabilities": ["登录账号", "家庭成员绑定", "老人端/子女端权限", "家庭健康档案云同步"],

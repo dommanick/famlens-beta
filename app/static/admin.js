@@ -49,7 +49,8 @@ function renderKpis(summary) {
     ["商品扫描", summary.product_scans || 0, "核心拍商品链路"],
     ["小票扫描", summary.receipt_scans || 0, "家庭记录数据入口"],
     ["AI 追问", summary.ai_chats || 0, "开放问题需求"],
-    ["活跃用户", summary.active_users || 0, "当前按 user_id 粗略统计"],
+    ["家庭数", summary.households || 0, "按家庭 ID 统计"],
+    ["绑定设备", summary.devices || 0, "匿名设备归属家庭"],
     ["失败率", formatPercent(summary.failure_rate || 0), "识别和 AI 失败事件"],
   ];
   kpiGrid.innerHTML = kpis
@@ -90,6 +91,9 @@ function moduleMetrics(key, module) {
   if (key === "user_management") {
     return [
       { label: "用户数", value: module.total_users || 0 },
+      { label: "家庭数", value: module.households || 0 },
+      { label: "绑定设备", value: module.devices || 0 },
+      { label: "恢复联系方式", value: module.recovery_contacts || 0 },
       { label: "家庭档案事件", value: module.family_profiles || 0 },
       { label: "反馈数", value: module.feedback_count || 0 },
     ];

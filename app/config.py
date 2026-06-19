@@ -23,6 +23,7 @@ class Settings:
     admin_username: str = os.getenv("ADMIN_USERNAME", "admin")
     admin_password: str = os.getenv("ADMIN_PASSWORD", "")
     request_timeout_seconds: float = float(os.getenv("REQUEST_TIMEOUT_SECONDS", "30"))
+    identity_store_path: str = os.getenv("IDENTITY_STORE_PATH", "data/identities.json")
     profile_store_path: str = os.getenv("PROFILE_STORE_PATH", "data/profiles.json")
     family_record_store_path: str = os.getenv("FAMILY_RECORD_STORE_PATH", "data/family_records.json")
     event_log_path: str = os.getenv("EVENT_LOG_PATH", "data/events.jsonl")

@@ -29,6 +29,7 @@ from app.clerk import build_clerk_phrase, format_clerk_phrase, parse_clerk_comma
 from app.config import settings
 from app.events import EventLogger, event_to_dict
 from app.feedback import feedback_help_text, parse_feedback
+from app.identity import IdentityStore
 from app.jobs import AnalysisJobStore, format_latest_result
 from app.languages import DEFAULT_OUTPUT_LANGUAGE, normalize_output_language
 from app.product import format_product_reply, format_wechat_reply, parse_product_judgement
@@ -51,6 +52,7 @@ app.mount("/cards", StaticFiles(directory=str(card_output_dir)), name="cards")
 app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
 profile_store = ProfileStore(settings.profile_store_path)
+identity_store = IdentityStore(settings.identity_store_path)
 family_record_store = FamilyRecordStore(settings.family_record_store_path)
 event_logger = EventLogger(settings.event_log_path)
 analysis_jobs = AnalysisJobStore()
@@ -106,6 +108,12 @@ class ProfileSetupRequest(BaseModel):
     user_id: str = "web-user"
     output_language: str | None = None
     members_text: str = ""
+    recovery_contact: str | None = None
+
+
+class IdentityBootstrapRequest(BaseModel):
+    device_id: str
+    output_language: str | None = None
 
 
 class ProductRecordRequest(BaseModel):
@@ -241,7 +249,7 @@ async def admin_overview(
     _: bool = Depends(require_admin_access),
 ) -> dict[str, object]:
     safe_limit = min(max(limit, 1), 20000)
-    return build_admin_overview(event_logger.read(limit=safe_limit))
+    return build_admin_overview(event_logger.read(limit=safe_limit), identity_store.overview())
 
 
 @app.post("/api/events/client")
@@ -251,6 +259,29 @@ async def client_event(payload: ClientEventRequest) -> dict[str, str]:
         event_type = f"client_{event_type}"
     event_logger.log(event_type[:80], clean_user_id(payload.user_id), **(payload.payload or {}))
     return {"status": "ok"}
+
+
+@app.post("/api/identity/bootstrap")
+async def bootstrap_identity(payload: IdentityBootstrapRequest) -> dict[str, object]:
+    device_id = clean_user_id(payload.device_id)
+    language = normalize_output_language(payload.output_language)
+    identity = identity_store.bootstrap_device(device_id, language)
+    migrated_profile = profile_store.migrate_user(device_id, identity.household_id)
+    migrated_records = family_record_store.migrate_user(device_id, identity.household_id)
+    event_logger.log(
+        "identity_bootstrapped",
+        identity.household_id,
+        device_id=device_id,
+        output_language=language,
+        is_new_household=identity.is_new_household,
+        migrated_profile=migrated_profile,
+        migrated_records=migrated_records,
+    )
+    return {
+        **identity.to_dict(),
+        "migrated_profile": migrated_profile,
+        "migrated_records": migrated_records,
+    }
 
 
 @app.get("/api/profile/{user_id}")
@@ -277,14 +308,18 @@ async def save_profile(payload: ProfileSetupRequest) -> dict[str, str | None]:
     clean_id = clean_user_id(payload.user_id)
     language = normalize_output_language(payload.output_language)
     profile = profile_store.save_family_setup(clean_id, language, payload.members_text)
+    if payload.recovery_contact:
+        identity_store.save_recovery_contact(clean_id, payload.recovery_contact)
     event_logger.log(
         "web_profile_saved",
         clean_id,
         output_language=language,
         members_chars=len(profile.members_text),
+        has_recovery_contact=bool(payload.recovery_contact),
     )
     return {
         "user_id": clean_id,
+        "household_id": clean_id,
         "output_language": profile.language,
         "members_text": profile.members_text,
         "updated_at": profile.updated_at,

@@ -98,6 +98,24 @@ class ProfileStore:
         self._write(data)
         return existed
 
+    def migrate_user(self, source_user_id: str, target_user_id: str) -> bool:
+        if source_user_id == target_user_id:
+            return False
+        data = self._read()
+        source = data.get(source_user_id)
+        if not isinstance(source, dict):
+            return False
+        target = data.get(target_user_id)
+        if not isinstance(target, dict) or not (target.get("members_text") or target.get("notes") or target.get("language")):
+            data[target_user_id] = {
+                **source,
+                "migrated_from": source_user_id,
+                "updated_at": datetime.now(UTC).isoformat(),
+            }
+        data.pop(source_user_id, None)
+        self._write(data)
+        return True
+
     def _read(self) -> dict[str, dict[str, str]]:
         if not self.path.exists():
             return {}

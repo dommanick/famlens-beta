@@ -74,12 +74,14 @@ class ProfileApiTests(unittest.TestCase):
             json={
                 "user_id": " beta.user ",
                 "output_language": "zh-Hans",
-                "members_text": "爸爸68岁\n孩子8岁",
+            "members_text": "爸爸68岁\n孩子8岁",
+            "recovery_contact": "child@example.com",
             },
         )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["user_id"], "beta.user")
+        self.assertEqual(response.json()["household_id"], "beta.user")
         self.assertEqual(response.json()["output_language"], "zh-Hans")
 
         response = self.client.get("/api/profile/beta.user")
