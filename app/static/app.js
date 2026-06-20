@@ -24,6 +24,22 @@ const homeStaffSub = document.querySelector("#homeStaffSub");
 const homeVoiceButton = document.querySelector("#homeVoiceButton");
 const homeVoiceTitle = document.querySelector("#homeVoiceTitle");
 const homeVoiceSub = document.querySelector("#homeVoiceSub");
+const homePreviewKicker = document.querySelector("#homePreviewKicker");
+const homePreviewTitle = document.querySelector("#homePreviewTitle");
+const homeProductPreviewLabel = document.querySelector("#homeProductPreviewLabel");
+const homeProductPreviewTitle = document.querySelector("#homeProductPreviewTitle");
+const homeProductPreviewBadgeGood = document.querySelector("#homeProductPreviewBadgeGood");
+const homeProductPreviewBadgeCaution = document.querySelector("#homeProductPreviewBadgeCaution");
+const homeProductPreviewOne = document.querySelector("#homeProductPreviewOne");
+const homeProductPreviewTwo = document.querySelector("#homeProductPreviewTwo");
+const homeProductPreviewThree = document.querySelector("#homeProductPreviewThree");
+const homeReceiptPreviewLabel = document.querySelector("#homeReceiptPreviewLabel");
+const homeReceiptPreviewTitle = document.querySelector("#homeReceiptPreviewTitle");
+const homeReceiptPreviewFood = document.querySelector("#homeReceiptPreviewFood");
+const homeReceiptPreviewCare = document.querySelector("#homeReceiptPreviewCare");
+const homeReceiptPreviewOne = document.querySelector("#homeReceiptPreviewOne");
+const homeReceiptPreviewTwo = document.querySelector("#homeReceiptPreviewTwo");
+const homeReceiptPreviewThree = document.querySelector("#homeReceiptPreviewThree");
 const visualProductLang = document.querySelector("#visualProductLang");
 const visualProductTitle = document.querySelector("#visualProductTitle");
 const visualProductCopy = document.querySelector("#visualProductCopy");
@@ -1422,6 +1438,22 @@ const homeLanguageCopy = {
     staffSub: "Translate what you want to ask",
     voiceTitle: "Ask AI by voice",
     voiceSub: "Speak in your language while shopping",
+    previewKicker: "What you get",
+    previewTitle: "Not just translation. A shopping decision card.",
+    productPreviewLabel: "Product scan",
+    productPreviewTitle: "Can my family use this?",
+    productPreviewBadgeGood: "OK for most families",
+    productPreviewBadgeCaution: "Check warning",
+    productPreviewOne: "Plain-language use and warning",
+    productPreviewTwo: "Who should be careful",
+    productPreviewThree: "What to ask or compare next",
+    receiptPreviewLabel: "Receipt scan",
+    receiptPreviewTitle: "Build family shopping memory",
+    receiptPreviewFood: "Food",
+    receiptPreviewCare: "Care",
+    receiptPreviewOne: "What the family bought",
+    receiptPreviewTwo: "Food and household categories",
+    receiptPreviewThree: "Monthly diet and spending signals",
     receiptKicker: "Shopping memory",
     progressTitle: "Build your family’s overseas shopping record",
     progressCopy: "Scan receipts after each trip. Over time, FamLens learns what your household buys, eats, and spends.",
@@ -1473,6 +1505,22 @@ const homeLanguageCopy = {
     staffSub: "把你想问的话翻译给店员",
     voiceTitle: "语音问 AI",
     voiceSub: "在超市里直接用熟悉的语言说",
+    previewKicker: "拍完会得到什么",
+    previewTitle: "不是只翻译，而是给你购物判断卡。",
+    productPreviewLabel: "商品扫描",
+    productPreviewTitle: "这个适合我家用吗？",
+    productPreviewBadgeGood: "多数家庭可用",
+    productPreviewBadgeCaution: "注意警示",
+    productPreviewOne: "用大白话解释用途和警示",
+    productPreviewTwo: "提醒哪些家人要谨慎",
+    productPreviewThree: "告诉你下一步该问什么、比什么",
+    receiptPreviewLabel: "小票扫描",
+    receiptPreviewTitle: "建立家庭购物记忆",
+    receiptPreviewFood: "食物",
+    receiptPreviewCare: "护理",
+    receiptPreviewOne: "记录全家买了什么",
+    receiptPreviewTwo: "整理食物和家庭用品分类",
+    receiptPreviewThree: "形成月度饮食和支出信号",
     receiptKicker: "购物记忆",
     progressTitle: "建立全家的海外购物记录",
     progressCopy: "每次买完扫小票。时间久了，FamLens 会更懂你家买什么、吃什么、花在哪里。",
@@ -1514,6 +1562,22 @@ const homeLanguageCopy = {
     staffSub: "Traduce lo que quieres preguntar",
     voiceTitle: "Pregunta por voz",
     voiceSub: "Habla naturalmente en tu idioma",
+    previewKicker: "Qué recibes",
+    previewTitle: "No solo traducción. Una tarjeta para decidir la compra.",
+    productPreviewLabel: "Escaneo de producto",
+    productPreviewTitle: "¿Le sirve a mi familia?",
+    productPreviewBadgeGood: "Apto para la mayoría",
+    productPreviewBadgeCaution: "Revisar alerta",
+    productPreviewOne: "Uso y advertencias en palabras simples",
+    productPreviewTwo: "Quién debe tener cuidado",
+    productPreviewThree: "Qué preguntar o comparar después",
+    receiptPreviewLabel: "Escaneo de recibo",
+    receiptPreviewTitle: "Memoria de compras familiar",
+    receiptPreviewFood: "Comida",
+    receiptPreviewCare: "Cuidado",
+    receiptPreviewOne: "Qué compró la familia",
+    receiptPreviewTwo: "Categorías de comida y hogar",
+    receiptPreviewThree: "Señales mensuales de dieta y gasto",
     receiptKicker: "Memoria familiar",
     progressTitle: "Tu primer informe familiar se está formando",
     progressCopy: "Escanea recibos después de comprar. FamLens aprenderá patrones de dieta y gasto.",
@@ -1555,6 +1619,22 @@ const homeLanguageCopy = {
     staffSub: "Traduire votre question",
     voiceTitle: "Demander à l’AI par voix",
     voiceSub: "Parlez naturellement dans votre langue",
+    previewKicker: "Ce que vous obtenez",
+    previewTitle: "Pas seulement une traduction. Une carte d’aide à l’achat.",
+    productPreviewLabel: "Scan produit",
+    productPreviewTitle: "Est-ce adapté à ma famille ?",
+    productPreviewBadgeGood: "OK pour la plupart",
+    productPreviewBadgeCaution: "Vérifier l’alerte",
+    productPreviewOne: "Usage et avertissements en langage simple",
+    productPreviewTwo: "Qui doit faire attention",
+    productPreviewThree: "Que demander ou comparer ensuite",
+    receiptPreviewLabel: "Scan reçu",
+    receiptPreviewTitle: "Mémoire d’achats familiale",
+    receiptPreviewFood: "Aliments",
+    receiptPreviewCare: "Soins",
+    receiptPreviewOne: "Ce que la famille a acheté",
+    receiptPreviewTwo: "Catégories alimentation et maison",
+    receiptPreviewThree: "Signaux mensuels alimentation et dépenses",
     receiptKicker: "Mémoire familiale",
     progressTitle: "Votre premier rapport familial se prépare",
     progressCopy: "Scannez les reçus après les courses. FamLens apprendra alimentation et dépenses.",
@@ -1596,6 +1676,22 @@ const homeLanguageCopy = {
     staffSub: "묻고 싶은 말을 번역",
     voiceTitle: "음성으로 AI에게 묻기",
     voiceSub: "익숙한 언어로 자연스럽게 말하세요",
+    previewKicker: "스캔 후 결과",
+    previewTitle: "단순 번역이 아니라 쇼핑 판단 카드.",
+    productPreviewLabel: "상품 스캔",
+    productPreviewTitle: "우리 가족이 써도 될까?",
+    productPreviewBadgeGood: "대부분 가족 사용 가능",
+    productPreviewBadgeCaution: "주의사항 확인",
+    productPreviewOne: "쉬운 말로 용도와 주의사항 설명",
+    productPreviewTwo: "주의가 필요한 가족 구성원",
+    productPreviewThree: "다음에 물어보거나 비교할 점",
+    receiptPreviewLabel: "영수증 스캔",
+    receiptPreviewTitle: "가족 쇼핑 기억 만들기",
+    receiptPreviewFood: "식품",
+    receiptPreviewCare: "케어",
+    receiptPreviewOne: "가족이 산 것 기록",
+    receiptPreviewTwo: "식품과 생활용품 분류",
+    receiptPreviewThree: "월간 식단과 지출 신호",
     receiptKicker: "가족 메모리",
     progressTitle: "첫 가족 리포트가 만들어지는 중",
     progressCopy: "쇼핑 후 영수증을 스캔하면 식단과 지출 패턴을 배웁니다.",
@@ -1637,6 +1733,22 @@ const homeLanguageCopy = {
     staffSub: "聞きたいことを翻訳",
     voiceTitle: "音声で AI に質問",
     voiceSub: "使いやすい言語で自然に話せます",
+    previewKicker: "得られる結果",
+    previewTitle: "ただの翻訳ではなく、買い物判断カード。",
+    productPreviewLabel: "商品スキャン",
+    productPreviewTitle: "家族に合う商品？",
+    productPreviewBadgeGood: "多くの家庭で利用可",
+    productPreviewBadgeCaution: "注意点を確認",
+    productPreviewOne: "使い方と注意点をやさしく説明",
+    productPreviewTwo: "注意すべき家族を確認",
+    productPreviewThree: "次に聞くこと・比べること",
+    receiptPreviewLabel: "レシートスキャン",
+    receiptPreviewTitle: "家族の買い物記録を作る",
+    receiptPreviewFood: "食品",
+    receiptPreviewCare: "ケア",
+    receiptPreviewOne: "家族が買ったものを記録",
+    receiptPreviewTwo: "食品と日用品を分類",
+    receiptPreviewThree: "月次の食事と支出のサイン",
     receiptKicker: "家族メモリー",
     progressTitle: "最初の家族レポートを作成中",
     progressCopy: "買い物後にレシートをスキャンすると、食事と支出の傾向を学習します。",
@@ -1678,6 +1790,22 @@ const homeLanguageCopy = {
     staffSub: "Dịch điều bạn muốn hỏi",
     voiceTitle: "Hỏi AI bằng giọng nói",
     voiceSub: "Nói tự nhiên bằng ngôn ngữ của bạn",
+    previewKicker: "Bạn nhận được gì",
+    previewTitle: "Không chỉ dịch. Đây là thẻ quyết định mua sắm.",
+    productPreviewLabel: "Quét sản phẩm",
+    productPreviewTitle: "Gia đình tôi dùng được không?",
+    productPreviewBadgeGood: "Hợp với đa số gia đình",
+    productPreviewBadgeCaution: "Xem cảnh báo",
+    productPreviewOne: "Cách dùng và cảnh báo dễ hiểu",
+    productPreviewTwo: "Ai nên cẩn thận",
+    productPreviewThree: "Nên hỏi hoặc so sánh gì tiếp",
+    receiptPreviewLabel: "Quét hóa đơn",
+    receiptPreviewTitle: "Tạo ký ức mua sắm gia đình",
+    receiptPreviewFood: "Thực phẩm",
+    receiptPreviewCare: "Chăm sóc",
+    receiptPreviewOne: "Gia đình đã mua gì",
+    receiptPreviewTwo: "Nhóm thực phẩm và đồ gia đình",
+    receiptPreviewThree: "Tín hiệu ăn uống và chi tiêu hàng tháng",
     receiptKicker: "Ký ức gia đình",
     progressTitle: "Báo cáo gia đình đầu tiên đang hình thành",
     progressCopy: "Quét hóa đơn sau khi mua. FamLens sẽ học thói quen ăn uống và chi tiêu.",
@@ -1719,6 +1847,22 @@ const homeLanguageCopy = {
     staffSub: "जो पूछना है उसका अनुवाद करें",
     voiceTitle: "आवाज़ से AI से पूछें",
     voiceSub: "अपनी भाषा में स्वाभाविक बोलें",
+    previewKicker: "आपको क्या मिलेगा",
+    previewTitle: "सिर्फ translation नहीं, shopping decision card.",
+    productPreviewLabel: "Product scan",
+    productPreviewTitle: "क्या यह मेरे परिवार के लिए सही है?",
+    productPreviewBadgeGood: "अधिकतर परिवारों के लिए ठीक",
+    productPreviewBadgeCaution: "चेतावनी देखें",
+    productPreviewOne: "सरल भाषा में उपयोग और warning",
+    productPreviewTwo: "किसे सावधान रहना चाहिए",
+    productPreviewThree: "आगे क्या पूछना या compare करना है",
+    receiptPreviewLabel: "Receipt scan",
+    receiptPreviewTitle: "Family shopping memory बनाएं",
+    receiptPreviewFood: "खाना",
+    receiptPreviewCare: "देखभाल",
+    receiptPreviewOne: "परिवार ने क्या खरीदा",
+    receiptPreviewTwo: "Food और household categories",
+    receiptPreviewThree: "Monthly diet और spending signals",
     receiptKicker: "Family memory",
     progressTitle: "आपकी पहली family report बन रही है",
     progressCopy: "Shopping के बाद receipts scan करें। FamLens eating और spending patterns सीखेगा।",
@@ -3293,6 +3437,22 @@ function applyHomeLanguage() {
   if (homeVoiceSub) homeVoiceSub.textContent = t("voiceSub");
   if (homeStaffTitle) homeStaffTitle.textContent = t("staffTitle");
   if (homeStaffSub) homeStaffSub.textContent = t("staffSub");
+  if (homePreviewKicker) homePreviewKicker.textContent = t("previewKicker");
+  if (homePreviewTitle) homePreviewTitle.textContent = t("previewTitle");
+  if (homeProductPreviewLabel) homeProductPreviewLabel.textContent = t("productPreviewLabel");
+  if (homeProductPreviewTitle) homeProductPreviewTitle.textContent = t("productPreviewTitle");
+  if (homeProductPreviewBadgeGood) homeProductPreviewBadgeGood.textContent = t("productPreviewBadgeGood");
+  if (homeProductPreviewBadgeCaution) homeProductPreviewBadgeCaution.textContent = t("productPreviewBadgeCaution");
+  if (homeProductPreviewOne) homeProductPreviewOne.textContent = t("productPreviewOne");
+  if (homeProductPreviewTwo) homeProductPreviewTwo.textContent = t("productPreviewTwo");
+  if (homeProductPreviewThree) homeProductPreviewThree.textContent = t("productPreviewThree");
+  if (homeReceiptPreviewLabel) homeReceiptPreviewLabel.textContent = t("receiptPreviewLabel");
+  if (homeReceiptPreviewTitle) homeReceiptPreviewTitle.textContent = t("receiptPreviewTitle");
+  if (homeReceiptPreviewFood) homeReceiptPreviewFood.textContent = t("receiptPreviewFood");
+  if (homeReceiptPreviewCare) homeReceiptPreviewCare.textContent = t("receiptPreviewCare");
+  if (homeReceiptPreviewOne) homeReceiptPreviewOne.textContent = t("receiptPreviewOne");
+  if (homeReceiptPreviewTwo) homeReceiptPreviewTwo.textContent = t("receiptPreviewTwo");
+  if (homeReceiptPreviewThree) homeReceiptPreviewThree.textContent = t("receiptPreviewThree");
   if (homeReceiptKicker) homeReceiptKicker.textContent = t("receiptKicker");
   if (homeReceiptProgressTitle) homeReceiptProgressTitle.textContent = t("progressTitle");
   if (homeReceiptProgressCopy) homeReceiptProgressCopy.textContent = t("progressCopy");

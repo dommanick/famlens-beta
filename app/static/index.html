@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=24" />
+    <link rel="stylesheet" href="/static/styles.css?v=25" />
   </head>
   <body>
     <main class="shell">
@@ -84,6 +84,51 @@
               <small id="homeVoiceSub">Ask by speaking naturally</small>
             </button>
           </div>
+
+          <section class="home-result-preview" aria-label="Example results">
+            <div class="home-result-preview-head">
+              <span id="homePreviewKicker">What you get</span>
+              <strong id="homePreviewTitle">Not just translation. A shopping decision card.</strong>
+            </div>
+            <div class="home-preview-cards">
+              <article class="home-preview-card product-preview-card">
+                <div class="home-preview-card-head">
+                  <span id="homeProductPreviewLabel">Product scan</span>
+                  <strong id="homeProductPreviewTitle">Can my family use this?</strong>
+                </div>
+                <div class="preview-decision-sample" aria-hidden="true">
+                  <span class="preview-pill good" id="homeProductPreviewBadgeGood">OK for most families</span>
+                  <span class="preview-pill caution" id="homeProductPreviewBadgeCaution">Check warning</span>
+                </div>
+                <ul>
+                  <li id="homeProductPreviewOne">Plain-language use and warning</li>
+                  <li id="homeProductPreviewTwo">Who should be careful</li>
+                  <li id="homeProductPreviewThree">What to ask or compare next</li>
+                </ul>
+              </article>
+              <article class="home-preview-card receipt-preview-card">
+                <div class="home-preview-card-head">
+                  <span id="homeReceiptPreviewLabel">Receipt scan</span>
+                  <strong id="homeReceiptPreviewTitle">Build family shopping memory</strong>
+                </div>
+                <div class="preview-receipt-sample" aria-hidden="true">
+                  <div>
+                    <span id="homeReceiptPreviewFood">Food</span>
+                    <strong>58%</strong>
+                  </div>
+                  <div>
+                    <span id="homeReceiptPreviewCare">Care</span>
+                    <strong>24%</strong>
+                  </div>
+                </div>
+                <ul>
+                  <li id="homeReceiptPreviewOne">What the family bought</li>
+                  <li id="homeReceiptPreviewTwo">Food and household categories</li>
+                  <li id="homeReceiptPreviewThree">Monthly diet and spending signals</li>
+                </ul>
+              </article>
+            </div>
+          </section>
 
           <div class="upload-zone" id="dropZone">
             <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
@@ -496,6 +541,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=24"></script>
+    <script src="/static/app.js?v=25"></script>
   </body>
 </html>
