@@ -93,6 +93,7 @@ const profileSavedMessage = document.querySelector("#profileSavedMessage");
 const scanTabs = document.querySelectorAll(".scan-tab");
 const uploadCopy = document.querySelector("#uploadCopy");
 const uploadNote = document.querySelector("#uploadNote");
+const homeResultPreview = document.querySelector(".home-result-preview");
 const emptyState = document.querySelector("#emptyState");
 const emptyTitle = document.querySelector("#emptyTitle");
 const emptyCopy = document.querySelector("#emptyCopy");
@@ -2357,10 +2358,15 @@ async function analyzeFile(file) {
   }
 }
 
+function setHomeResultPreviewVisible(visible) {
+  if (homeResultPreview) homeResultPreview.hidden = !visible;
+}
+
 function renderResult(data) {
   latestResult = data;
   latestCardSvg = data.card_svg || "";
   if (resultPanel) resultPanel.hidden = false;
+  setHomeResultPreviewVisible(false);
 
   const judgement = data.judgement || {};
   verdictBadge.textContent = judgement.verdict || "OK";
@@ -2401,6 +2407,7 @@ function renderReceiptResult(data) {
   latestResult = data;
   latestCardSvg = "";
   if (resultPanel) resultPanel.hidden = false;
+  setHomeResultPreviewVisible(false);
   const receipt = data.receipt || {};
   const currency = receipt.currency || "CAD";
 
@@ -2502,6 +2509,7 @@ async function localizeLatestResult() {
 
 function focusChatPanel() {
   if (resultPanel) resultPanel.hidden = false;
+  setHomeResultPreviewVisible(false);
   emptyState.hidden = true;
   loadingState.hidden = true;
   errorState.hidden = true;
@@ -3249,6 +3257,7 @@ function submitFeedback(feedback) {
 
 function showLoading() {
   if (resultPanel) resultPanel.hidden = false;
+  setHomeResultPreviewVisible(false);
   emptyState.hidden = true;
   loadingState.hidden = false;
   errorState.hidden = true;
@@ -3261,6 +3270,7 @@ function showLoading() {
 
 function showError(message) {
   if (resultPanel) resultPanel.hidden = false;
+  setHomeResultPreviewVisible(false);
   errorTitle.textContent = ui().errorTitle;
   errorText.textContent = message;
   emptyState.hidden = true;
@@ -3325,6 +3335,7 @@ function setScanMode(mode) {
     tab.classList.toggle("active", tab.dataset.mode === scanMode);
   });
   updateModeCopy();
+  setHomeResultPreviewVisible(true);
   if (resultPanel) resultPanel.hidden = true;
   emptyState.hidden = false;
   loadingState.hidden = true;
