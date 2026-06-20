@@ -1335,15 +1335,6 @@ h1 {
   padding: 16px;
 }
 
-.clerk-dialog {
-  width: min(440px, calc(100vw - 32px));
-  border: 0;
-  border-radius: 18px;
-  padding: 18px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-
 .records-dialog {
   width: min(940px, calc(100vw - 24px));
   max-height: min(86vh, 820px);
@@ -1419,6 +1410,136 @@ h1 {
 .setup-field textarea {
   resize: vertical;
   min-height: 132px;
+}
+
+.structured-profile {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-structured-card {
+  border: 1px solid rgba(17, 63, 52, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.66);
+  padding: 14px;
+}
+
+.profile-structured-card h3 {
+  margin: 0 0 12px;
+  color: var(--green-deep);
+  font-size: 18px;
+  line-height: 1.18;
+}
+
+.setup-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.setup-grid.two {
+  grid-template-columns: 1fr 1fr;
+}
+
+.profile-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-chip-grid button {
+  min-height: 38px;
+  border: 1px solid rgba(14, 93, 64, 0.18);
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #385a4c;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 0 11px;
+}
+
+.profile-chip-grid button.active {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.profile-add-member {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 4px;
+  border-color: rgba(14, 93, 64, 0.2);
+  background: #eaf6ef;
+  color: var(--green-deep);
+}
+
+.profile-member-list {
+  display: grid;
+  gap: 9px;
+}
+
+.profile-member-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 820;
+}
+
+.profile-member-item {
+  border: 1px solid rgba(17, 63, 52, 0.08);
+  border-radius: 18px;
+  background: #f7f1e8;
+  padding: 12px;
+}
+
+.profile-member-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.profile-member-head strong {
+  display: block;
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.profile-member-head small {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 820;
+}
+
+.profile-remove-member {
+  border: 0;
+  border-radius: 999px;
+  background: #fffdf8;
+  color: var(--green-deep);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 950;
+  padding: 8px 10px;
+}
+
+.profile-member-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.profile-member-tags span {
+  border-radius: 999px;
+  background: #fffdf8;
+  color: #4a6259;
+  font-size: 12px;
+  font-weight: 900;
+  padding: 6px 9px;
 }
 
 .family-invite-card {
@@ -1519,10 +1640,6 @@ h1 {
   line-height: 1.65;
 }
 
-.clerk-dialog::backdrop {
-  background: rgba(20, 24, 22, 0.42);
-}
-
 .records-dialog::backdrop,
 .profile-dialog::backdrop {
   background: rgba(20, 24, 22, 0.42);
@@ -1550,24 +1667,6 @@ h1 {
   font-size: 28px;
   line-height: 1;
   cursor: pointer;
-}
-
-.clerk-phrase {
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 14px;
-  background: #eef6ff;
-  color: #173b5b;
-  font-size: 26px;
-  line-height: 1.32;
-  font-weight: 900;
-}
-
-.dialog-hint {
-  margin: 12px 0 16px;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.5;
 }
 
 [hidden] {
@@ -1957,7 +2056,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: flex-end;
+  justify-content: center;
   position: relative;
   overflow: hidden;
   background: var(--blue);
@@ -2315,6 +2414,19 @@ h1 {
   line-height: 1.14;
 }
 
+.home-family-action {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 14px;
+  border: 1px solid rgba(14, 93, 64, 0.22);
+  border-radius: 18px;
+  background: #0e5d40;
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 950;
+}
+
 @media (max-width: 860px) {
   .shell {
     width: min(100vw - 20px, 560px);
@@ -2527,6 +2639,10 @@ h1 {
     padding: 18px;
   }
 
+  .setup-grid.two {
+    grid-template-columns: 1fr;
+  }
+
   #profileDialogTitle {
     font-size: 26px;
   }
@@ -2640,7 +2756,6 @@ h1 {
 }
 
 .language-control span,
-.profile-open,
 .records-open {
   display: none;
 }
@@ -2711,6 +2826,9 @@ h1 {
   background: linear-gradient(135deg, var(--green-deep), var(--green));
   color: #fff;
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   box-shadow: 0 18px 38px rgba(22, 107, 72, 0.18);
   font-size: 23px;
@@ -2718,7 +2836,7 @@ h1 {
 }
 
 .scan-tab::before {
-  content: "01";
+  content: "";
   position: absolute;
   left: 18px;
   top: 50%;
@@ -2726,13 +2844,13 @@ h1 {
   height: 46px;
   transform: translateY(-50%);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.17);
+  background:
+    center / 27px 27px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 4.5 16 7h3a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h3l1.5-2.5h5Z'/%3E%3Ccircle cx='12' cy='13' r='3.5'/%3E%3C/svg%3E"),
+    rgba(255, 255, 255, 0.17);
   border: 1px solid rgba(255, 255, 255, 0.28);
   display: grid;
   place-items: center;
   color: #fff;
-  font-size: 18px;
-  font-weight: 950;
 }
 
 .scan-tab::after {
@@ -2749,7 +2867,7 @@ h1 {
 }
 
 #receiptTab::before {
-  content: "02";
+  content: "";
 }
 
 .scan-tab.active {
@@ -3303,7 +3421,6 @@ h1 {
   width: 100%;
 }
 
-.clerk-dialog,
 .profile-dialog,
 .records-dialog {
   width: min(430px, calc(100vw - 20px));
@@ -3311,27 +3428,17 @@ h1 {
   border-radius: 30px;
 }
 
-.clerk-dialog::backdrop,
 .profile-dialog::backdrop,
 .records-dialog::backdrop {
   background: rgba(16, 24, 21, 0.28);
 }
 
-.clerk-dialog {
-  border: 0;
-  padding: 18px;
-  background: #fffdf8;
-  box-shadow: var(--shadow);
-}
-
-.clerk-phrase {
-  border-radius: 24px;
-  background: #edf8f1;
-  color: var(--green-deep);
-  padding: 16px;
-  font-size: 23px;
-  line-height: 1.25;
-  font-weight: 950;
+.dialog-intro {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 800;
 }
 
 .dialog-hint {

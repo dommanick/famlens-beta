@@ -120,6 +120,10 @@ For the exact rollout steps, see:
 - [docs/deploy-for-beta.md](docs/deploy-for-beta.md)
 - [docs/beta-launch-plan.md](docs/beta-launch-plan.md)
 
+For product/UI iteration workflow, see:
+
+- [docs/product-workflow.md](docs/product-workflow.md)
+
 ## Operations Backend
 
 The admin page currently tracks:

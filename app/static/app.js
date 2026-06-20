@@ -18,12 +18,6 @@ const panelTitle = document.querySelector("#panelTitle");
 const panelIntro = document.querySelector("#panelIntro");
 const productTab = document.querySelector("#productTab");
 const receiptTab = document.querySelector("#receiptTab");
-const homeStaffButton = document.querySelector("#homeStaffButton");
-const homeStaffTitle = document.querySelector("#homeStaffTitle");
-const homeStaffSub = document.querySelector("#homeStaffSub");
-const homeVoiceButton = document.querySelector("#homeVoiceButton");
-const homeVoiceTitle = document.querySelector("#homeVoiceTitle");
-const homeVoiceSub = document.querySelector("#homeVoiceSub");
 const homePreviewKicker = document.querySelector("#homePreviewKicker");
 const homePreviewTitle = document.querySelector("#homePreviewTitle");
 const homeProductPreviewLabel = document.querySelector("#homeProductPreviewLabel");
@@ -39,7 +33,6 @@ const homeProductPreviewThreeLabel = document.querySelector("#homeProductPreview
 const homeProductPreviewThree = document.querySelector("#homeProductPreviewThree");
 const homeProductPreviewVoiceLabel = document.querySelector("#homeProductPreviewVoiceLabel");
 const homeProductPreviewVoice = document.querySelector("#homeProductPreviewVoice");
-const homeProductPreviewAsk = document.querySelector("#homeProductPreviewAsk");
 const homeProductPreviewShare = document.querySelector("#homeProductPreviewShare");
 const homeProductPreviewSave = document.querySelector("#homeProductPreviewSave");
 const homeReceiptPreviewLabel = document.querySelector("#homeReceiptPreviewLabel");
@@ -60,7 +53,6 @@ const visualReceiptTitle = document.querySelector("#visualReceiptTitle");
 const visualReceiptCopy = document.querySelector("#visualReceiptCopy");
 const useCaseProduct = document.querySelector("#useCaseProduct");
 const useCaseReceipt = document.querySelector("#useCaseReceipt");
-const useCaseStaff = document.querySelector("#useCaseStaff");
 const useCaseFamily = document.querySelector("#useCaseFamily");
 const homeReceiptKicker = document.querySelector("#homeReceiptKicker");
 const homeReceiptProgressTitle = document.querySelector("#homeReceiptProgressTitle");
@@ -86,6 +78,7 @@ const homeFamilyTileAdult = document.querySelector("#homeFamilyTileAdult");
 const homeFamilyTileChild = document.querySelector("#homeFamilyTileChild");
 const homeFamilyTileLanguage = document.querySelector("#homeFamilyTileLanguage");
 const homeFamilyNote = document.querySelector("#homeFamilyNote");
+const homeFamilySetupButton = document.querySelector("#homeFamilySetupButton");
 const profileLabel = document.querySelector("#profileLabel");
 const profileSummary = document.querySelector("#profileSummary");
 const profileSaveButton = document.querySelector("#profileSaveButton");
@@ -155,15 +148,8 @@ const receiptCommerceKicker = document.querySelector("#receiptCommerceKicker");
 const receiptCommerceTitle = document.querySelector("#receiptCommerceTitle");
 const receiptCommerceCopy = document.querySelector("#receiptCommerceCopy");
 const receiptCommerceButton = document.querySelector("#receiptCommerceButton");
-const clerkButton = document.querySelector("#clerkButton");
 const copyButton = document.querySelector("#copyButton");
 const downloadButton = document.querySelector("#downloadButton");
-const clerkDialog = document.querySelector("#clerkDialog");
-const dialogTitle = document.querySelector("#dialogTitle");
-const clerkPhrase = document.querySelector("#clerkPhrase");
-const dialogHint = document.querySelector("#dialogHint");
-const closeDialogButton = document.querySelector("#closeDialogButton");
-const copyClerkButton = document.querySelector("#copyClerkButton");
 const profileDialog = document.querySelector("#profileDialog");
 const profileDialogKicker = document.querySelector("#profileDialogKicker");
 const profileDialogTitle = document.querySelector("#profileDialogTitle");
@@ -173,6 +159,31 @@ const setupLanguageSelect = document.querySelector("#setupLanguageSelect");
 const setupLanguageLabel = document.querySelector("#setupLanguageLabel");
 const profileMembersLabel = document.querySelector("#profileMembersLabel");
 const profileMembersInput = document.querySelector("#profileMembersInput");
+const profileMainTitle = document.querySelector("#profileMainTitle");
+const profileMainNameLabel = document.querySelector("#profileMainNameLabel");
+const profileMainNameInput = document.querySelector("#profileMainNameInput");
+const profileMainAgeLabel = document.querySelector("#profileMainAgeLabel");
+const profileMainAgeInput = document.querySelector("#profileMainAgeInput");
+const profileMainGenderLabel = document.querySelector("#profileMainGenderLabel");
+const profileMainGenderSelect = document.querySelector("#profileMainGenderSelect");
+const profileMainHealthLabel = document.querySelector("#profileMainHealthLabel");
+const profileMainHealthChips = document.querySelector("#profileMainHealthChips");
+const profileAddTitle = document.querySelector("#profileAddTitle");
+const profileMemberNameLabel = document.querySelector("#profileMemberNameLabel");
+const profileMemberNameInput = document.querySelector("#profileMemberNameInput");
+const profileMemberAgeLabel = document.querySelector("#profileMemberAgeLabel");
+const profileMemberAgeInput = document.querySelector("#profileMemberAgeInput");
+const profileMemberRelationLabel = document.querySelector("#profileMemberRelationLabel");
+const profileMemberRelationSelect = document.querySelector("#profileMemberRelationSelect");
+const profileMemberGenderLabel = document.querySelector("#profileMemberGenderLabel");
+const profileMemberGenderSelect = document.querySelector("#profileMemberGenderSelect");
+const profileMemberHealthLabel = document.querySelector("#profileMemberHealthLabel");
+const profileMemberHealthChips = document.querySelector("#profileMemberHealthChips");
+const profileMemberNoteLabel = document.querySelector("#profileMemberNoteLabel");
+const profileMemberNoteInput = document.querySelector("#profileMemberNoteInput");
+const profileAddMemberButton = document.querySelector("#profileAddMemberButton");
+const profileMemberListTitle = document.querySelector("#profileMemberListTitle");
+const profileMemberList = document.querySelector("#profileMemberList");
 const profileRecoveryLabel = document.querySelector("#profileRecoveryLabel");
 const profileRecoveryInput = document.querySelector("#profileRecoveryInput");
 const profileIdentityHint = document.querySelector("#profileIdentityHint");
@@ -258,7 +269,6 @@ let cancelChatVoice = false;
 let isChatListening = false;
 const recordsStorageKey = "carecart.familyRecords.v1";
 let familyRecords = loadFamilyRecords();
-let lastHomeStaffOpenAt = 0;
 
 const languageConfig = {
   "zh-Hans": {
@@ -273,7 +283,7 @@ const languageConfig = {
       panelKicker: "给家里主要采购的人用",
       panelTitle: "拍一下，马上看懂",
       productTab: "拍商品",
-      receiptTab: "扫小票",
+      receiptTab: "拍小票",
       profileLabel: "家庭提醒，可选",
       profilePlaceholder: "例如：家里有人血脂高；老人高血压；孩子8岁；想少糖少盐。",
       resultKicker: "FamLens",
@@ -282,13 +292,10 @@ const languageConfig = {
       uploadFromAlbum: "拍照或选图",
       speakProduct: "播放给老人听",
       speakReceipt: "播放小票摘要",
-      askStaff: "问店员怎么说",
       shareFamily: "发给家人",
       saveCard: "保存图文卡",
       copied: "已复制",
       copyEnglish: "复制英文",
-      dialogTitle: "给店员看",
-      dialogHint: "把这句话给店员看，或点复制后粘贴到翻译器。",
       receiptRecord: "小票记录",
       receiptTotalPrefix: "总额",
       date: "日期",
@@ -315,17 +322,17 @@ const languageConfig = {
         upload: "海外商品、外文标签、说明书或价签都可以",
         note: "直接给出能不能买、怎么用、要注意什么",
         emptyTitle: "这里展示结果",
-        emptyCopy: "拍商品或扫小票后，识别结果会显示在这里。",
+        emptyCopy: "拍商品或拍小票后，识别结果会显示在这里。",
         loadingTitle: "正在看这张海外商品图",
         loadingCopy: "通常需要 8-20 秒。正面、背面、成分或说明文字越清楚越好。",
         error: "这张图暂时没分析成功。请换一张更清楚的正面、背面或说明照片。",
       },
       receipt: {
-        pick: "扫小票 / 选图",
+        pick: "拍小票 / 选图",
         upload: "拍完整海外小票，包含商品清单和总额",
         note: "小票会沉淀成家庭购物、饮食和支出记录",
         emptyTitle: "这里展示结果",
-        emptyCopy: "扫小票后，采购清单和家庭购物记录会显示在这里。",
+        emptyCopy: "拍小票后，采购清单和家庭购物记录会显示在这里。",
         loadingTitle: "正在整理这张小票",
         loadingCopy: "我会提取商店、日期、总额、商品清单和分类金额。",
         error: "这张小票暂时没分析成功。请拍完整小票，包含商品清单和总金额。",
@@ -361,13 +368,10 @@ const languageConfig = {
       uploadFromAlbum: "Take or choose photo",
       speakProduct: "Play aloud",
       speakReceipt: "Play receipt summary",
-      askStaff: "Ask staff",
       shareFamily: "Share with family",
       saveCard: "Save card",
       copied: "Copied",
       copyEnglish: "Copy English",
-      dialogTitle: "Show staff",
-      dialogHint: "Show this sentence to staff, or copy it into a translator.",
       receiptRecord: "Receipt record",
       receiptTotalPrefix: "Total",
       date: "Date",
@@ -440,13 +444,10 @@ const languageConfig = {
       uploadFromAlbum: "Tomar o elegir foto",
       speakProduct: "Leer en voz alta",
       speakReceipt: "Leer resumen",
-      askStaff: "Preguntar al personal",
       shareFamily: "Enviar a familia",
       saveCard: "Guardar tarjeta",
       copied: "Copiado",
       copyEnglish: "Copiar inglés",
-      dialogTitle: "Mostrar al personal",
-      dialogHint: "Muestra esta frase al personal o cópiala en un traductor.",
       receiptRecord: "Registro de recibo",
       receiptTotalPrefix: "Total",
       date: "Fecha",
@@ -512,13 +513,10 @@ const languageConfig = {
       uploadFromAlbum: "Prendre ou choisir une photo",
       speakProduct: "Lire à voix haute",
       speakReceipt: "Lire le reçu",
-      askStaff: "Demander au personnel",
       shareFamily: "Partager",
       saveCard: "Sauver la carte",
       copied: "Copié",
       copyEnglish: "Copier l'anglais",
-      dialogTitle: "Montrer au personnel",
-      dialogHint: "Montrez cette phrase au personnel ou copiez-la dans un traducteur.",
       receiptRecord: "Reçu",
       receiptTotalPrefix: "Total",
       date: "Date",
@@ -584,13 +582,10 @@ const languageConfig = {
       uploadFromAlbum: "촬영 또는 사진 선택",
       speakProduct: "소리로 듣기",
       speakReceipt: "영수증 요약 듣기",
-      askStaff: "직원에게 묻기",
       shareFamily: "가족에게 보내기",
       saveCard: "카드 저장",
       copied: "복사됨",
       copyEnglish: "영어 복사",
-      dialogTitle: "직원에게 보여주기",
-      dialogHint: "이 문장을 직원에게 보여주거나 번역기에 붙여 넣으세요.",
       receiptRecord: "영수증 기록",
       receiptTotalPrefix: "합계",
       date: "날짜",
@@ -656,13 +651,10 @@ const languageConfig = {
       uploadFromAlbum: "撮影または写真を選択",
       speakProduct: "音声で聞く",
       speakReceipt: "レシート要約",
-      askStaff: "店員に聞く",
       shareFamily: "家族に送る",
       saveCard: "カード保存",
       copied: "コピー済み",
       copyEnglish: "英語をコピー",
-      dialogTitle: "店員に見せる",
-      dialogHint: "この文を店員に見せるか、翻訳アプリに貼り付けてください。",
       receiptRecord: "レシート記録",
       receiptTotalPrefix: "合計",
       date: "日付",
@@ -728,13 +720,10 @@ const languageConfig = {
       uploadFromAlbum: "Chụp hoặc chọn ảnh",
       speakProduct: "Đọc thành tiếng",
       speakReceipt: "Đọc tóm tắt hóa đơn",
-      askStaff: "Hỏi nhân viên",
       shareFamily: "Gửi gia đình",
       saveCard: "Lưu thẻ",
       copied: "Đã sao chép",
       copyEnglish: "Sao chép tiếng Anh",
-      dialogTitle: "Cho nhân viên xem",
-      dialogHint: "Cho nhân viên xem câu này hoặc dán vào ứng dụng dịch.",
       receiptRecord: "Ghi hóa đơn",
       receiptTotalPrefix: "Tổng",
       date: "Ngày",
@@ -800,13 +789,10 @@ const languageConfig = {
       uploadFromAlbum: "फोटो लें या चुनें",
       speakProduct: "आवाज में सुनें",
       speakReceipt: "रसीद सुनें",
-      askStaff: "स्टाफ से पूछें",
       shareFamily: "परिवार को भेजें",
       saveCard: "कार्ड सेव करें",
       copied: "कॉपी हो गया",
       copyEnglish: "अंग्रेजी कॉपी करें",
-      dialogTitle: "स्टाफ को दिखाएं",
-      dialogHint: "यह वाक्य स्टाफ को दिखाएं या अनुवाद ऐप में चिपकाएं।",
       receiptRecord: "रसीद रिकॉर्ड",
       receiptTotalPrefix: "कुल",
       date: "तारीख",
@@ -1033,7 +1019,7 @@ const recordsLanguageCopy = {
     topCategoryPrefix: "主要花在",
     receiptUnit: "张",
     productUnit: "件",
-    noReceipts: "还没有小票记录。买完东西后扫小票，就能慢慢看到家庭采购和支出结构。",
+    noReceipts: "还没有小票记录。买完东西后拍小票，就能慢慢看到家庭采购和支出结构。",
     noProducts: "还没有商品记录。拍过的商品会自动留在这里，方便家人回看。",
     unknownStore: "未知商店",
     unknownProduct: "未知商品",
@@ -1441,27 +1427,22 @@ const homeLanguageCopy = {
     visualReceiptCopy: "Family shopping memory",
     useCaseProduct: "Foreign labels",
     useCaseReceipt: "Receipts",
-    useCaseStaff: "Store staff",
     useCaseFamily: "Family sharing",
-    staffTitle: "Ask staff",
-    staffSub: "Translate what you want to ask",
-    voiceTitle: "Ask AI by voice",
-    voiceSub: "Speak in your language while shopping",
     previewKicker: "Scan result",
     previewTitle: "What you get after scanning",
     productPreviewLabel: "Product result",
     productPreviewTitle: "A2 Milk Powder",
     productPreviewSubtitle: "Milk powder for the family",
     productPreviewVoiceLabel: "Voice summary",
-    productPreviewVoice: "This is full cream milk powder. It can be used for family drinks, but check milk and soy allergies.",
+    productPreviewVoice: "This is full cream milk powder. It can be used for family drinks, but check milk and soy allergies. If someone has high cholesterol, compare a lower-fat option.",
     productPreviewBadgeGood: "OK for most families",
-    productPreviewBadgeCaution: "Check warning",
+    productPreviewBadgeCaution: "Family note",
     productPreviewOneLabel: "Use",
     productPreviewOne: "Mix with water. Drink after prepared.",
     productPreviewTwoLabel: "Careful",
     productPreviewTwo: "Milk or soy allergy.",
-    productPreviewThreeLabel: "Next step",
-    productPreviewThree: "What to ask or compare next",
+    productPreviewThreeLabel: "Family note",
+    productPreviewThree: "Dad has high cholesterol: full cream milk powder has saturated fat. Compare low-fat or use less.",
     receiptPreviewLabel: "Receipt result",
     receiptPreviewTitle: "Family shopping summary",
     receiptStoreLabel: "Store",
@@ -1469,7 +1450,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "Care",
     receiptPreviewOne: "More vegetables this week. Fewer protein items.",
     receiptPreviewTwo: "Food and household categories",
-    receiptPreviewThree: "Monthly diet and spending signals",
+    receiptPreviewThree: "Build a monthly food and spending report",
     receiptKicker: "Shopping memory",
     progressTitle: "Build your family’s overseas shopping record",
     progressCopy: "Scan receipts after each trip. Over time, FamLens learns what your household buys, eats, and spends.",
@@ -1504,7 +1485,7 @@ const homeLanguageCopy = {
     brandEyebrow: "海外移民家庭购物 AI",
     panelKicker: "给在国外生活的家庭用",
     panelTitle: "看不懂？拍一下再买。",
-    panelIntro: "给海外生活的家庭用：拍商品看懂标签、用法和注意事项；扫小票沉淀全家的购物记录。",
+    panelIntro: "给海外生活的家庭用：拍商品看懂标签、用法和注意事项；拍小票沉淀全家的购物记录。",
     productSub: "拍标签、成分、警示或说明文字。",
     receiptSub: "结账后拍完整小票，保存采购清单。",
     visualProductLang: "英文 / 法文标签",
@@ -1515,27 +1496,22 @@ const homeLanguageCopy = {
     visualReceiptCopy: "家庭购物记忆",
     useCaseProduct: "外文标签",
     useCaseReceipt: "购物小票",
-    useCaseStaff: "问店员",
     useCaseFamily: "发家人",
-    staffTitle: "问店员",
-    staffSub: "把你想问的话翻译给店员",
-    voiceTitle: "语音问 AI",
-    voiceSub: "在超市里直接用熟悉的语言说",
     previewKicker: "扫描结果",
     previewTitle: "扫完后会看到这些",
     productPreviewLabel: "商品结果",
     productPreviewTitle: "A2 奶粉",
     productPreviewSubtitle: "全家饮用的奶粉",
     productPreviewVoiceLabel: "语音摘要",
-    productPreviewVoice: "这是全脂奶粉，可以给家里冲饮，但牛奶或大豆过敏的人要谨慎。",
+    productPreviewVoice: "这是全脂奶粉，可以给家里冲饮，但牛奶或大豆过敏的人要谨慎。如果家里有人血脂高，可以比较低脂款。",
     productPreviewBadgeGood: "多数家庭可用",
-    productPreviewBadgeCaution: "注意警示",
+    productPreviewBadgeCaution: "家庭提醒",
     productPreviewOneLabel: "怎么用",
     productPreviewOne: "加水冲好后饮用。",
     productPreviewTwoLabel: "注意",
     productPreviewTwo: "牛奶或大豆过敏要谨慎。",
-    productPreviewThreeLabel: "下一步",
-    productPreviewThree: "告诉你下一步该问什么、比什么",
+    productPreviewThreeLabel: "家庭提醒",
+    productPreviewThree: "家里有人血脂高：全脂奶粉含饱和脂肪，建议少量或比较低脂款。",
     receiptPreviewLabel: "小票结果",
     receiptPreviewTitle: "家庭购物小结",
     receiptStoreLabel: "商店",
@@ -1543,10 +1519,10 @@ const homeLanguageCopy = {
     receiptPreviewCare: "护理",
     receiptPreviewOne: "本周蔬菜更多，蛋白类偏少。",
     receiptPreviewTwo: "整理食物和家庭用品分类",
-    receiptPreviewThree: "形成月度饮食和支出信号",
+    receiptPreviewThree: "累计后生成月度饮食和支出报告",
     receiptKicker: "购物记忆",
     progressTitle: "建立全家的海外购物记录",
-    progressCopy: "每次买完扫小票。时间久了，FamLens 会更懂你家买什么、吃什么、花在哪里。",
+    progressCopy: "每次买完拍小票。时间久了，FamLens 会更懂你家买什么、吃什么、花在哪里。",
     receiptProgress: "{count} / 8 张小票",
     sampleKicker: "长期价值",
     sampleTitle: "一个月后，看清你家真正买了什么",
@@ -1581,25 +1557,21 @@ const homeLanguageCopy = {
     panelIntro: "Entiende productos y recibos. Crea una memoria de compras saludable para la familia.",
     productSub: "Qué es, cómo usarlo y para quién conviene.",
     receiptSub: "Guarda la compra de hoy en la memoria familiar.",
-    staffTitle: "Preguntar al personal",
-    staffSub: "Traduce lo que quieres preguntar",
-    voiceTitle: "Pregunta por voz",
-    voiceSub: "Habla naturalmente en tu idioma",
     previewKicker: "Resultado",
     previewTitle: "Lo que recibes al escanear",
     productPreviewLabel: "Resultado del producto",
     productPreviewTitle: "Leche A2 en polvo",
     productPreviewSubtitle: "Leche en polvo para la familia",
     productPreviewVoiceLabel: "Resumen por voz",
-    productPreviewVoice: "Es leche entera en polvo. Puede servir para bebidas familiares, pero revisa alergias a leche o soya.",
+    productPreviewVoice: "Es leche entera en polvo. Puede servir para bebidas familiares, pero revisa alergias a leche o soya. Si alguien tiene colesterol alto, compara una opción baja en grasa.",
     productPreviewBadgeGood: "Apto para la mayoría",
-    productPreviewBadgeCaution: "Revisar alerta",
+    productPreviewBadgeCaution: "Nota familiar",
     productPreviewOneLabel: "Uso",
     productPreviewOne: "Mezclar con agua y beber.",
     productPreviewTwoLabel: "Cuidado",
     productPreviewTwo: "Alergia a leche o soya.",
-    productPreviewThreeLabel: "Siguiente paso",
-    productPreviewThree: "Qué preguntar o comparar después",
+    productPreviewThreeLabel: "Nota familiar",
+    productPreviewThree: "Si alguien tiene colesterol alto: esta leche entera tiene grasa saturada. Compara una opción baja en grasa.",
     receiptPreviewLabel: "Resultado del recibo",
     receiptPreviewTitle: "Resumen familiar",
     receiptStoreLabel: "Tienda",
@@ -1607,7 +1579,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "Cuidado",
     receiptPreviewOne: "Más verduras esta semana. Menos proteína.",
     receiptPreviewTwo: "Categorías de comida y hogar",
-    receiptPreviewThree: "Señales mensuales de dieta y gasto",
+    receiptPreviewThree: "Crear un informe mensual de comida y gastos",
     receiptKicker: "Memoria familiar",
     progressTitle: "Tu primer informe familiar se está formando",
     progressCopy: "Escanea recibos después de comprar. FamLens aprenderá patrones de dieta y gasto.",
@@ -1645,25 +1617,21 @@ const homeLanguageCopy = {
     panelIntro: "Comprenez produits et reçus. Créez une mémoire d’achats santé pour la famille.",
     productSub: "Ce que c’est, comment l’utiliser, pour qui.",
     receiptSub: "Ajoutez les achats du jour à la mémoire familiale.",
-    staffTitle: "Demander au personnel",
-    staffSub: "Traduire votre question",
-    voiceTitle: "Demander à l’AI par voix",
-    voiceSub: "Parlez naturellement dans votre langue",
     previewKicker: "Résultat",
     previewTitle: "Ce que vous obtenez après le scan",
     productPreviewLabel: "Résultat produit",
     productPreviewTitle: "Lait A2 en poudre",
     productPreviewSubtitle: "Lait en poudre pour la famille",
     productPreviewVoiceLabel: "Résumé vocal",
-    productPreviewVoice: "C’est du lait entier en poudre. Il peut servir aux boissons familiales, mais vérifiez les allergies au lait ou au soja.",
+    productPreviewVoice: "C’est du lait entier en poudre. Il peut servir aux boissons familiales, mais vérifiez les allergies au lait ou au soja. Si quelqu’un a un cholestérol élevé, comparez une option allégée.",
     productPreviewBadgeGood: "OK pour la plupart",
-    productPreviewBadgeCaution: "Vérifier l’alerte",
+    productPreviewBadgeCaution: "Note famille",
     productPreviewOneLabel: "Usage",
     productPreviewOne: "Mélanger avec de l’eau, puis boire.",
     productPreviewTwoLabel: "Attention",
     productPreviewTwo: "Allergie au lait ou au soja.",
-    productPreviewThreeLabel: "Étape suivante",
-    productPreviewThree: "Que demander ou comparer ensuite",
+    productPreviewThreeLabel: "Note famille",
+    productPreviewThree: "Si quelqu’un a un cholestérol élevé : ce lait entier contient des graisses saturées. Comparez une option allégée.",
     receiptPreviewLabel: "Résultat reçu",
     receiptPreviewTitle: "Résumé familial",
     receiptStoreLabel: "Magasin",
@@ -1671,7 +1639,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "Soins",
     receiptPreviewOne: "Plus de légumes cette semaine. Moins de protéines.",
     receiptPreviewTwo: "Catégories alimentation et maison",
-    receiptPreviewThree: "Signaux mensuels alimentation et dépenses",
+    receiptPreviewThree: "Créer un rapport mensuel alimentation et dépenses",
     receiptKicker: "Mémoire familiale",
     progressTitle: "Votre premier rapport familial se prépare",
     progressCopy: "Scannez les reçus après les courses. FamLens apprendra alimentation et dépenses.",
@@ -1709,25 +1677,21 @@ const homeLanguageCopy = {
     panelIntro: "상품과 영수증을 이해하고 가족 쇼핑 건강 기록을 만듭니다.",
     productSub: "무엇인지, 사용법, 누구에게 맞는지 확인.",
     receiptSub: "오늘 쇼핑을 가족 기록에 저장.",
-    staffTitle: "직원에게 묻기",
-    staffSub: "묻고 싶은 말을 번역",
-    voiceTitle: "음성으로 AI에게 묻기",
-    voiceSub: "익숙한 언어로 자연스럽게 말하세요",
     previewKicker: "스캔 결과",
     previewTitle: "스캔 후 보이는 결과",
     productPreviewLabel: "상품 결과",
     productPreviewTitle: "A2 분유",
     productPreviewSubtitle: "가족용 분유",
     productPreviewVoiceLabel: "음성 요약",
-    productPreviewVoice: "전지분유입니다. 가족 음료로 사용할 수 있지만 우유나 대두 알레르기를 확인하세요.",
+    productPreviewVoice: "전지분유입니다. 가족 음료로 사용할 수 있지만 우유나 대두 알레르기를 확인하세요. 가족 중 고지혈증이 있으면 저지방 제품과 비교하세요.",
     productPreviewBadgeGood: "대부분 가족 사용 가능",
-    productPreviewBadgeCaution: "주의사항 확인",
+    productPreviewBadgeCaution: "가족 메모",
     productPreviewOneLabel: "사용법",
     productPreviewOne: "물에 타서 마십니다.",
     productPreviewTwoLabel: "주의",
     productPreviewTwo: "우유나 대두 알레르기 주의.",
-    productPreviewThreeLabel: "다음 단계",
-    productPreviewThree: "다음에 물어보거나 비교할 점",
+    productPreviewThreeLabel: "가족 메모",
+    productPreviewThree: "가족 중 고지혈증이 있으면: 전지분유는 포화지방이 있어 저지방 제품과 비교하세요.",
     receiptPreviewLabel: "영수증 결과",
     receiptPreviewTitle: "가족 쇼핑 요약",
     receiptStoreLabel: "매장",
@@ -1735,7 +1699,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "케어",
     receiptPreviewOne: "이번 주 채소가 늘고 단백질 품목은 적습니다.",
     receiptPreviewTwo: "식품과 생활용품 분류",
-    receiptPreviewThree: "월간 식단과 지출 신호",
+    receiptPreviewThree: "월간 식단과 지출 리포트 만들기",
     receiptKicker: "가족 메모리",
     progressTitle: "첫 가족 리포트가 만들어지는 중",
     progressCopy: "쇼핑 후 영수증을 스캔하면 식단과 지출 패턴을 배웁니다.",
@@ -1773,25 +1737,21 @@ const homeLanguageCopy = {
     panelIntro: "商品とレシートを理解し、家族の健康的な買い物記録を作ります。",
     productSub: "何か、使い方、誰に合うかを確認。",
     receiptSub: "今日の買い物を家族記録に保存。",
-    staffTitle: "店員に聞く",
-    staffSub: "聞きたいことを翻訳",
-    voiceTitle: "音声で AI に質問",
-    voiceSub: "使いやすい言語で自然に話せます",
     previewKicker: "スキャン結果",
     previewTitle: "スキャン後に見える結果",
     productPreviewLabel: "商品結果",
     productPreviewTitle: "A2 ミルクパウダー",
     productPreviewSubtitle: "家族向けの粉ミルク",
     productPreviewVoiceLabel: "音声要約",
-    productPreviewVoice: "これは全脂粉乳です。家族の飲み物に使えますが、牛乳や大豆アレルギーを確認してください。",
+    productPreviewVoice: "これは全脂粉乳です。家族の飲み物に使えますが、牛乳や大豆アレルギーを確認してください。家族に脂質が気になる人がいる場合は、低脂肪品と比較してください。",
     productPreviewBadgeGood: "多くの家庭で利用可",
-    productPreviewBadgeCaution: "注意点を確認",
+    productPreviewBadgeCaution: "家族メモ",
     productPreviewOneLabel: "使い方",
     productPreviewOne: "水に混ぜて飲みます。",
     productPreviewTwoLabel: "注意",
     productPreviewTwo: "牛乳・大豆アレルギーに注意。",
-    productPreviewThreeLabel: "次のステップ",
-    productPreviewThree: "次に聞くこと・比べること",
+    productPreviewThreeLabel: "家族メモ",
+    productPreviewThree: "家族に脂質が気になる人がいる場合：全脂粉乳は飽和脂肪を含むため、低脂肪品と比較してください。",
     receiptPreviewLabel: "レシート結果",
     receiptPreviewTitle: "家族の買い物まとめ",
     receiptStoreLabel: "店舗",
@@ -1799,7 +1759,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "ケア",
     receiptPreviewOne: "今週は野菜が多め、たんぱく質は少なめ。",
     receiptPreviewTwo: "食品と日用品を分類",
-    receiptPreviewThree: "月次の食事と支出のサイン",
+    receiptPreviewThree: "月次の食事と支出レポートを作成",
     receiptKicker: "家族メモリー",
     progressTitle: "最初の家族レポートを作成中",
     progressCopy: "買い物後にレシートをスキャンすると、食事と支出の傾向を学習します。",
@@ -1837,25 +1797,21 @@ const homeLanguageCopy = {
     panelIntro: "Hiểu sản phẩm và hóa đơn. Xây dựng ký ức mua sắm sức khỏe cho gia đình.",
     productSub: "Biết là gì, dùng thế nào, hợp với ai.",
     receiptSub: "Lưu mua sắm hôm nay vào ký ức gia đình.",
-    staffTitle: "Hỏi nhân viên",
-    staffSub: "Dịch điều bạn muốn hỏi",
-    voiceTitle: "Hỏi AI bằng giọng nói",
-    voiceSub: "Nói tự nhiên bằng ngôn ngữ của bạn",
     previewKicker: "Kết quả quét",
     previewTitle: "Bạn nhận được gì sau khi quét",
     productPreviewLabel: "Kết quả sản phẩm",
     productPreviewTitle: "Sữa bột A2",
     productPreviewSubtitle: "Sữa bột cho gia đình",
     productPreviewVoiceLabel: "Tóm tắt giọng nói",
-    productPreviewVoice: "Đây là sữa bột nguyên kem. Có thể pha cho gia đình, nhưng cần kiểm tra dị ứng sữa hoặc đậu nành.",
+    productPreviewVoice: "Đây là sữa bột nguyên kem. Có thể pha cho gia đình, nhưng cần kiểm tra dị ứng sữa hoặc đậu nành. Nếu gia đình có người mỡ máu cao, nên so sánh loại ít béo.",
     productPreviewBadgeGood: "Hợp với đa số gia đình",
-    productPreviewBadgeCaution: "Xem cảnh báo",
+    productPreviewBadgeCaution: "Ghi chú gia đình",
     productPreviewOneLabel: "Cách dùng",
     productPreviewOne: "Pha với nước rồi uống.",
     productPreviewTwoLabel: "Cẩn thận",
     productPreviewTwo: "Dị ứng sữa hoặc đậu nành.",
-    productPreviewThreeLabel: "Bước tiếp theo",
-    productPreviewThree: "Nên hỏi hoặc so sánh gì tiếp",
+    productPreviewThreeLabel: "Ghi chú gia đình",
+    productPreviewThree: "Nếu gia đình có người mỡ máu cao: sữa nguyên kem có chất béo bão hòa. Nên so sánh loại ít béo.",
     receiptPreviewLabel: "Kết quả hóa đơn",
     receiptPreviewTitle: "Tóm tắt mua sắm gia đình",
     receiptStoreLabel: "Cửa hàng",
@@ -1863,7 +1819,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "Chăm sóc",
     receiptPreviewOne: "Tuần này nhiều rau hơn, ít món giàu đạm hơn.",
     receiptPreviewTwo: "Nhóm thực phẩm và đồ gia đình",
-    receiptPreviewThree: "Tín hiệu ăn uống và chi tiêu hàng tháng",
+    receiptPreviewThree: "Tạo báo cáo ăn uống và chi tiêu hàng tháng",
     receiptKicker: "Ký ức gia đình",
     progressTitle: "Báo cáo gia đình đầu tiên đang hình thành",
     progressCopy: "Quét hóa đơn sau khi mua. FamLens sẽ học thói quen ăn uống và chi tiêu.",
@@ -1901,25 +1857,21 @@ const homeLanguageCopy = {
     panelIntro: "प्रोडक्ट और रसीद समझें। पूरे परिवार की हेल्थ-aware shopping memory बनाएं।",
     productSub: "क्या है, कैसे उपयोग करें, किसके लिए सही है।",
     receiptSub: "आज की shopping को family memory में सेव करें।",
-    staffTitle: "Staff से पूछें",
-    staffSub: "जो पूछना है उसका अनुवाद करें",
-    voiceTitle: "आवाज़ से AI से पूछें",
-    voiceSub: "अपनी भाषा में स्वाभाविक बोलें",
     previewKicker: "Scan result",
     previewTitle: "Scan के बाद क्या मिलेगा",
     productPreviewLabel: "Product result",
     productPreviewTitle: "A2 milk powder",
     productPreviewSubtitle: "परिवार के लिए milk powder",
     productPreviewVoiceLabel: "Voice summary",
-    productPreviewVoice: "यह full cream milk powder है। परिवार के drinks के लिए उपयोग हो सकता है, लेकिन milk या soy allergy check करें.",
+    productPreviewVoice: "यह full cream milk powder है। परिवार के drinks के लिए उपयोग हो सकता है, लेकिन milk या soy allergy check करें. अगर परिवार में high cholesterol है, low-fat option compare करें.",
     productPreviewBadgeGood: "अधिकतर परिवारों के लिए ठीक",
-    productPreviewBadgeCaution: "चेतावनी देखें",
+    productPreviewBadgeCaution: "Family note",
     productPreviewOneLabel: "कैसे उपयोग करें",
     productPreviewOne: "पानी में मिलाकर पिएं.",
     productPreviewTwoLabel: "ध्यान दें",
     productPreviewTwo: "Milk या soy allergy हो तो सावधान.",
-    productPreviewThreeLabel: "अगला step",
-    productPreviewThree: "आगे क्या पूछना या compare करना है",
+    productPreviewThreeLabel: "Family note",
+    productPreviewThree: "अगर परिवार में high cholesterol है: full cream milk powder में saturated fat होता है. Low-fat option compare करें.",
     receiptPreviewLabel: "Receipt result",
     receiptPreviewTitle: "Family shopping summary",
     receiptStoreLabel: "Store",
@@ -1927,7 +1879,7 @@ const homeLanguageCopy = {
     receiptPreviewCare: "देखभाल",
     receiptPreviewOne: "इस हफ्ते vegetables ज़्यादा, protein items कम.",
     receiptPreviewTwo: "Food और household categories",
-    receiptPreviewThree: "Monthly diet और spending signals",
+    receiptPreviewThree: "Monthly food और spending report बनाएं",
     receiptKicker: "Family memory",
     progressTitle: "आपकी पहली family report बन रही है",
     progressCopy: "Shopping के बाद receipts scan करें। FamLens eating और spending patterns सीखेगा।",
@@ -2118,7 +2070,302 @@ const familyJoinLanguageCopy = {
   },
 };
 
-pickButton.addEventListener("click", () => imageInput.click());
+const profileStructuredLanguageCopy = {
+  en: {
+    mainTitle: "Main shopper",
+    mainName: "Name or nickname",
+    mainAge: "Age",
+    mainGender: "Gender",
+    mainHealth: "Health notes",
+    addTitle: "Add family member",
+    memberName: "Name",
+    memberAge: "Age",
+    memberRelation: "Relationship",
+    memberGender: "Gender",
+    memberHealth: "Health concerns",
+    memberNote: "Other note",
+    addMember: "Add member",
+    memberList: "Family members added",
+    noMembers: "No family members added yet.",
+    remove: "Remove",
+    mainShopperPrefix: "Main shopper",
+    memberPrefix: "Family member",
+    genders: [
+      ["", "Prefer not to say"],
+      ["female", "Female"],
+      ["male", "Male"],
+      ["other", "Other"],
+    ],
+    relations: [
+      ["", "Select"],
+      ["self", "Self"],
+      ["spouse", "Spouse"],
+      ["parent", "Parent"],
+      ["child", "Child"],
+      ["other", "Other"],
+    ],
+    health: {
+      blood_pressure: "High blood pressure",
+      diabetes: "Diabetes",
+      cholesterol: "High cholesterol",
+      allergy: "Allergy",
+      low_sugar: "Less sugar",
+      low_salt: "Less salt",
+      lactose: "Lactose sensitive",
+      child_growth: "Child growth",
+    },
+  },
+  "zh-Hans": {
+    mainTitle: "主要购买人",
+    mainName: "姓名或称呼",
+    mainAge: "年龄",
+    mainGender: "性别",
+    mainHealth: "健康关注",
+    addTitle: "添加家庭成员",
+    memberName: "姓名",
+    memberAge: "年龄",
+    memberRelation: "关系",
+    memberGender: "性别",
+    memberHealth: "健康关注",
+    memberNote: "其他说明",
+    addMember: "添加成员",
+    memberList: "已添加成员",
+    noMembers: "还没有添加家庭成员。",
+    remove: "删除",
+    mainShopperPrefix: "主要购买人",
+    memberPrefix: "家庭成员",
+    genders: [
+      ["", "不填写"],
+      ["female", "女"],
+      ["male", "男"],
+      ["other", "其他"],
+    ],
+    relations: [
+      ["", "请选择"],
+      ["self", "本人"],
+      ["spouse", "配偶"],
+      ["parent", "父母"],
+      ["child", "孩子"],
+      ["other", "其他"],
+    ],
+    health: {
+      blood_pressure: "高血压",
+      diabetes: "糖尿病",
+      cholesterol: "血脂高",
+      allergy: "过敏",
+      low_sugar: "少糖",
+      low_salt: "少盐",
+      lactose: "乳糖敏感",
+      child_growth: "孩子成长",
+    },
+  },
+};
+
+profileStructuredLanguageCopy.es = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "Comprador principal",
+  mainName: "Nombre o apodo",
+  mainAge: "Edad",
+  mainGender: "Género",
+  mainHealth: "Notas de salud",
+  addTitle: "Añadir familiar",
+  memberName: "Nombre",
+  memberAge: "Edad",
+  memberRelation: "Relación",
+  memberGender: "Género",
+  memberHealth: "Puntos de salud",
+  memberNote: "Otra nota",
+  addMember: "Añadir miembro",
+  memberList: "Familia añadida",
+  noMembers: "Aún no hay familiares añadidos.",
+  remove: "Quitar",
+  mainShopperPrefix: "Comprador principal",
+  memberPrefix: "Familiar",
+  genders: [["", "Prefiero no decir"], ["female", "Mujer"], ["male", "Hombre"], ["other", "Otro"]],
+  relations: [["", "Seleccionar"], ["self", "Yo"], ["spouse", "Pareja"], ["parent", "Padre/madre"], ["child", "Hijo/a"], ["other", "Otro"]],
+  health: {
+    blood_pressure: "Presión alta",
+    diabetes: "Diabetes",
+    cholesterol: "Colesterol alto",
+    allergy: "Alergia",
+    low_sugar: "Menos azúcar",
+    low_salt: "Menos sal",
+    lactose: "Sensibilidad a lactosa",
+    child_growth: "Crecimiento infantil",
+  },
+};
+
+profileStructuredLanguageCopy.fr = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "Acheteur principal",
+  mainName: "Nom ou surnom",
+  mainAge: "Âge",
+  mainGender: "Genre",
+  mainHealth: "Notes santé",
+  addTitle: "Ajouter un membre",
+  memberName: "Nom",
+  memberAge: "Âge",
+  memberRelation: "Relation",
+  memberGender: "Genre",
+  memberHealth: "Points santé",
+  memberNote: "Autre note",
+  addMember: "Ajouter",
+  memberList: "Membres ajoutés",
+  noMembers: "Aucun membre ajouté.",
+  remove: "Retirer",
+  mainShopperPrefix: "Acheteur principal",
+  memberPrefix: "Membre",
+  genders: [["", "Ne pas préciser"], ["female", "Femme"], ["male", "Homme"], ["other", "Autre"]],
+  relations: [["", "Choisir"], ["self", "Moi"], ["spouse", "Conjoint"], ["parent", "Parent"], ["child", "Enfant"], ["other", "Autre"]],
+  health: {
+    blood_pressure: "Hypertension",
+    diabetes: "Diabète",
+    cholesterol: "Cholestérol élevé",
+    allergy: "Allergie",
+    low_sugar: "Moins de sucre",
+    low_salt: "Moins de sel",
+    lactose: "Sensible au lactose",
+    child_growth: "Croissance enfant",
+  },
+};
+
+profileStructuredLanguageCopy.ko = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "주 구매자",
+  mainName: "이름 또는 별명",
+  mainAge: "나이",
+  mainGender: "성별",
+  mainHealth: "건강 메모",
+  addTitle: "가족 구성원 추가",
+  memberName: "이름",
+  memberAge: "나이",
+  memberRelation: "관계",
+  memberGender: "성별",
+  memberHealth: "건강 관심사",
+  memberNote: "기타 메모",
+  addMember: "구성원 추가",
+  memberList: "추가된 가족",
+  noMembers: "아직 추가된 가족이 없습니다.",
+  remove: "삭제",
+  mainShopperPrefix: "주 구매자",
+  memberPrefix: "가족 구성원",
+  genders: [["", "선택 안 함"], ["female", "여성"], ["male", "남성"], ["other", "기타"]],
+  relations: [["", "선택"], ["self", "본인"], ["spouse", "배우자"], ["parent", "부모"], ["child", "자녀"], ["other", "기타"]],
+  health: {
+    blood_pressure: "고혈압",
+    diabetes: "당뇨",
+    cholesterol: "고지혈증",
+    allergy: "알레르기",
+    low_sugar: "당 줄이기",
+    low_salt: "소금 줄이기",
+    lactose: "유당 민감",
+    child_growth: "아이 성장",
+  },
+};
+
+profileStructuredLanguageCopy.ja = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "主な買い物担当",
+  mainName: "名前または呼び名",
+  mainAge: "年齢",
+  mainGender: "性別",
+  mainHealth: "健康メモ",
+  addTitle: "家族を追加",
+  memberName: "名前",
+  memberAge: "年齢",
+  memberRelation: "関係",
+  memberGender: "性別",
+  memberHealth: "健康上の注意",
+  memberNote: "その他メモ",
+  addMember: "追加",
+  memberList: "追加済み家族",
+  noMembers: "まだ家族が追加されていません。",
+  remove: "削除",
+  mainShopperPrefix: "主な買い物担当",
+  memberPrefix: "家族",
+  genders: [["", "未回答"], ["female", "女性"], ["male", "男性"], ["other", "その他"]],
+  relations: [["", "選択"], ["self", "本人"], ["spouse", "配偶者"], ["parent", "親"], ["child", "子ども"], ["other", "その他"]],
+  health: {
+    blood_pressure: "高血圧",
+    diabetes: "糖尿病",
+    cholesterol: "脂質高め",
+    allergy: "アレルギー",
+    low_sugar: "砂糖控えめ",
+    low_salt: "塩分控えめ",
+    lactose: "乳糖に敏感",
+    child_growth: "子どもの成長",
+  },
+};
+
+profileStructuredLanguageCopy.vi = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "Người mua chính",
+  mainName: "Tên hoặc biệt danh",
+  mainAge: "Tuổi",
+  mainGender: "Giới tính",
+  mainHealth: "Ghi chú sức khỏe",
+  addTitle: "Thêm thành viên",
+  memberName: "Tên",
+  memberAge: "Tuổi",
+  memberRelation: "Quan hệ",
+  memberGender: "Giới tính",
+  memberHealth: "Sức khỏe cần lưu ý",
+  memberNote: "Ghi chú khác",
+  addMember: "Thêm thành viên",
+  memberList: "Thành viên đã thêm",
+  noMembers: "Chưa thêm thành viên.",
+  remove: "Xóa",
+  mainShopperPrefix: "Người mua chính",
+  memberPrefix: "Thành viên",
+  genders: [["", "Không muốn nói"], ["female", "Nữ"], ["male", "Nam"], ["other", "Khác"]],
+  relations: [["", "Chọn"], ["self", "Bản thân"], ["spouse", "Vợ/chồng"], ["parent", "Cha/mẹ"], ["child", "Con"], ["other", "Khác"]],
+  health: {
+    blood_pressure: "Huyết áp cao",
+    diabetes: "Tiểu đường",
+    cholesterol: "Mỡ máu cao",
+    allergy: "Dị ứng",
+    low_sugar: "Ít đường",
+    low_salt: "Ít muối",
+    lactose: "Nhạy lactose",
+    child_growth: "Trẻ đang lớn",
+  },
+};
+
+profileStructuredLanguageCopy.hi = {
+  ...profileStructuredLanguageCopy.en,
+  mainTitle: "मुख्य खरीदार",
+  mainName: "नाम या निकनेम",
+  mainAge: "उम्र",
+  mainGender: "लिंग",
+  mainHealth: "Health notes",
+  addTitle: "परिवार सदस्य जोड़ें",
+  memberName: "नाम",
+  memberAge: "उम्र",
+  memberRelation: "रिश्ता",
+  memberGender: "लिंग",
+  memberHealth: "Health concerns",
+  memberNote: "अन्य नोट",
+  addMember: "सदस्य जोड़ें",
+  memberList: "जोड़े गए सदस्य",
+  noMembers: "अभी कोई सदस्य नहीं जोड़ा गया।",
+  remove: "हटाएं",
+  mainShopperPrefix: "मुख्य खरीदार",
+  memberPrefix: "परिवार सदस्य",
+  genders: [["", "नहीं बताना"], ["female", "महिला"], ["male", "पुरुष"], ["other", "अन्य"]],
+  relations: [["", "चुनें"], ["self", "स्वयं"], ["spouse", "जीवनसाथी"], ["parent", "माता-पिता"], ["child", "बच्चा"], ["other", "अन्य"]],
+  health: {
+    blood_pressure: "High blood pressure",
+    diabetes: "Diabetes",
+    cholesterol: "High cholesterol",
+    allergy: "Allergy",
+    low_sugar: "कम चीनी",
+    low_salt: "कम नमक",
+    lactose: "Lactose sensitive",
+    child_growth: "बच्चे की growth",
+  },
+};
+
+pickButton?.addEventListener("click", () => imageInput.click());
 albumButton?.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
@@ -2128,7 +2375,30 @@ setupLanguageSelect.addEventListener("change", async () => {
   await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
 });
 profileOpenButton.addEventListener("click", () => openProfileDialog());
+homeFamilySetupButton?.addEventListener("click", () => openProfileDialog());
 profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
+profileMainHealthChips?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-main-health]");
+  if (!button) return;
+  button.classList.toggle("active");
+  syncStructuredProfileStateFromInputs();
+});
+profileMemberHealthChips?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-member-health]");
+  if (!button) return;
+  button.classList.toggle("active");
+});
+profileAddMemberButton?.addEventListener("click", () => addStructuredFamilyMember());
+profileMemberList?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove-member]");
+  if (!button) return;
+  const index = Number(button.dataset.removeMember);
+  if (!Number.isInteger(index)) return;
+  familyProfileState.members = normalizedFamilyMembers().filter((_, memberIndex) => memberIndex !== index);
+  profileMembersInput.value = buildProfileMembersText();
+  persistFamilyProfileState();
+  renderStructuredMemberList();
+});
 profileSkipButton.addEventListener("click", () => {
   syncVisibleFamilyInputs();
   localStorage.setItem(profileSetupCompletedKey, "true");
@@ -2137,7 +2407,7 @@ profileSkipButton.addEventListener("click", () => {
   sendClientEvent("profile_setup_skipped", { output_language: appLanguage });
 });
 profileDialogSaveButton.addEventListener("click", async () => {
-  await saveFamilyProfile(profileMembersInput.value);
+  await saveFamilyProfile(buildProfileMembersText());
   closeProfileDialog();
 });
 profileSaveButton.addEventListener("click", async () => {
@@ -2237,13 +2507,6 @@ recordsOpenButton.addEventListener("click", () => {
   sendClientEvent("open_family_records", { output_language: appLanguage });
 });
 
-homeVoiceButton?.addEventListener("click", () => {
-  focusChatPanel();
-});
-homeStaffButton?.addEventListener("click", handleHomeStaffEntry);
-homeStaffButton?.addEventListener("pointerup", handleHomeStaffEntry);
-homeStaffButton?.addEventListener("touchend", handleHomeStaffEntry, { passive: false });
-
 recordsCloseButton.addEventListener("click", () => recordsDialog.close());
 
 recordsDialog.addEventListener("click", (event) => {
@@ -2264,17 +2527,6 @@ clearRecordsButton.addEventListener("click", async () => {
 
 [feedbackHelpful, feedbackInaccurate, feedbackConfusing].forEach((button) => {
   button.addEventListener("click", () => submitFeedback(button.dataset.feedback || "unknown"));
-});
-
-clerkButton.addEventListener("click", () => {
-  openStaffDialog();
-});
-
-closeDialogButton.addEventListener("click", () => clerkDialog.close());
-copyClerkButton.addEventListener("click", async () => {
-  await copyText(clerkPhrase.textContent);
-  copyClerkButton.textContent = ui().copied;
-  setTimeout(() => (copyClerkButton.textContent = ui().copyEnglish), 1200);
 });
 
 copyButton.addEventListener("click", async () => {
@@ -2505,47 +2757,6 @@ async function localizeLatestResult() {
   } catch (error) {
     setServiceStatus("retry");
   }
-}
-
-function focusChatPanel() {
-  if (resultPanel) resultPanel.hidden = false;
-  setHomeResultPreviewVisible(false);
-  emptyState.hidden = true;
-  loadingState.hidden = true;
-  errorState.hidden = true;
-  resultState.hidden = true;
-  receiptState.hidden = true;
-  feedbackPanel.hidden = true;
-  chatPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
-  chatInput?.focus({ preventScroll: true });
-  sendClientEvent("home_ai_entry_clicked", { output_language: appLanguage });
-}
-
-function openStaffDialog() {
-  const name = latestResult?.judgement?.item_name || "this product";
-  clerkPhrase.textContent = `Where can I find ${toEnglishFallback(name)}?`;
-  try {
-    if (typeof clerkDialog.showModal === "function" && !clerkDialog.open) {
-      clerkDialog.showModal();
-    } else {
-      clerkDialog.setAttribute("open", "");
-    }
-  } catch (error) {
-    clerkDialog.setAttribute("open", "");
-  }
-  sendClientEvent("ask_staff_opened", {
-    source: latestResult?.judgement ? "product_result" : "home",
-    item_name: latestResult?.judgement?.item_name || "",
-    output_language: appLanguage,
-  });
-}
-
-function handleHomeStaffEntry(event) {
-  event?.preventDefault?.();
-  const now = Date.now();
-  if (now - lastHomeStaffOpenAt < 320) return;
-  lastHomeStaffOpenAt = now;
-  openStaffDialog();
 }
 
 async function askChat(rawQuestion, options = {}) {
@@ -3330,7 +3541,7 @@ function setScanMode(mode) {
   imageInput.value = "";
   previewImage.removeAttribute("src");
   previewWrap.hidden = true;
-  dropZone.hidden = false;
+  dropZone.hidden = true;
   scanTabs.forEach((tab) => {
     tab.classList.toggle("active", tab.dataset.mode === scanMode);
   });
@@ -3377,8 +3588,8 @@ function applyProfileLanguage() {
   profileDialogTitle.textContent = copy.title;
   profileDialogIntro.textContent = copy.intro;
   setupLanguageLabel.textContent = copy.language;
-  profileMembersLabel.textContent = copy.members;
-  profileMembersInput.placeholder = copy.membersPlaceholder;
+  if (profileMembersLabel) profileMembersLabel.textContent = copy.members;
+  if (profileMembersInput) profileMembersInput.placeholder = copy.membersPlaceholder;
   profileRecoveryLabel.textContent = copy.recovery || profileLanguageCopy.en.recovery;
   profileRecoveryInput.placeholder = copy.recoveryPlaceholder || profileLanguageCopy.en.recoveryPlaceholder;
   profileIdentityHint.textContent = (copy.identityHint || profileLanguageCopy.en.identityHint).replace("{code}", familyCode);
@@ -3398,7 +3609,8 @@ function applyProfileLanguage() {
   profileDialogSaveButton.textContent = copy.save;
   profileDialogCloseButton.setAttribute("aria-label", copy.close);
   familyProfile.value = familyProfileState.members_text || "";
-  profileMembersInput.value = familyProfileState.members_text || "";
+  applyStructuredProfileLanguage();
+  profileMembersInput.value = buildProfileMembersText();
   profileRecoveryInput.value = familyProfileState.recovery_contact || "";
 }
 
@@ -3421,13 +3633,8 @@ function applyLanguage() {
   if (albumButtonText) albumButtonText.textContent = ui().uploadFromAlbum;
   speakButtonText.textContent = ui().speakProduct;
   receiptSpeakButtonText.textContent = ui().speakReceipt;
-  clerkButton.textContent = ui().askStaff;
   copyButton.textContent = ui().shareFamily;
   downloadButton.textContent = ui().saveCard;
-  dialogTitle.textContent = ui().dialogTitle;
-  dialogHint.textContent = ui().dialogHint;
-  copyClerkButton.textContent = ui().copyEnglish;
-  closeDialogButton.setAttribute("aria-label", appLanguage === "zh-Hans" ? "关闭" : "Close");
   receiptHeroLabel.textContent = ui().receiptRecord;
   receiptDateLabel.textContent = ui().date;
   receiptCountLabel.textContent = ui().itemCount;
@@ -3455,6 +3662,7 @@ function applyLanguage() {
 function applyHomeLanguage() {
   const copy = homeCopy();
   const fallback = homeLanguageCopy.en;
+  const profile = profileCopy();
   const t = (key) => copy[key] || fallback[key] || "";
   if (brandEyebrow) brandEyebrow.textContent = t("brandEyebrow");
   if (panelKicker) panelKicker.textContent = t("panelKicker");
@@ -3470,12 +3678,7 @@ function applyHomeLanguage() {
   if (visualReceiptCopy) visualReceiptCopy.textContent = t("visualReceiptCopy");
   if (useCaseProduct) useCaseProduct.textContent = t("useCaseProduct");
   if (useCaseReceipt) useCaseReceipt.textContent = t("useCaseReceipt");
-  if (useCaseStaff) useCaseStaff.textContent = t("useCaseStaff");
   if (useCaseFamily) useCaseFamily.textContent = t("useCaseFamily");
-  if (homeVoiceTitle) homeVoiceTitle.textContent = t("voiceTitle");
-  if (homeVoiceSub) homeVoiceSub.textContent = t("voiceSub");
-  if (homeStaffTitle) homeStaffTitle.textContent = t("staffTitle");
-  if (homeStaffSub) homeStaffSub.textContent = t("staffSub");
   if (homePreviewKicker) homePreviewKicker.textContent = t("previewKicker");
   if (homePreviewTitle) homePreviewTitle.textContent = t("previewTitle");
   if (homeProductPreviewLabel) homeProductPreviewLabel.textContent = t("productPreviewLabel");
@@ -3491,7 +3694,6 @@ function applyHomeLanguage() {
   if (homeProductPreviewTwo) homeProductPreviewTwo.textContent = t("productPreviewTwo");
   if (homeProductPreviewThreeLabel) homeProductPreviewThreeLabel.textContent = t("productPreviewThreeLabel");
   if (homeProductPreviewThree) homeProductPreviewThree.textContent = t("productPreviewThree");
-  if (homeProductPreviewAsk) homeProductPreviewAsk.textContent = ui().askStaff;
   if (homeProductPreviewShare) homeProductPreviewShare.textContent = ui().shareFamily;
   if (homeProductPreviewSave) homeProductPreviewSave.textContent = ui().saveCard;
   if (homeReceiptPreviewLabel) homeReceiptPreviewLabel.textContent = t("receiptPreviewLabel");
@@ -3525,6 +3727,7 @@ function applyHomeLanguage() {
   if (homeFamilyTileChild) homeFamilyTileChild.innerHTML = t("familyChild");
   if (homeFamilyTileLanguage) homeFamilyTileLanguage.innerHTML = t("familyLanguage");
   if (homeFamilyNote) homeFamilyNote.textContent = t("familyNote");
+  if (homeFamilySetupButton) homeFamilySetupButton.textContent = profile.boxLabel || profileLanguageCopy.en.boxLabel;
 }
 
 function applyGrowthLanguage() {
@@ -3558,9 +3761,9 @@ function applyFeedbackLanguage() {
 
 function updateModeCopy() {
   const copy = modeCopy();
-  pickButtonText.textContent = copy.pick;
-  uploadCopy.textContent = copy.upload;
-  uploadNote.textContent = copy.note;
+  if (pickButtonText) pickButtonText.textContent = copy.pick;
+  if (uploadCopy) uploadCopy.textContent = copy.upload;
+  if (uploadNote) uploadNote.textContent = copy.note;
   emptyTitle.textContent = copy.emptyTitle;
   emptyCopy.textContent = copy.emptyCopy;
 }
@@ -3657,6 +3860,10 @@ function ui() {
   return config().ui;
 }
 
+function uiText(key) {
+  return ui()[key] || languageConfig.en.ui[key] || "";
+}
+
 function modeCopy() {
   return config().modes[scanMode];
 }
@@ -3681,12 +3888,39 @@ function profileCopy() {
   return profileLanguageCopy[appLanguage] || profileLanguageCopy.en;
 }
 
+function structuredProfileCopy() {
+  return profileStructuredLanguageCopy[appLanguage] || profileStructuredLanguageCopy.en;
+}
+
 function growthCopy() {
   return growthLanguageCopy[appLanguage] || growthLanguageCopy.en;
 }
 
 function familyJoinCopy() {
   return familyJoinLanguageCopy[appLanguage] || familyJoinLanguageCopy.en;
+}
+
+function normalizeProfilePerson(raw = {}) {
+  const health = Array.isArray(raw.health) ? raw.health : [];
+  return {
+    name: String(raw.name || "").trim(),
+    relation: String(raw.relation || "").trim(),
+    gender: String(raw.gender || "").trim(),
+    age: String(raw.age || "").trim(),
+    health: health.map((item) => String(item || "").trim()).filter(Boolean),
+    note: String(raw.note || "").trim(),
+  };
+}
+
+function hasProfilePersonData(person) {
+  return Boolean(
+    person.name ||
+      person.relation ||
+      person.gender ||
+      person.age ||
+      person.health?.length ||
+      person.note
+  );
 }
 
 function loadFamilyProfileState() {
@@ -3696,6 +3930,8 @@ function loadFamilyProfileState() {
     return {
       output_language: supportedLanguageKeys.has(saved.output_language) ? saved.output_language : "",
       members_text: String(saved.members_text || ""),
+      main_shopper: normalizeProfilePerson(saved.main_shopper || {}),
+      members: Array.isArray(saved.members) ? saved.members.map(normalizeProfilePerson).filter(hasProfilePersonData) : [],
       recovery_contact: String(saved.recovery_contact || ""),
       household_id: String(saved.household_id || ""),
       family_code: String(saved.family_code || ""),
@@ -3712,6 +3948,8 @@ function persistFamilyProfileState() {
     JSON.stringify({
       output_language: appLanguage,
       members_text: familyProfileState.members_text || "",
+      main_shopper: normalizeProfilePerson(familyProfileState.main_shopper || {}),
+      members: normalizedFamilyMembers(),
       recovery_contact: familyProfileState.recovery_contact || "",
       household_id: familyProfileState.household_id || clientUserId,
       family_code: familyProfileState.family_code || "",
@@ -3720,7 +3958,187 @@ function persistFamilyProfileState() {
   );
 }
 
+function normalizedFamilyMembers() {
+  return Array.isArray(familyProfileState.members)
+    ? familyProfileState.members.map(normalizeProfilePerson).filter(hasProfilePersonData)
+    : [];
+}
+
+function populateProfileSelect(select, options, selectedValue) {
+  if (!select) return;
+  const selected = String(selectedValue || "");
+  select.innerHTML = options
+    .map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`)
+    .join("");
+  select.value = selected;
+}
+
+function selectedProfileChipValues(container, attribute) {
+  if (!container) return [];
+  return Array.from(container.querySelectorAll(`[${attribute}].active`)).map((button) => button.getAttribute(attribute) || "");
+}
+
+function setProfileChipValues(container, attribute, values) {
+  const selected = new Set(values || []);
+  container?.querySelectorAll(`[${attribute}]`).forEach((button) => {
+    button.classList.toggle("active", selected.has(button.getAttribute(attribute) || ""));
+  });
+}
+
+function updateProfileChipLabels() {
+  const copy = structuredProfileCopy();
+  profileMainHealthChips?.querySelectorAll("[data-main-health]").forEach((button) => {
+    const key = button.getAttribute("data-main-health") || "";
+    button.textContent = copy.health[key] || profileStructuredLanguageCopy.en.health[key] || key;
+  });
+  profileMemberHealthChips?.querySelectorAll("[data-member-health]").forEach((button) => {
+    const key = button.getAttribute("data-member-health") || "";
+    button.textContent = copy.health[key] || profileStructuredLanguageCopy.en.health[key] || key;
+  });
+}
+
+function hydrateStructuredProfileInputs() {
+  const main = normalizeProfilePerson(familyProfileState.main_shopper || {});
+  if (profileMainNameInput) profileMainNameInput.value = main.name;
+  if (profileMainAgeInput) profileMainAgeInput.value = main.age;
+  if (profileMainGenderSelect) profileMainGenderSelect.value = main.gender;
+  setProfileChipValues(profileMainHealthChips, "data-main-health", main.health);
+}
+
+function syncStructuredProfileStateFromInputs() {
+  familyProfileState.main_shopper = normalizeProfilePerson({
+    name: profileMainNameInput?.value || "",
+    relation: "main_shopper",
+    gender: profileMainGenderSelect?.value || "",
+    age: profileMainAgeInput?.value || "",
+    health: selectedProfileChipValues(profileMainHealthChips, "data-main-health"),
+  });
+}
+
+function addStructuredFamilyMember() {
+  const member = normalizeProfilePerson({
+    name: profileMemberNameInput?.value || "",
+    relation: profileMemberRelationSelect?.value || "",
+    gender: profileMemberGenderSelect?.value || "",
+    age: profileMemberAgeInput?.value || "",
+    health: selectedProfileChipValues(profileMemberHealthChips, "data-member-health"),
+    note: profileMemberNoteInput?.value || "",
+  });
+  if (!hasProfilePersonData(member)) return;
+  familyProfileState.members = [...normalizedFamilyMembers(), member];
+  if (profileMemberNameInput) profileMemberNameInput.value = "";
+  if (profileMemberAgeInput) profileMemberAgeInput.value = "";
+  if (profileMemberRelationSelect) profileMemberRelationSelect.value = "";
+  if (profileMemberGenderSelect) profileMemberGenderSelect.value = "";
+  if (profileMemberNoteInput) profileMemberNoteInput.value = "";
+  setProfileChipValues(profileMemberHealthChips, "data-member-health", []);
+  profileMembersInput.value = buildProfileMembersText();
+  persistFamilyProfileState();
+  renderStructuredMemberList();
+}
+
+function labelProfileValue(options, value) {
+  return (options.find(([optionValue]) => optionValue === value) || [value, value])[1] || "";
+}
+
+function labelHealthValues(values) {
+  const copy = structuredProfileCopy();
+  return (values || []).map((key) => copy.health[key] || profileStructuredLanguageCopy.en.health[key] || key);
+}
+
+function describeProfilePerson(person, options = {}) {
+  const copy = structuredProfileCopy();
+  const pieces = [];
+  const gender = labelProfileValue(copy.genders, person.gender);
+  const relation = options.isMain ? "" : labelProfileValue(copy.relations, person.relation);
+  if (relation) pieces.push(relation);
+  if (gender) pieces.push(gender);
+  if (person.age) pieces.push(`${person.age}`);
+  const health = labelHealthValues(person.health);
+  if (health.length) pieces.push(health.join(", "));
+  if (person.note) pieces.push(person.note);
+  return pieces.filter(Boolean).join(" · ");
+}
+
+function buildProfileMembersText() {
+  syncStructuredProfileStateFromInputs();
+  const copy = structuredProfileCopy();
+  const lines = [];
+  const main = normalizeProfilePerson(familyProfileState.main_shopper || {});
+  if (hasProfilePersonData(main)) {
+    const mainName = main.name || copy.mainShopperPrefix;
+    const details = describeProfilePerson(main, { isMain: true });
+    lines.push(details ? `${copy.mainShopperPrefix}: ${mainName} (${details})` : `${copy.mainShopperPrefix}: ${mainName}`);
+  }
+  normalizedFamilyMembers().forEach((member) => {
+    const memberName = member.name || copy.memberPrefix;
+    const details = describeProfilePerson(member);
+    lines.push(details ? `${copy.memberPrefix}: ${memberName} (${details})` : `${copy.memberPrefix}: ${memberName}`);
+  });
+  const structuredText = lines.join("\n").trim();
+  familyProfileState.members_text = structuredText || String(profileMembersInput?.value || familyProfileState.members_text || "").trim();
+  return familyProfileState.members_text;
+}
+
+function renderStructuredMemberList() {
+  if (!profileMemberList) return;
+  const copy = structuredProfileCopy();
+  const members = normalizedFamilyMembers();
+  if (!members.length) {
+    profileMemberList.innerHTML = `<p class="profile-member-empty">${escapeHtml(copy.noMembers)}</p>`;
+    return;
+  }
+  profileMemberList.innerHTML = members
+    .map((member, index) => {
+      const title = member.name || copy.memberPrefix;
+      const meta = describeProfilePerson(member);
+      const healthTags = labelHealthValues(member.health)
+        .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+        .join("");
+      const noteTag = member.note ? `<span>${escapeHtml(member.note)}</span>` : "";
+      return `
+        <article class="profile-member-item">
+          <div class="profile-member-head">
+            <div>
+              <strong>${escapeHtml(title)}</strong>
+              <small>${escapeHtml(meta || copy.memberPrefix)}</small>
+            </div>
+            <button class="profile-remove-member" type="button" data-remove-member="${index}">${escapeHtml(copy.remove)}</button>
+          </div>
+          <div class="profile-member-tags">${healthTags}${noteTag}</div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function applyStructuredProfileLanguage() {
+  const copy = structuredProfileCopy();
+  if (profileMainTitle) profileMainTitle.textContent = copy.mainTitle;
+  if (profileMainNameLabel) profileMainNameLabel.textContent = copy.mainName;
+  if (profileMainAgeLabel) profileMainAgeLabel.textContent = copy.mainAge;
+  if (profileMainGenderLabel) profileMainGenderLabel.textContent = copy.mainGender;
+  if (profileMainHealthLabel) profileMainHealthLabel.textContent = copy.mainHealth;
+  if (profileAddTitle) profileAddTitle.textContent = copy.addTitle;
+  if (profileMemberNameLabel) profileMemberNameLabel.textContent = copy.memberName;
+  if (profileMemberAgeLabel) profileMemberAgeLabel.textContent = copy.memberAge;
+  if (profileMemberRelationLabel) profileMemberRelationLabel.textContent = copy.memberRelation;
+  if (profileMemberGenderLabel) profileMemberGenderLabel.textContent = copy.memberGender;
+  if (profileMemberHealthLabel) profileMemberHealthLabel.textContent = copy.memberHealth;
+  if (profileMemberNoteLabel) profileMemberNoteLabel.textContent = copy.memberNote;
+  if (profileAddMemberButton) profileAddMemberButton.textContent = copy.addMember;
+  if (profileMemberListTitle) profileMemberListTitle.textContent = copy.memberList;
+  populateProfileSelect(profileMainGenderSelect, copy.genders, familyProfileState.main_shopper?.gender || "");
+  populateProfileSelect(profileMemberRelationSelect, copy.relations, profileMemberRelationSelect?.value || "");
+  populateProfileSelect(profileMemberGenderSelect, copy.genders, profileMemberGenderSelect?.value || "");
+  updateProfileChipLabels();
+  hydrateStructuredProfileInputs();
+  renderStructuredMemberList();
+}
+
 function syncVisibleFamilyInputs() {
+  syncStructuredProfileStateFromInputs();
+  profileMembersInput.value = buildProfileMembersText();
   const activeMembersText =
     profileDialog?.open && profileMembersInput
       ? profileMembersInput.value
@@ -3729,7 +4147,7 @@ function syncVisibleFamilyInputs() {
 }
 
 function profileContextText() {
-  return String(familyProfileState.members_text || familyProfile.value || "").trim();
+  return String(buildProfileMembersText() || familyProfile.value || "").trim();
 }
 
 function currentFamilyCode() {

@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=30" />
+    <link rel="stylesheet" href="/static/styles.css?v=39" />
   </head>
   <body>
     <main class="shell">
@@ -114,7 +114,6 @@
                   </div>
                 </div>
                 <div class="sample-action-row" aria-hidden="true">
-                  <span id="homeProductPreviewAsk">Ask staff</span>
                   <span id="homeProductPreviewShare">Share</span>
                   <span id="homeProductPreviewSave">Save</span>
                 </div>
@@ -161,34 +160,14 @@
             </div>
           </section>
 
-          <div class="home-secondary-actions" aria-label="In-store help">
-            <button class="mini-home-action" id="homeStaffButton" type="button">
-              <strong id="homeStaffTitle">Ask staff</strong>
-              <small id="homeStaffSub">Translate what you want to ask</small>
-            </button>
-            <button class="mini-home-action" id="homeVoiceButton" type="button">
-              <strong id="homeVoiceTitle">Voice AI</strong>
-              <small id="homeVoiceSub">Ask by speaking naturally</small>
-            </button>
-          </div>
-
-          <div class="upload-zone" id="dropZone">
+          <div class="upload-zone" id="dropZone" hidden>
             <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
             <input id="imageInput" class="file-input" type="file" accept="image/*" />
-            <div class="upload-actions">
-              <button class="primary-action" id="pickButton" type="button">
-                <span class="camera-icon" aria-hidden="true"></span>
-                <span id="pickButtonText">Scan product</span>
-              </button>
-            </div>
-            <p class="upload-copy" id="uploadCopy">Product, label, instructions, or price tag</p>
-            <p class="upload-note" id="uploadNote">Results appear here directly, no chat loop or extra link</p>
           </div>
 
           <div class="shopping-use-cases" aria-label="Overseas shopping help" hidden>
             <span id="useCaseProduct">Read foreign labels</span>
             <span id="useCaseReceipt">Save receipts</span>
-            <span id="useCaseStaff">Ask store staff</span>
             <span id="useCaseFamily">Share with family</span>
           </div>
 
@@ -256,7 +235,6 @@
             <div class="card-stage" id="cardStage" aria-label="图文判断卡"></div>
 
             <div class="quick-grid" aria-label="下一步操作">
-              <button id="clerkButton" type="button">Ask staff</button>
               <button id="copyButton" type="button">Share with family</button>
               <button id="downloadButton" type="button">Save card</button>
             </div>
@@ -368,32 +346,32 @@
             </div>
             <p id="feedbackThanks" hidden>Thanks. Your feedback helps us improve FamLens.</p>
           </section>
-
-          <section class="ai-chat-panel" id="chatPanel" aria-label="AI questions">
-            <div class="chat-head">
-              <div>
-                <p id="chatKicker">Ask AI</p>
-                <h2 id="chatTitle">Ask a follow-up</h2>
-              </div>
-              <button class="chat-clear" id="clearChatButton" type="button">Clear</button>
-            </div>
-            <div class="chat-suggestions" id="chatSuggestions" aria-label="常用问题"></div>
-            <div class="chat-messages" id="chatMessages" aria-live="polite">
-              <div class="chat-message assistant" id="chatWelcome">You can ask: Is this good for seniors? How do I use it? What should I watch out for?</div>
-            </div>
-            <div class="chat-voice-box">
-              <button class="chat-mic" id="chatMicButton" type="button">
-                <span class="mic-icon" aria-hidden="true"></span>
-                <span id="chatMicButtonText">Tap to speak</span>
-              </button>
-              <p id="chatVoiceStatus">Speak naturally, for example: How do I use this?</p>
-            </div>
-            <form class="chat-form" id="chatForm">
-              <textarea id="chatInput" rows="2" placeholder="Type your question"></textarea>
-              <button class="chat-submit" id="chatSubmitButton" type="submit">Send</button>
-            </form>
-          </section>
         </div>
+
+        <section class="ai-chat-panel" id="chatPanel" aria-label="AI questions">
+          <div class="chat-head">
+            <div>
+              <p id="chatKicker">Ask AI</p>
+              <h2 id="chatTitle">Ask a follow-up</h2>
+            </div>
+            <button class="chat-clear" id="clearChatButton" type="button">Clear</button>
+          </div>
+          <div class="chat-suggestions" id="chatSuggestions" aria-label="常用问题"></div>
+          <div class="chat-messages" id="chatMessages" aria-live="polite">
+            <div class="chat-message assistant" id="chatWelcome">You can ask: Is this good for seniors? How do I use it? What should I watch out for?</div>
+          </div>
+          <div class="chat-voice-box">
+            <button class="chat-mic" id="chatMicButton" type="button">
+              <span class="mic-icon" aria-hidden="true"></span>
+              <span id="chatMicButtonText">Tap to speak</span>
+            </button>
+            <p id="chatVoiceStatus">Speak naturally, for example: How do I use this?</p>
+          </div>
+          <form class="chat-form" id="chatForm">
+            <textarea id="chatInput" rows="2" placeholder="Type your question"></textarea>
+            <button class="chat-submit" id="chatSubmitButton" type="submit">Send</button>
+          </form>
+        </section>
       </section>
 
       <section class="home-insights" aria-label="Family shopping intelligence">
@@ -445,6 +423,7 @@
             <span id="homeFamilyTileLanguage">Language<br />preference</span>
           </div>
           <p id="homeFamilyNote">Set this once. Product answers, receipt reports, and AI suggestions will become more relevant to this household.</p>
+          <button class="home-family-action" id="homeFamilySetupButton" type="button">Family member basics</button>
         </article>
       </section>
 
@@ -454,16 +433,6 @@
         <a href="/terms" target="_blank" rel="noreferrer">Terms</a>
       </footer>
     </main>
-
-    <dialog class="clerk-dialog" id="clerkDialog">
-      <div class="dialog-head">
-        <h2 id="dialogTitle">Show staff</h2>
-        <button id="closeDialogButton" type="button" aria-label="Close">×</button>
-      </div>
-      <p class="clerk-phrase" id="clerkPhrase">Where can I find this product?</p>
-      <p class="dialog-hint" id="dialogHint">Show this sentence to staff, or copy it into a translator.</p>
-      <button class="primary-action compact" id="copyClerkButton" type="button">Copy English</button>
-    </dialog>
 
     <dialog class="profile-dialog" id="profileDialog">
       <section class="profile-setup-panel" aria-label="Family setup">
@@ -488,10 +457,82 @@
             <option value="hi">हिन्दी</option>
           </select>
         </label>
-        <label class="setup-field" for="profileMembersInput">
-          <span id="profileMembersLabel">Family members</span>
-          <textarea id="profileMembersInput" rows="5" placeholder="Example: I shop for 4 people: father 68, mother 65, child 8, spouse adult. Add basic health notes only if useful."></textarea>
-        </label>
+        <section class="structured-profile" aria-label="Family member basics">
+          <section class="profile-structured-card">
+            <h3 id="profileMainTitle">Main shopper</h3>
+            <div class="setup-grid two">
+              <label class="setup-field" for="profileMainNameInput">
+                <span id="profileMainNameLabel">Name or nickname</span>
+                <input id="profileMainNameInput" type="text" autocomplete="name" placeholder="Mom" />
+              </label>
+              <label class="setup-field" for="profileMainAgeInput">
+                <span id="profileMainAgeLabel">Age</span>
+                <input id="profileMainAgeInput" type="number" inputmode="numeric" min="0" max="120" placeholder="62" />
+              </label>
+            </div>
+            <label class="setup-field" for="profileMainGenderSelect">
+              <span id="profileMainGenderLabel">Gender</span>
+              <select id="profileMainGenderSelect"></select>
+            </label>
+            <div class="setup-field">
+              <span id="profileMainHealthLabel">Health notes</span>
+              <div class="profile-chip-grid" id="profileMainHealthChips">
+                <button type="button" data-main-health="blood_pressure">High blood pressure</button>
+                <button type="button" data-main-health="diabetes">Diabetes</button>
+                <button type="button" data-main-health="cholesterol">High cholesterol</button>
+                <button type="button" data-main-health="allergy">Allergy</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="profile-structured-card">
+            <h3 id="profileAddTitle">Add family member</h3>
+            <div class="setup-grid two">
+              <label class="setup-field" for="profileMemberNameInput">
+                <span id="profileMemberNameLabel">Name</span>
+                <input id="profileMemberNameInput" type="text" placeholder="Dad" />
+              </label>
+              <label class="setup-field" for="profileMemberAgeInput">
+                <span id="profileMemberAgeLabel">Age</span>
+                <input id="profileMemberAgeInput" type="number" inputmode="numeric" min="0" max="120" placeholder="66" />
+              </label>
+            </div>
+            <div class="setup-grid two">
+              <label class="setup-field" for="profileMemberRelationSelect">
+                <span id="profileMemberRelationLabel">Relationship</span>
+                <select id="profileMemberRelationSelect"></select>
+              </label>
+              <label class="setup-field" for="profileMemberGenderSelect">
+                <span id="profileMemberGenderLabel">Gender</span>
+                <select id="profileMemberGenderSelect"></select>
+              </label>
+            </div>
+            <div class="setup-field">
+              <span id="profileMemberHealthLabel">Health concerns</span>
+              <div class="profile-chip-grid" id="profileMemberHealthChips">
+                <button type="button" data-member-health="blood_pressure">High blood pressure</button>
+                <button type="button" data-member-health="diabetes">Diabetes</button>
+                <button type="button" data-member-health="cholesterol">High cholesterol</button>
+                <button type="button" data-member-health="low_sugar">Less sugar</button>
+                <button type="button" data-member-health="low_salt">Less salt</button>
+                <button type="button" data-member-health="lactose">Lactose sensitive</button>
+                <button type="button" data-member-health="child_growth">Child growth</button>
+                <button type="button" data-member-health="allergy">Allergy</button>
+              </div>
+            </div>
+            <label class="setup-field" for="profileMemberNoteInput">
+              <span id="profileMemberNoteLabel">Other note</span>
+              <textarea id="profileMemberNoteInput" rows="2" placeholder="Optional short note"></textarea>
+            </label>
+            <button class="secondary-action profile-add-member" id="profileAddMemberButton" type="button">Add member</button>
+          </section>
+
+          <section class="profile-structured-card" id="profileMemberListSection">
+            <h3 id="profileMemberListTitle">Family members added</h3>
+            <div class="profile-member-list" id="profileMemberList"></div>
+          </section>
+        </section>
+        <textarea id="profileMembersInput" hidden></textarea>
         <label class="setup-field" for="profileRecoveryInput">
           <span id="profileRecoveryLabel">Save family records</span>
           <input id="profileRecoveryInput" type="text" inputmode="email" autocomplete="email" placeholder="Optional: email or phone for future recovery" />
@@ -572,6 +613,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=30"></script>
+    <script src="/static/app.js?v=39"></script>
   </body>
 </html>
