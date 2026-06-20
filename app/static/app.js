@@ -258,6 +258,17 @@ if (familyProfileState.output_language && supportedLanguageKeys.has(familyProfil
   localStorage.setItem(languageStorageKey, appLanguage);
 }
 let serviceState = "ready";
+
+const actionStatusCopy = {
+  en: { shared: "Shared", saved: "Saved PNG", imageReady: "Image ready" },
+  "zh-Hans": { shared: "已分享", saved: "已保存图片", imageReady: "图片已生成" },
+  es: { shared: "Compartido", saved: "PNG guardado", imageReady: "Imagen lista" },
+  fr: { shared: "Partagé", saved: "PNG enregistré", imageReady: "Image prête" },
+  ko: { shared: "공유됨", saved: "PNG 저장됨", imageReady: "이미지 준비됨" },
+  ja: { shared: "共有しました", saved: "PNG保存済み", imageReady: "画像準備済み" },
+  vi: { shared: "Đã chia sẻ", saved: "Đã lưu PNG", imageReady: "Ảnh đã sẵn sàng" },
+  hi: { shared: "Share हो गया", saved: "PNG saved", imageReady: "Image ready" },
+};
 let currentAudio = null;
 let currentAudioUrl = null;
 let localizationRequestId = 0;
@@ -1916,7 +1927,7 @@ const growthLanguageCopy = {
   en: {
     productShareKicker: "Shareable card",
     productShareTitle: "Send this judgement to family",
-    productShareCopy: "One tap copies the key points so another family member can confirm before buying.",
+    productShareCopy: "One tap shares the image card so another family member can confirm before buying.",
     productShareButton: "Share",
     productCommerceKicker: "Optional savings",
     productCommerceTitle: "Relevant offers can appear here later",
@@ -1930,13 +1941,13 @@ const growthLanguageCopy = {
     receiptCommerceTitle: "Cashback and coupon opportunities can appear here later",
     receiptCommerceCopy: "Savings modules stay separate from health and family notes.",
     receiptCommerceButton: "View",
-    productShareTemplate: "Copy the product judgement and send it to family before buying.",
+    productShareTemplate: "Share this product image card with family before buying.",
     receiptShareTemplate: "Copy this receipt summary and keep the household shopping record up to date.",
   },
   "zh-Hans": {
     productShareKicker: "可分享判断卡",
     productShareTitle: "发给家人，一起确认再买",
-    productShareCopy: "一键复制重点信息，让不在现场的家人也能看懂这个商品。",
+    productShareCopy: "一键分享图文卡，让不在现场的家人也能看懂这个商品。",
     productShareButton: "分享",
     productCommerceKicker: "可选省钱信息",
     productCommerceTitle: "未来可在这里展示相关优惠",
@@ -1950,7 +1961,7 @@ const growthLanguageCopy = {
     receiptCommerceTitle: "未来可在这里展示返现和优惠券",
     receiptCommerceCopy: "省钱模块会和健康、家庭提醒分开展示。",
     receiptCommerceButton: "查看",
-    productShareTemplate: "复制商品判断，买之前发给家人一起确认。",
+    productShareTemplate: "把这张商品图文卡发给家人，买之前一起确认。",
     receiptShareTemplate: "复制小票摘要，同时沉淀家庭购物记录。",
   },
 };
@@ -2531,18 +2542,18 @@ clearRecordsButton.addEventListener("click", async () => {
 
 copyButton.addEventListener("click", async () => {
   if (!latestResult) return;
-  await copyText(buildShareText(latestResult));
-  sendClientEvent("share_family", { mode: latestResult.receipt ? "receipt" : "product", output_language: appLanguage });
-  copyButton.textContent = ui().copied;
-  setTimeout(() => (copyButton.textContent = ui().shareFamily), 1200);
+  await shareResultWithFamily(copyButton, ui().shareFamily, "share_family", {
+    mode: latestResult.receipt ? "receipt" : "product",
+    output_language: appLanguage,
+  });
 });
 
 productShareButton?.addEventListener("click", async () => {
   if (!latestResult) return;
-  await copyText(buildShareText(latestResult));
-  sendClientEvent("share_product_panel", { output_language: appLanguage, item_name: latestResult?.judgement?.item_name || "" });
-  productShareButton.textContent = ui().copied;
-  setTimeout(() => (productShareButton.textContent = growthCopy().productShareButton), 1200);
+  await shareResultWithFamily(productShareButton, growthCopy().productShareButton, "share_product_panel", {
+    output_language: appLanguage,
+    item_name: latestResult?.judgement?.item_name || "",
+  });
 });
 
 receiptShareButton?.addEventListener("click", async () => {
@@ -2553,16 +2564,13 @@ receiptShareButton?.addEventListener("click", async () => {
   setTimeout(() => (receiptShareButton.textContent = growthCopy().receiptShareButton), 1200);
 });
 
-downloadButton.addEventListener("click", () => {
+downloadButton.addEventListener("click", async () => {
   if (!latestCardSvg) return;
   sendClientEvent("save_card", { output_language: appLanguage, item_name: latestResult?.judgement?.item_name || "" });
-  const blob = new Blob([latestCardSvg], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${latestResult?.judgement?.item_name || "famlens-card"}.svg`;
-  link.click();
-  URL.revokeObjectURL(url);
+  const blob = await renderLatestCardPngBlob();
+  downloadBlob(blob, cardImageFilename());
+  downloadButton.textContent = actionStatus("saved");
+  setTimeout(() => (downloadButton.textContent = ui().saveCard), 1200);
 });
 
 async function analyzeFile(file) {
@@ -3524,6 +3532,111 @@ async function copyText(text) {
   textarea.select();
   document.execCommand("copy");
   textarea.remove();
+}
+
+function actionStatus(key) {
+  return (actionStatusCopy[appLanguage] || actionStatusCopy.en)[key] || actionStatusCopy.en[key] || "";
+}
+
+function cardImageFilename() {
+  const rawName = latestResult?.judgement?.item_name || "famlens-card";
+  const cleanName = String(rawName)
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+  return `${cleanName || "famlens-card"}.png`;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 800);
+}
+
+async function renderLatestCardPngBlob() {
+  if (!latestCardSvg) throw new Error("No card available");
+  const svgBlob = new Blob([latestCardSvg], { type: "image/svg+xml;charset=utf-8" });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  try {
+    const image = await loadImage(svgUrl);
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth || 900;
+    canvas.height = image.naturalHeight || 1400;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Could not create canvas");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob((pngBlob) => {
+        if (pngBlob) resolve(pngBlob);
+        else reject(new Error("Could not create PNG"));
+      }, "image/png", 0.96);
+    });
+    return blob;
+  } finally {
+    URL.revokeObjectURL(svgUrl);
+  }
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Could not render card image"));
+    image.src = src;
+  });
+}
+
+async function shareResultWithFamily(button, resetLabel, eventName, eventPayload) {
+  const isProductCard = Boolean(latestResult?.judgement && latestCardSvg);
+  try {
+    if (isProductCard) {
+      const pngBlob = await renderLatestCardPngBlob();
+      const filename = cardImageFilename();
+      if (typeof File !== "function") {
+        downloadBlob(pngBlob, filename);
+        await copyText(buildShareText(latestResult));
+        button.textContent = actionStatus("imageReady");
+        sendClientEvent(eventName, eventPayload);
+        return;
+      }
+      const file = new File([pngBlob], filename, { type: "image/png" });
+      const sharePayload = {
+        title: latestResult?.judgement?.item_name || "FamLens",
+        text: buildShareText(latestResult),
+        files: [file],
+      };
+      if (navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+        await navigator.share(sharePayload);
+        button.textContent = actionStatus("shared");
+      } else {
+        downloadBlob(pngBlob, filename);
+        await copyText(buildShareText(latestResult));
+        button.textContent = actionStatus("imageReady");
+      }
+    } else if (navigator.share) {
+      await navigator.share({ title: "FamLens", text: buildShareText(latestResult) });
+      button.textContent = actionStatus("shared");
+    } else {
+      await copyText(buildShareText(latestResult));
+      button.textContent = ui().copied;
+    }
+    sendClientEvent(eventName, eventPayload);
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      await copyText(buildShareText(latestResult));
+      button.textContent = ui().copied;
+    }
+  } finally {
+    setTimeout(() => (button.textContent = resetLabel), 1400);
+  }
 }
 
 function toEnglishFallback(name) {

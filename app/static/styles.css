@@ -2720,11 +2720,18 @@ body {
 
 .topbar {
   min-height: 58px;
+  gap: 10px;
   align-items: flex-start;
 }
 
 .brand {
+  flex: 1 1 auto;
+  min-width: 0;
   gap: 10px;
+}
+
+.brand > div {
+  min-width: 0;
 }
 
 .brand-mark {
@@ -2735,9 +2742,11 @@ body {
 }
 
 .eyebrow {
+  max-width: 170px;
   margin-bottom: 4px;
   font-size: 12px;
   font-weight: 950;
+  line-height: 1.08;
   text-transform: uppercase;
 }
 
@@ -2746,11 +2755,17 @@ h1 {
 }
 
 .top-actions {
-  align-items: flex-start;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
 }
 
 .language-control {
-  min-width: 112px;
+  min-width: 102px;
+  max-width: 112px;
+  padding: 6px 8px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.74);
 }
@@ -2762,6 +2777,12 @@ h1 {
 
 .language-select {
   font-size: 13px;
+}
+
+.profile-open {
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 14px;
 }
 
 .workspace {
