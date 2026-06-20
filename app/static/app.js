@@ -77,10 +77,6 @@ const homeFamilyTileAdult = document.querySelector("#homeFamilyTileAdult");
 const homeFamilyTileChild = document.querySelector("#homeFamilyTileChild");
 const homeFamilyTileLanguage = document.querySelector("#homeFamilyTileLanguage");
 const homeFamilyNote = document.querySelector("#homeFamilyNote");
-const homeScanButton = document.querySelector("#homeScanButton");
-const homeRecordsButton = document.querySelector("#homeRecordsButton");
-const homeFamilyButton = document.querySelector("#homeFamilyButton");
-const homeAiButton = document.querySelector("#homeAiButton");
 const profileLabel = document.querySelector("#profileLabel");
 const profileSummary = document.querySelector("#profileSummary");
 const profileSaveButton = document.querySelector("#profileSaveButton");
@@ -2090,10 +2086,6 @@ setupLanguageSelect.addEventListener("change", async () => {
   await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
 });
 profileOpenButton.addEventListener("click", () => openProfileDialog());
-homeFamilyButton?.addEventListener("click", () => {
-  setActiveHomeNav("family");
-  openProfileDialog();
-});
 profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
 profileSkipButton.addEventListener("click", () => {
   syncVisibleFamilyInputs();
@@ -2198,30 +2190,12 @@ clearChatButton.addEventListener("click", () => {
 });
 
 recordsOpenButton.addEventListener("click", () => {
-  setActiveHomeNav("records");
   renderFamilyRecords();
   recordsDialog.showModal();
   sendClientEvent("open_family_records", { output_language: appLanguage });
 });
 
-homeRecordsButton?.addEventListener("click", () => {
-  setActiveHomeNav("records");
-  renderFamilyRecords();
-  recordsDialog.showModal();
-  sendClientEvent("open_family_records", { source: "home_nav", output_language: appLanguage });
-});
-
-homeScanButton?.addEventListener("click", () => {
-  setActiveHomeNav("scan");
-  document.querySelector(".camera-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
-});
-
-homeAiButton?.addEventListener("click", () => {
-  setActiveHomeNav("ai");
-  focusChatPanel();
-});
 homeVoiceButton?.addEventListener("click", () => {
-  setActiveHomeNav("ai");
   focusChatPanel();
 });
 homeStaffButton?.addEventListener("click", handleHomeStaffEntry);
@@ -2522,20 +2496,7 @@ function handleHomeStaffEntry(event) {
   const now = Date.now();
   if (now - lastHomeStaffOpenAt < 320) return;
   lastHomeStaffOpenAt = now;
-  setActiveHomeNav("scan");
   openStaffDialog();
-}
-
-function setActiveHomeNav(view) {
-  const navItems = [
-    [homeScanButton, "scan"],
-    [homeRecordsButton, "records"],
-    [homeFamilyButton, "family"],
-    [homeAiButton, "ai"],
-  ];
-  navItems.forEach(([button, key]) => {
-    button?.classList.toggle("active", key === view);
-  });
 }
 
 async function askChat(rawQuestion, options = {}) {
@@ -3309,7 +3270,6 @@ function toEnglishFallback(name) {
 }
 
 function setScanMode(mode) {
-  setActiveHomeNav("scan");
   scanMode = mode === "receipt" ? "receipt" : "product";
   latestResult = null;
   latestCardSvg = "";
@@ -3504,10 +3464,6 @@ function applyHomeLanguage() {
   if (homeFamilyTileChild) homeFamilyTileChild.innerHTML = t("familyChild");
   if (homeFamilyTileLanguage) homeFamilyTileLanguage.innerHTML = t("familyLanguage");
   if (homeFamilyNote) homeFamilyNote.textContent = t("familyNote");
-  if (homeScanButton) homeScanButton.textContent = t("navScan");
-  if (homeRecordsButton) homeRecordsButton.textContent = t("navRecords");
-  if (homeFamilyButton) homeFamilyButton.textContent = t("navFamily");
-  if (homeAiButton) homeAiButton.textContent = t("navAi");
 }
 
 function applyGrowthLanguage() {
