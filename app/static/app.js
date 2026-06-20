@@ -35,7 +35,13 @@ const homeProductPreviewOneLabel = document.querySelector("#homeProductPreviewOn
 const homeProductPreviewOne = document.querySelector("#homeProductPreviewOne");
 const homeProductPreviewTwoLabel = document.querySelector("#homeProductPreviewTwoLabel");
 const homeProductPreviewTwo = document.querySelector("#homeProductPreviewTwo");
+const homeProductPreviewThreeLabel = document.querySelector("#homeProductPreviewThreeLabel");
 const homeProductPreviewThree = document.querySelector("#homeProductPreviewThree");
+const homeProductPreviewVoiceLabel = document.querySelector("#homeProductPreviewVoiceLabel");
+const homeProductPreviewVoice = document.querySelector("#homeProductPreviewVoice");
+const homeProductPreviewAsk = document.querySelector("#homeProductPreviewAsk");
+const homeProductPreviewShare = document.querySelector("#homeProductPreviewShare");
+const homeProductPreviewSave = document.querySelector("#homeProductPreviewSave");
 const homeReceiptPreviewLabel = document.querySelector("#homeReceiptPreviewLabel");
 const homeReceiptPreviewTitle = document.querySelector("#homeReceiptPreviewTitle");
 const homeReceiptPreviewFood = document.querySelector("#homeReceiptPreviewFood");
@@ -43,6 +49,9 @@ const homeReceiptPreviewCare = document.querySelector("#homeReceiptPreviewCare")
 const homeReceiptPreviewOne = document.querySelector("#homeReceiptPreviewOne");
 const homeReceiptPreviewTwo = document.querySelector("#homeReceiptPreviewTwo");
 const homeReceiptPreviewThree = document.querySelector("#homeReceiptPreviewThree");
+const homeReceiptStoreLabel = document.querySelector("#homeReceiptStoreLabel");
+const homeReceiptItemsLabel = document.querySelector("#homeReceiptItemsLabel");
+const homeReceiptDateLabel = document.querySelector("#homeReceiptDateLabel");
 const visualProductLang = document.querySelector("#visualProductLang");
 const visualProductTitle = document.querySelector("#visualProductTitle");
 const visualProductCopy = document.querySelector("#visualProductCopy");
@@ -1438,19 +1447,23 @@ const homeLanguageCopy = {
     voiceTitle: "Ask AI by voice",
     voiceSub: "Speak in your language while shopping",
     previewKicker: "Scan result",
-    previewTitle: "Example card",
+    previewTitle: "What you get after scanning",
     productPreviewLabel: "Product result",
     productPreviewTitle: "A2 Milk Powder",
     productPreviewSubtitle: "Milk powder for the family",
+    productPreviewVoiceLabel: "Voice summary",
+    productPreviewVoice: "This is full cream milk powder. It can be used for family drinks, but check milk and soy allergies.",
     productPreviewBadgeGood: "OK for most families",
     productPreviewBadgeCaution: "Check warning",
     productPreviewOneLabel: "Use",
     productPreviewOne: "Mix with water. Drink after prepared.",
     productPreviewTwoLabel: "Careful",
     productPreviewTwo: "Milk or soy allergy.",
+    productPreviewThreeLabel: "Next step",
     productPreviewThree: "What to ask or compare next",
     receiptPreviewLabel: "Receipt result",
     receiptPreviewTitle: "Family shopping summary",
+    receiptStoreLabel: "Store",
     receiptPreviewFood: "Food",
     receiptPreviewCare: "Care",
     receiptPreviewOne: "More vegetables this week. Fewer protein items.",
@@ -1508,19 +1521,23 @@ const homeLanguageCopy = {
     voiceTitle: "语音问 AI",
     voiceSub: "在超市里直接用熟悉的语言说",
     previewKicker: "扫描结果",
-    previewTitle: "示例卡片",
+    previewTitle: "扫完后会看到这些",
     productPreviewLabel: "商品结果",
     productPreviewTitle: "A2 奶粉",
     productPreviewSubtitle: "全家饮用的奶粉",
+    productPreviewVoiceLabel: "语音摘要",
+    productPreviewVoice: "这是全脂奶粉，可以给家里冲饮，但牛奶或大豆过敏的人要谨慎。",
     productPreviewBadgeGood: "多数家庭可用",
     productPreviewBadgeCaution: "注意警示",
     productPreviewOneLabel: "怎么用",
     productPreviewOne: "加水冲好后饮用。",
     productPreviewTwoLabel: "注意",
     productPreviewTwo: "牛奶或大豆过敏要谨慎。",
+    productPreviewThreeLabel: "下一步",
     productPreviewThree: "告诉你下一步该问什么、比什么",
     receiptPreviewLabel: "小票结果",
     receiptPreviewTitle: "家庭购物小结",
+    receiptStoreLabel: "商店",
     receiptPreviewFood: "食物",
     receiptPreviewCare: "护理",
     receiptPreviewOne: "本周蔬菜更多，蛋白类偏少。",
@@ -1568,19 +1585,23 @@ const homeLanguageCopy = {
     voiceTitle: "Pregunta por voz",
     voiceSub: "Habla naturalmente en tu idioma",
     previewKicker: "Resultado",
-    previewTitle: "Tarjeta de ejemplo",
+    previewTitle: "Lo que recibes al escanear",
     productPreviewLabel: "Resultado del producto",
     productPreviewTitle: "Leche A2 en polvo",
     productPreviewSubtitle: "Leche en polvo para la familia",
+    productPreviewVoiceLabel: "Resumen por voz",
+    productPreviewVoice: "Es leche entera en polvo. Puede servir para bebidas familiares, pero revisa alergias a leche o soya.",
     productPreviewBadgeGood: "Apto para la mayoría",
     productPreviewBadgeCaution: "Revisar alerta",
     productPreviewOneLabel: "Uso",
     productPreviewOne: "Mezclar con agua y beber.",
     productPreviewTwoLabel: "Cuidado",
     productPreviewTwo: "Alergia a leche o soya.",
+    productPreviewThreeLabel: "Siguiente paso",
     productPreviewThree: "Qué preguntar o comparar después",
     receiptPreviewLabel: "Resultado del recibo",
     receiptPreviewTitle: "Resumen familiar",
+    receiptStoreLabel: "Tienda",
     receiptPreviewFood: "Comida",
     receiptPreviewCare: "Cuidado",
     receiptPreviewOne: "Más verduras esta semana. Menos proteína.",
@@ -1628,19 +1649,23 @@ const homeLanguageCopy = {
     voiceTitle: "Demander à l’AI par voix",
     voiceSub: "Parlez naturellement dans votre langue",
     previewKicker: "Résultat",
-    previewTitle: "Carte exemple",
+    previewTitle: "Ce que vous obtenez après le scan",
     productPreviewLabel: "Résultat produit",
     productPreviewTitle: "Lait A2 en poudre",
     productPreviewSubtitle: "Lait en poudre pour la famille",
+    productPreviewVoiceLabel: "Résumé vocal",
+    productPreviewVoice: "C’est du lait entier en poudre. Il peut servir aux boissons familiales, mais vérifiez les allergies au lait ou au soja.",
     productPreviewBadgeGood: "OK pour la plupart",
     productPreviewBadgeCaution: "Vérifier l’alerte",
     productPreviewOneLabel: "Usage",
     productPreviewOne: "Mélanger avec de l’eau, puis boire.",
     productPreviewTwoLabel: "Attention",
     productPreviewTwo: "Allergie au lait ou au soja.",
+    productPreviewThreeLabel: "Étape suivante",
     productPreviewThree: "Que demander ou comparer ensuite",
     receiptPreviewLabel: "Résultat reçu",
     receiptPreviewTitle: "Résumé familial",
+    receiptStoreLabel: "Magasin",
     receiptPreviewFood: "Aliments",
     receiptPreviewCare: "Soins",
     receiptPreviewOne: "Plus de légumes cette semaine. Moins de protéines.",
@@ -1688,19 +1713,23 @@ const homeLanguageCopy = {
     voiceTitle: "음성으로 AI에게 묻기",
     voiceSub: "익숙한 언어로 자연스럽게 말하세요",
     previewKicker: "스캔 결과",
-    previewTitle: "예시 카드",
+    previewTitle: "스캔 후 보이는 결과",
     productPreviewLabel: "상품 결과",
     productPreviewTitle: "A2 분유",
     productPreviewSubtitle: "가족용 분유",
+    productPreviewVoiceLabel: "음성 요약",
+    productPreviewVoice: "전지분유입니다. 가족 음료로 사용할 수 있지만 우유나 대두 알레르기를 확인하세요.",
     productPreviewBadgeGood: "대부분 가족 사용 가능",
     productPreviewBadgeCaution: "주의사항 확인",
     productPreviewOneLabel: "사용법",
     productPreviewOne: "물에 타서 마십니다.",
     productPreviewTwoLabel: "주의",
     productPreviewTwo: "우유나 대두 알레르기 주의.",
+    productPreviewThreeLabel: "다음 단계",
     productPreviewThree: "다음에 물어보거나 비교할 점",
     receiptPreviewLabel: "영수증 결과",
     receiptPreviewTitle: "가족 쇼핑 요약",
+    receiptStoreLabel: "매장",
     receiptPreviewFood: "식품",
     receiptPreviewCare: "케어",
     receiptPreviewOne: "이번 주 채소가 늘고 단백질 품목은 적습니다.",
@@ -1748,19 +1777,23 @@ const homeLanguageCopy = {
     voiceTitle: "音声で AI に質問",
     voiceSub: "使いやすい言語で自然に話せます",
     previewKicker: "スキャン結果",
-    previewTitle: "サンプルカード",
+    previewTitle: "スキャン後に見える結果",
     productPreviewLabel: "商品結果",
     productPreviewTitle: "A2 ミルクパウダー",
     productPreviewSubtitle: "家族向けの粉ミルク",
+    productPreviewVoiceLabel: "音声要約",
+    productPreviewVoice: "これは全脂粉乳です。家族の飲み物に使えますが、牛乳や大豆アレルギーを確認してください。",
     productPreviewBadgeGood: "多くの家庭で利用可",
     productPreviewBadgeCaution: "注意点を確認",
     productPreviewOneLabel: "使い方",
     productPreviewOne: "水に混ぜて飲みます。",
     productPreviewTwoLabel: "注意",
     productPreviewTwo: "牛乳・大豆アレルギーに注意。",
+    productPreviewThreeLabel: "次のステップ",
     productPreviewThree: "次に聞くこと・比べること",
     receiptPreviewLabel: "レシート結果",
     receiptPreviewTitle: "家族の買い物まとめ",
+    receiptStoreLabel: "店舗",
     receiptPreviewFood: "食品",
     receiptPreviewCare: "ケア",
     receiptPreviewOne: "今週は野菜が多め、たんぱく質は少なめ。",
@@ -1808,19 +1841,23 @@ const homeLanguageCopy = {
     voiceTitle: "Hỏi AI bằng giọng nói",
     voiceSub: "Nói tự nhiên bằng ngôn ngữ của bạn",
     previewKicker: "Kết quả quét",
-    previewTitle: "Thẻ mẫu",
+    previewTitle: "Bạn nhận được gì sau khi quét",
     productPreviewLabel: "Kết quả sản phẩm",
     productPreviewTitle: "Sữa bột A2",
     productPreviewSubtitle: "Sữa bột cho gia đình",
+    productPreviewVoiceLabel: "Tóm tắt giọng nói",
+    productPreviewVoice: "Đây là sữa bột nguyên kem. Có thể pha cho gia đình, nhưng cần kiểm tra dị ứng sữa hoặc đậu nành.",
     productPreviewBadgeGood: "Hợp với đa số gia đình",
     productPreviewBadgeCaution: "Xem cảnh báo",
     productPreviewOneLabel: "Cách dùng",
     productPreviewOne: "Pha với nước rồi uống.",
     productPreviewTwoLabel: "Cẩn thận",
     productPreviewTwo: "Dị ứng sữa hoặc đậu nành.",
+    productPreviewThreeLabel: "Bước tiếp theo",
     productPreviewThree: "Nên hỏi hoặc so sánh gì tiếp",
     receiptPreviewLabel: "Kết quả hóa đơn",
     receiptPreviewTitle: "Tóm tắt mua sắm gia đình",
+    receiptStoreLabel: "Cửa hàng",
     receiptPreviewFood: "Thực phẩm",
     receiptPreviewCare: "Chăm sóc",
     receiptPreviewOne: "Tuần này nhiều rau hơn, ít món giàu đạm hơn.",
@@ -1868,19 +1905,23 @@ const homeLanguageCopy = {
     voiceTitle: "आवाज़ से AI से पूछें",
     voiceSub: "अपनी भाषा में स्वाभाविक बोलें",
     previewKicker: "Scan result",
-    previewTitle: "Sample card",
+    previewTitle: "Scan के बाद क्या मिलेगा",
     productPreviewLabel: "Product result",
     productPreviewTitle: "A2 milk powder",
     productPreviewSubtitle: "परिवार के लिए milk powder",
+    productPreviewVoiceLabel: "Voice summary",
+    productPreviewVoice: "यह full cream milk powder है। परिवार के drinks के लिए उपयोग हो सकता है, लेकिन milk या soy allergy check करें.",
     productPreviewBadgeGood: "अधिकतर परिवारों के लिए ठीक",
     productPreviewBadgeCaution: "चेतावनी देखें",
     productPreviewOneLabel: "कैसे उपयोग करें",
     productPreviewOne: "पानी में मिलाकर पिएं.",
     productPreviewTwoLabel: "ध्यान दें",
     productPreviewTwo: "Milk या soy allergy हो तो सावधान.",
+    productPreviewThreeLabel: "अगला step",
     productPreviewThree: "आगे क्या पूछना या compare करना है",
     receiptPreviewLabel: "Receipt result",
     receiptPreviewTitle: "Family shopping summary",
+    receiptStoreLabel: "Store",
     receiptPreviewFood: "खाना",
     receiptPreviewCare: "देखभाल",
     receiptPreviewOne: "इस हफ्ते vegetables ज़्यादा, protein items कम.",
@@ -3431,13 +3472,22 @@ function applyHomeLanguage() {
   if (homeProductPreviewSubtitle) homeProductPreviewSubtitle.textContent = t("productPreviewSubtitle");
   if (homeProductPreviewBadgeGood) homeProductPreviewBadgeGood.textContent = t("productPreviewBadgeGood");
   if (homeProductPreviewBadgeCaution) homeProductPreviewBadgeCaution.textContent = t("productPreviewBadgeCaution");
+  if (homeProductPreviewVoiceLabel) homeProductPreviewVoiceLabel.textContent = t("productPreviewVoiceLabel");
+  if (homeProductPreviewVoice) homeProductPreviewVoice.textContent = t("productPreviewVoice");
   if (homeProductPreviewOneLabel) homeProductPreviewOneLabel.textContent = t("productPreviewOneLabel");
   if (homeProductPreviewOne) homeProductPreviewOne.textContent = t("productPreviewOne");
   if (homeProductPreviewTwoLabel) homeProductPreviewTwoLabel.textContent = t("productPreviewTwoLabel");
   if (homeProductPreviewTwo) homeProductPreviewTwo.textContent = t("productPreviewTwo");
+  if (homeProductPreviewThreeLabel) homeProductPreviewThreeLabel.textContent = t("productPreviewThreeLabel");
   if (homeProductPreviewThree) homeProductPreviewThree.textContent = t("productPreviewThree");
+  if (homeProductPreviewAsk) homeProductPreviewAsk.textContent = ui().askStaff;
+  if (homeProductPreviewShare) homeProductPreviewShare.textContent = ui().shareFamily;
+  if (homeProductPreviewSave) homeProductPreviewSave.textContent = ui().saveCard;
   if (homeReceiptPreviewLabel) homeReceiptPreviewLabel.textContent = t("receiptPreviewLabel");
   if (homeReceiptPreviewTitle) homeReceiptPreviewTitle.textContent = t("receiptPreviewTitle");
+  if (homeReceiptStoreLabel) homeReceiptStoreLabel.textContent = t("receiptStoreLabel");
+  if (homeReceiptItemsLabel) homeReceiptItemsLabel.textContent = ui().itemCount;
+  if (homeReceiptDateLabel) homeReceiptDateLabel.textContent = ui().date;
   if (homeReceiptPreviewFood) homeReceiptPreviewFood.textContent = t("receiptPreviewFood");
   if (homeReceiptPreviewCare) homeReceiptPreviewCare.textContent = t("receiptPreviewCare");
   if (homeReceiptPreviewOne) homeReceiptPreviewOne.textContent = t("receiptPreviewOne");

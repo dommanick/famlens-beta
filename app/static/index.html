@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=28" />
+    <link rel="stylesheet" href="/static/styles.css?v=29" />
   </head>
   <body>
     <main class="shell">
@@ -77,7 +77,7 @@
           <section class="home-result-preview" aria-label="Example results">
             <div class="home-result-preview-head">
               <span id="homePreviewKicker">Scan result</span>
-              <strong id="homePreviewTitle">Example card</strong>
+              <strong id="homePreviewTitle">What you get after scanning</strong>
             </div>
             <div class="home-preview-cards">
               <article class="home-result-shot product-preview-card">
@@ -95,6 +95,10 @@
                   <span class="preview-pill good" id="homeProductPreviewBadgeGood">OK for most families</span>
                   <span class="preview-pill caution" id="homeProductPreviewBadgeCaution">Check warning</span>
                 </div>
+                <div class="sample-voice-mini">
+                  <span id="homeProductPreviewVoiceLabel">Voice summary</span>
+                  <strong id="homeProductPreviewVoice">This is full cream milk powder. It can be used for family drinks, but check milk and soy allergies.</strong>
+                </div>
                 <div class="sample-result-grid">
                   <div>
                     <span id="homeProductPreviewOneLabel">Use</span>
@@ -104,6 +108,15 @@
                     <span id="homeProductPreviewTwoLabel">Careful</span>
                     <strong id="homeProductPreviewTwo">Milk or soy allergy.</strong>
                   </div>
+                  <div class="sample-result-wide">
+                    <span id="homeProductPreviewThreeLabel">Next step</span>
+                    <strong id="homeProductPreviewThree">What to ask or compare next</strong>
+                  </div>
+                </div>
+                <div class="sample-action-row" aria-hidden="true">
+                  <span id="homeProductPreviewAsk">Ask staff</span>
+                  <span id="homeProductPreviewShare">Share</span>
+                  <span id="homeProductPreviewSave">Save</span>
                 </div>
               </article>
               <article class="home-result-shot receipt-preview-card">
@@ -112,7 +125,25 @@
                     <span id="homeReceiptPreviewLabel">Receipt result</span>
                     <strong id="homeReceiptPreviewTitle">Family shopping summary</strong>
                   </div>
-                  <small>Jun</small>
+                  <small>$16.48</small>
+                </div>
+                <div class="sample-receipt-meta">
+                  <div>
+                    <span id="homeReceiptStoreLabel">Store</span>
+                    <strong>SAFEWAY</strong>
+                  </div>
+                  <div>
+                    <span id="homeReceiptItemsLabel">Items</span>
+                    <strong>2</strong>
+                  </div>
+                  <div>
+                    <span id="homeReceiptDateLabel">Date</span>
+                    <strong>Jun 16</strong>
+                  </div>
+                </div>
+                <div class="sample-receipt-items">
+                  <div><span>Honey Bear</span><strong>$7.49</strong></div>
+                  <div><span>Ambrosia Apple</span><strong>$8.99</strong></div>
                 </div>
                 <div class="preview-receipt-sample">
                   <div>
@@ -125,6 +156,7 @@
                   </div>
                 </div>
                 <div class="sample-report-note" id="homeReceiptPreviewOne">More vegetables this week. Fewer protein items.</div>
+                <div class="sample-report-note secondary" id="homeReceiptPreviewThree">Monthly diet and spending signals</div>
               </article>
             </div>
           </section>
@@ -540,6 +572,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=28"></script>
+    <script src="/static/app.js?v=29"></script>
   </body>
 </html>
