@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=27" />
+    <link rel="stylesheet" href="/static/styles.css?v=28" />
   </head>
   <body>
     <main class="shell">
@@ -144,13 +144,9 @@
             <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
             <input id="imageInput" class="file-input" type="file" accept="image/*" />
             <div class="upload-actions">
-              <button class="primary-action" id="pickButton" type="button" hidden>
+              <button class="primary-action" id="pickButton" type="button">
                 <span class="camera-icon" aria-hidden="true"></span>
                 <span id="pickButtonText">Scan product</span>
-              </button>
-              <button class="album-action" id="albumButton" type="button">
-                <span class="album-icon" aria-hidden="true"></span>
-                <span id="albumButtonText">Upload from album</span>
               </button>
             </div>
             <p class="upload-copy" id="uploadCopy">Product, label, instructions, or price tag</p>
@@ -544,6 +540,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=27"></script>
+    <script src="/static/app.js?v=28"></script>
   </body>
 </html>

@@ -269,7 +269,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "这张没看成功",
       replace: "换一张",
-      uploadFromAlbum: "从相册上传",
+      uploadFromAlbum: "拍照或选图",
       speakProduct: "播放给老人听",
       speakReceipt: "播放小票摘要",
       askStaff: "问店员怎么说",
@@ -301,7 +301,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "拍商品",
+        pick: "拍商品 / 选图",
         upload: "海外商品、外文标签、说明书或价签都可以",
         note: "直接给出能不能买、怎么用、要注意什么",
         emptyTitle: "这里展示结果",
@@ -311,7 +311,7 @@ const languageConfig = {
         error: "这张图暂时没分析成功。请换一张更清楚的正面、背面或说明照片。",
       },
       receipt: {
-        pick: "扫小票",
+        pick: "扫小票 / 选图",
         upload: "拍完整海外小票，包含商品清单和总额",
         note: "小票会沉淀成家庭购物、饮食和支出记录",
         emptyTitle: "这里展示结果",
@@ -348,7 +348,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "This photo did not work",
       replace: "Choose another",
-      uploadFromAlbum: "Upload from album",
+      uploadFromAlbum: "Take or choose photo",
       speakProduct: "Play aloud",
       speakReceipt: "Play receipt summary",
       askStaff: "Ask staff",
@@ -380,7 +380,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "Scan product",
+        pick: "Scan product / choose photo",
         upload: "Overseas product, foreign label, instructions, or price tag",
         note: "Get buying, usage, and watch-out advice directly here",
         emptyTitle: "Results appear here",
@@ -390,7 +390,7 @@ const languageConfig = {
         error: "This product photo did not analyze well. Try a clearer front, back, or instruction photo.",
       },
       receipt: {
-        pick: "Scan receipt",
+        pick: "Scan receipt / choose photo",
         upload: "Capture the full overseas receipt with item list and total",
         note: "Receipts become your family shopping, diet, and spending memory",
         emptyTitle: "Results appear here",
@@ -427,7 +427,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "La foto no funcionó",
       replace: "Cambiar foto",
-      uploadFromAlbum: "Subir desde álbum",
+      uploadFromAlbum: "Tomar o elegir foto",
       speakProduct: "Leer en voz alta",
       speakReceipt: "Leer resumen",
       askStaff: "Preguntar al personal",
@@ -459,7 +459,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "Escanear producto",
+        pick: "Escanear producto / elegir foto",
         upload: "Producto, etiqueta, instrucciones o precio",
         note: "El resultado aparece aquí, sin enlace extra",
         emptyTitle: "Los resultados aparecen aquí",
@@ -469,7 +469,7 @@ const languageConfig = {
         error: "No pude analizar bien esta foto. Prueba con una más clara.",
       },
       receipt: {
-        pick: "Escanear recibo",
+        pick: "Escanear recibo / elegir foto",
         upload: "Recibo completo con lista y total",
         note: "Sirve para informes de compra, dieta y gasto familiar",
         emptyTitle: "Los resultados aparecen aquí",
@@ -499,7 +499,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "La photo n'a pas marché",
       replace: "Changer",
-      uploadFromAlbum: "Importer une photo",
+      uploadFromAlbum: "Prendre ou choisir une photo",
       speakProduct: "Lire à voix haute",
       speakReceipt: "Lire le reçu",
       askStaff: "Demander au personnel",
@@ -531,7 +531,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "Scanner produit",
+        pick: "Scanner produit / choisir photo",
         upload: "Produit, étiquette, mode d'emploi ou prix",
         note: "Le résultat s'affiche ici, sans lien séparé",
         emptyTitle: "Les résultats apparaissent ici",
@@ -541,7 +541,7 @@ const languageConfig = {
         error: "Analyse difficile. Essayez une photo plus nette.",
       },
       receipt: {
-        pick: "Scanner reçu",
+        pick: "Scanner reçu / choisir photo",
         upload: "Reçu complet avec liste et total",
         note: "Base des rapports de courses, alimentation et dépenses",
         emptyTitle: "Les résultats apparaissent ici",
@@ -571,7 +571,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "사진 분석 실패",
       replace: "다른 사진",
-      uploadFromAlbum: "앨범에서 올리기",
+      uploadFromAlbum: "촬영 또는 사진 선택",
       speakProduct: "소리로 듣기",
       speakReceipt: "영수증 요약 듣기",
       askStaff: "직원에게 묻기",
@@ -603,7 +603,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "상품 스캔",
+        pick: "상품 스캔 / 사진 선택",
         upload: "상품, 라벨, 설명, 가격표",
         note: "결과가 이 페이지에 바로 표시됩니다",
         emptyTitle: "결과가 여기에 표시됩니다",
@@ -613,7 +613,7 @@ const languageConfig = {
         error: "분석이 잘 되지 않았습니다. 더 선명한 사진을 올려 주세요.",
       },
       receipt: {
-        pick: "영수증 스캔",
+        pick: "영수증 스캔 / 사진 선택",
         upload: "상품 목록과 총액이 보이게 찍기",
         note: "가족 구매, 식단, 월간 지출 분석에 사용됩니다",
         emptyTitle: "결과가 여기에 표시됩니다",
@@ -643,7 +643,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "写真を分析できません",
       replace: "別の写真",
-      uploadFromAlbum: "写真から選ぶ",
+      uploadFromAlbum: "撮影または写真を選択",
       speakProduct: "音声で聞く",
       speakReceipt: "レシート要約",
       askStaff: "店員に聞く",
@@ -675,7 +675,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "商品をスキャン",
+        pick: "商品をスキャン / 写真選択",
         upload: "商品、ラベル、説明、値札",
         note: "結果はこのページに直接表示されます",
         emptyTitle: "結果はここに表示されます",
@@ -685,7 +685,7 @@ const languageConfig = {
         error: "分析できませんでした。より鮮明な写真を試してください。",
       },
       receipt: {
-        pick: "レシートをスキャン",
+        pick: "レシートをスキャン / 写真選択",
         upload: "商品リストと合計が見えるレシート",
         note: "家族の買い物、食生活、月次支出分析に使います",
         emptyTitle: "結果はここに表示されます",
@@ -715,7 +715,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "Ảnh chưa phân tích được",
       replace: "Đổi ảnh",
-      uploadFromAlbum: "Tải từ album",
+      uploadFromAlbum: "Chụp hoặc chọn ảnh",
       speakProduct: "Đọc thành tiếng",
       speakReceipt: "Đọc tóm tắt hóa đơn",
       askStaff: "Hỏi nhân viên",
@@ -747,7 +747,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "Quét sản phẩm",
+        pick: "Quét sản phẩm / chọn ảnh",
         upload: "Sản phẩm, nhãn, hướng dẫn hoặc giá",
         note: "Kết quả hiện ngay tại đây, không cần mở link",
         emptyTitle: "Kết quả sẽ hiển thị ở đây",
@@ -757,7 +757,7 @@ const languageConfig = {
         error: "Ảnh này chưa phân tích tốt. Hãy thử ảnh rõ hơn.",
       },
       receipt: {
-        pick: "Quét hóa đơn",
+        pick: "Quét hóa đơn / chọn ảnh",
         upload: "Chụp đủ danh sách món và tổng tiền",
         note: "Dùng cho báo cáo mua sắm, ăn uống và chi tiêu gia đình",
         emptyTitle: "Kết quả sẽ hiển thị ở đây",
@@ -787,7 +787,7 @@ const languageConfig = {
       resultKicker: "FamLens",
       errorTitle: "यह फोटो साफ नहीं पढ़ी गई",
       replace: "दूसरी फोटो",
-      uploadFromAlbum: "गैलरी से अपलोड करें",
+      uploadFromAlbum: "फोटो लें या चुनें",
       speakProduct: "आवाज में सुनें",
       speakReceipt: "रसीद सुनें",
       askStaff: "स्टाफ से पूछें",
@@ -819,7 +819,7 @@ const languageConfig = {
     },
     modes: {
       product: {
-        pick: "सामान स्कैन करें",
+        pick: "सामान स्कैन / फोटो चुनें",
         upload: "सामान, लेबल, निर्देश या कीमत",
         note: "नतीजा यहीं दिखेगा, लिंक खोलने की जरूरत नहीं",
         emptyTitle: "नतीजे यहां दिखेंगे",
@@ -829,7 +829,7 @@ const languageConfig = {
         error: "यह फोटो ठीक से पढ़ी नहीं गई। कृपया साफ फोटो लें।",
       },
       receipt: {
-        pick: "रसीद स्कैन करें",
+        pick: "रसीद स्कैन / फोटो चुनें",
         upload: "पूरी सूची और कुल रकम की फोटो लें",
         note: "परिवार की खरीदारी, खाना और खर्च रिपोर्ट के लिए",
         emptyTitle: "नतीजे यहां दिखेंगे",
@@ -2076,8 +2076,8 @@ const familyJoinLanguageCopy = {
   },
 };
 
-pickButton.addEventListener("click", () => cameraInput.click());
-albumButton.addEventListener("click", () => imageInput.click());
+pickButton.addEventListener("click", () => imageInput.click());
+albumButton?.addEventListener("click", () => imageInput.click());
 replaceButton.addEventListener("click", () => imageInput.click());
 languageSelect.addEventListener("change", async () => {
   await changeLanguage(languageSelect.value, { localizeResult: true });
@@ -2134,7 +2134,7 @@ cameraInput.addEventListener("change", () => {
 scanTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     setScanMode(tab.dataset.mode || "product");
-    cameraInput.click();
+    imageInput.click();
   });
 });
 
@@ -3366,7 +3366,7 @@ function applyLanguage() {
   resultKicker.textContent = ui().resultKicker;
   errorTitle.textContent = ui().errorTitle;
   replaceButton.textContent = ui().replace;
-  albumButtonText.textContent = ui().uploadFromAlbum;
+  if (albumButtonText) albumButtonText.textContent = ui().uploadFromAlbum;
   speakButtonText.textContent = ui().speakProduct;
   receiptSpeakButtonText.textContent = ui().speakReceipt;
   clerkButton.textContent = ui().askStaff;
