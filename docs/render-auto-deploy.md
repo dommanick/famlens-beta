@@ -17,17 +17,19 @@ RENDER_DEPLOY_HOOK_URL=Render 给你的 Deploy Hook URL
 
 以后推送到 `main` 时，GitHub Actions 会自动调用这个 Hook。
 
-如果当前 GitHub Token 没有 `workflow` 权限，先不要直接提交 `.github/workflows` 文件。项目里提供了工作流模板：
+当前仓库已经启用 GitHub Actions 工作流：
+
+```text
+.github/workflows/render-deploy.yml
+```
+
+它来自项目里保留的模板：
 
 ```text
 docs/render-deploy.workflow.yml
 ```
 
-等 Token 有 `workflow` 权限后，把它复制到：
-
-```text
-.github/workflows/render-deploy.yml
-```
+如果 GitHub 里没有配置 Render secret，工作流会明确失败并提示需要配置部署凭证，避免误以为已经上线。
 
 ## 备用方式：Render API
 

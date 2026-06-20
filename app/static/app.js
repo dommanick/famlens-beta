@@ -18,9 +18,22 @@ const panelTitle = document.querySelector("#panelTitle");
 const panelIntro = document.querySelector("#panelIntro");
 const productTab = document.querySelector("#productTab");
 const receiptTab = document.querySelector("#receiptTab");
+const homeStaffButton = document.querySelector("#homeStaffButton");
+const homeStaffTitle = document.querySelector("#homeStaffTitle");
+const homeStaffSub = document.querySelector("#homeStaffSub");
 const homeVoiceButton = document.querySelector("#homeVoiceButton");
 const homeVoiceTitle = document.querySelector("#homeVoiceTitle");
 const homeVoiceSub = document.querySelector("#homeVoiceSub");
+const visualProductLang = document.querySelector("#visualProductLang");
+const visualProductTitle = document.querySelector("#visualProductTitle");
+const visualProductCopy = document.querySelector("#visualProductCopy");
+const visualReceiptStore = document.querySelector("#visualReceiptStore");
+const visualReceiptTitle = document.querySelector("#visualReceiptTitle");
+const visualReceiptCopy = document.querySelector("#visualReceiptCopy");
+const useCaseProduct = document.querySelector("#useCaseProduct");
+const useCaseReceipt = document.querySelector("#useCaseReceipt");
+const useCaseStaff = document.querySelector("#useCaseStaff");
+const useCaseFamily = document.querySelector("#useCaseFamily");
 const homeReceiptKicker = document.querySelector("#homeReceiptKicker");
 const homeReceiptProgressTitle = document.querySelector("#homeReceiptProgressTitle");
 const homeReceiptProgressCount = document.querySelector("#homeReceiptProgressCount");
@@ -66,6 +79,7 @@ const loadingCopy = document.querySelector("#loadingCopy");
 const errorState = document.querySelector("#errorState");
 const errorTitle = document.querySelector("#errorTitle");
 const errorText = document.querySelector("#errorText");
+const resultPanel = document.querySelector("#resultPanel");
 const resultState = document.querySelector("#resultState");
 const receiptState = document.querySelector("#receiptState");
 const verdictBadge = document.querySelector("#verdictBadge");
@@ -74,6 +88,15 @@ const subtitle = document.querySelector("#subtitle");
 const voiceSummary = document.querySelector("#voiceSummary");
 const cardStage = document.querySelector("#cardStage");
 const detailList = document.querySelector("#detailList");
+const productShareKicker = document.querySelector("#productShareKicker");
+const productShareTitle = document.querySelector("#productShareTitle");
+const productShareCopy = document.querySelector("#productShareCopy");
+const productShareButton = document.querySelector("#productShareButton");
+const productCommercePanel = document.querySelector("#productCommercePanel");
+const productCommerceKicker = document.querySelector("#productCommerceKicker");
+const productCommerceTitle = document.querySelector("#productCommerceTitle");
+const productCommerceCopy = document.querySelector("#productCommerceCopy");
+const productCommerceButton = document.querySelector("#productCommerceButton");
 const speakButton = document.querySelector("#speakButton");
 const speakButtonText = document.querySelector("#speakButtonText");
 const receiptSpeakButton = document.querySelector("#receiptSpeakButton");
@@ -98,6 +121,15 @@ const spendingSignalLabel = document.querySelector("#spendingSignalLabel");
 const spendingSignal = document.querySelector("#spendingSignal");
 const familyReportNoteLabel = document.querySelector("#familyReportNoteLabel");
 const familyReportNote = document.querySelector("#familyReportNote");
+const receiptShareKicker = document.querySelector("#receiptShareKicker");
+const receiptShareTitle = document.querySelector("#receiptShareTitle");
+const receiptShareCopy = document.querySelector("#receiptShareCopy");
+const receiptShareButton = document.querySelector("#receiptShareButton");
+const receiptCommercePanel = document.querySelector("#receiptCommercePanel");
+const receiptCommerceKicker = document.querySelector("#receiptCommerceKicker");
+const receiptCommerceTitle = document.querySelector("#receiptCommerceTitle");
+const receiptCommerceCopy = document.querySelector("#receiptCommerceCopy");
+const receiptCommerceButton = document.querySelector("#receiptCommerceButton");
 const clerkButton = document.querySelector("#clerkButton");
 const copyButton = document.querySelector("#copyButton");
 const downloadButton = document.querySelector("#downloadButton");
@@ -201,6 +233,7 @@ let cancelChatVoice = false;
 let isChatListening = false;
 const recordsStorageKey = "carecart.familyRecords.v1";
 let familyRecords = loadFamilyRecords();
+let lastHomeStaffOpenAt = 0;
 
 const languageConfig = {
   "zh-Hans": {
@@ -254,20 +287,20 @@ const languageConfig = {
     modes: {
       product: {
         pick: "拍商品",
-        upload: "商品、说明、价签都可以",
-        note: "结果直接显示在本页，不跳链接，不需要再聊天追问",
-        emptyTitle: "商品信息会显示在这里",
-        emptyCopy: "支持包装、说明、价签和使用提示。",
-        loadingTitle: "正在看这张商品图",
-        loadingCopy: "通常需要 8-20 秒。尽量拍清楚正面、背面或说明文字。",
-        error: "这张图暂时没分析成功。请换一张更清楚的正面或背面照片。",
+        upload: "海外商品、外文标签、说明书或价签都可以",
+        note: "直接给出能不能买、怎么用、要注意什么",
+        emptyTitle: "这里展示结果",
+        emptyCopy: "拍商品或扫小票后，识别结果会显示在这里。",
+        loadingTitle: "正在看这张海外商品图",
+        loadingCopy: "通常需要 8-20 秒。正面、背面、成分或说明文字越清楚越好。",
+        error: "这张图暂时没分析成功。请换一张更清楚的正面、背面或说明照片。",
       },
       receipt: {
         pick: "扫小票",
-        upload: "拍完整小票，包含商品清单和总额",
-        note: "小票用于统计家庭采购清单、饮食结构和月度支出",
-        emptyTitle: "记录买了什么，花了多少钱",
-        emptyCopy: "小票是家庭饮食结构和支出报告的数据入口，建议买完就扫。",
+        upload: "拍完整海外小票，包含商品清单和总额",
+        note: "小票会沉淀成家庭购物、饮食和支出记录",
+        emptyTitle: "这里展示结果",
+        emptyCopy: "扫小票后，采购清单和家庭购物记录会显示在这里。",
         loadingTitle: "正在整理这张小票",
         loadingCopy: "我会提取商店、日期、总额、商品清单和分类金额。",
         error: "这张小票暂时没分析成功。请拍完整小票，包含商品清单和总金额。",
@@ -293,8 +326,8 @@ const languageConfig = {
       retry: "Retry",
       panelKicker: "For the family shopper",
       panelTitle: "Snap it. Understand it.",
-      productTab: "Product",
-      receiptTab: "Receipt",
+      productTab: "Scan product",
+      receiptTab: "Scan receipt",
       profileLabel: "Family notes, optional",
       profilePlaceholder: "Example: someone has high cholesterol; grandma has high blood pressure; child is 8; prefer less sugar and salt.",
       resultKicker: "FamLens",
@@ -333,20 +366,20 @@ const languageConfig = {
     modes: {
       product: {
         pick: "Scan product",
-        upload: "Product, label, instructions, or price tag",
-        note: "Results appear here directly, no chat loop or extra link",
-        emptyTitle: "Product information appears here",
-        emptyCopy: "Works with packaging, labels, instructions, and price tags.",
-        loadingTitle: "Reading this product photo",
-        loadingCopy: "Usually takes 8-20 seconds. Clear front, back, or instruction photos work best.",
-        error: "This product photo did not analyze well. Try a clearer front or back photo.",
+        upload: "Overseas product, foreign label, instructions, or price tag",
+        note: "Get buying, usage, and watch-out advice directly here",
+        emptyTitle: "Results appear here",
+        emptyCopy: "After you scan a product, FamLens will show the explanation here.",
+        loadingTitle: "Reading this overseas product photo",
+        loadingCopy: "Usually takes 8-20 seconds. Clear front, back, ingredients, or instruction photos work best.",
+        error: "This product photo did not analyze well. Try a clearer front, back, or instruction photo.",
       },
       receipt: {
         pick: "Scan receipt",
-        upload: "Capture the full receipt with item list and total",
-        note: "Receipts power family shopping, diet, and monthly spending reports",
-        emptyTitle: "Track what the family bought and spent",
-        emptyCopy: "Receipts are the data entry point for family diet and spending reports.",
+        upload: "Capture the full overseas receipt with item list and total",
+        note: "Receipts become your family shopping, diet, and spending memory",
+        emptyTitle: "Results appear here",
+        emptyCopy: "After you scan a receipt, the shopping list and family record will appear here.",
         loadingTitle: "Organizing this receipt",
         loadingCopy: "I will extract store, date, total, items, and category amounts.",
         error: "This receipt did not analyze well. Retake the full receipt with item list and total.",
@@ -414,8 +447,8 @@ const languageConfig = {
         pick: "Escanear producto",
         upload: "Producto, etiqueta, instrucciones o precio",
         note: "El resultado aparece aquí, sin enlace extra",
-        emptyTitle: "Qué es, si conviene comprarlo y cómo usarlo",
-        emptyCopy: "Empieza con productos, etiquetas, avisos e instrucciones.",
+        emptyTitle: "Los resultados aparecen aquí",
+        emptyCopy: "Después de escanear, la explicación aparecerá aquí.",
         loadingTitle: "Leyendo la foto del producto",
         loadingCopy: "Suele tardar 8-20 segundos. Mejor con texto claro.",
         error: "No pude analizar bien esta foto. Prueba con una más clara.",
@@ -424,8 +457,8 @@ const languageConfig = {
         pick: "Escanear recibo",
         upload: "Recibo completo con lista y total",
         note: "Sirve para informes de compra, dieta y gasto familiar",
-        emptyTitle: "Registra qué compró y gastó la familia",
-        emptyCopy: "El recibo es la base de informes familiares mensuales.",
+        emptyTitle: "Los resultados aparecen aquí",
+        emptyCopy: "Después de escanear el recibo, la lista aparecerá aquí.",
         loadingTitle: "Ordenando este recibo",
         loadingCopy: "Extraeré tienda, fecha, total, artículos y categorías.",
         error: "No pude analizar bien este recibo. Toma el recibo completo.",
@@ -486,8 +519,8 @@ const languageConfig = {
         pick: "Scanner produit",
         upload: "Produit, étiquette, mode d'emploi ou prix",
         note: "Le résultat s'affiche ici, sans lien séparé",
-        emptyTitle: "Ce que c'est, si l'acheter, comment l'utiliser",
-        emptyCopy: "Commencez par les produits, étiquettes et consignes.",
+        emptyTitle: "Les résultats apparaissent ici",
+        emptyCopy: "Après le scan, l'explication apparaîtra ici.",
         loadingTitle: "Lecture du produit",
         loadingCopy: "Souvent 8-20 secondes. Une photo nette aide beaucoup.",
         error: "Analyse difficile. Essayez une photo plus nette.",
@@ -496,8 +529,8 @@ const languageConfig = {
         pick: "Scanner reçu",
         upload: "Reçu complet avec liste et total",
         note: "Base des rapports de courses, alimentation et dépenses",
-        emptyTitle: "Suivre les achats et dépenses familiales",
-        emptyCopy: "Les reçus alimentent les rapports mensuels.",
+        emptyTitle: "Les résultats apparaissent ici",
+        emptyCopy: "Après le scan du reçu, la liste apparaîtra ici.",
         loadingTitle: "Organisation du reçu",
         loadingCopy: "J'extrais magasin, date, total, articles et catégories.",
         error: "Analyse difficile. Reprenez le reçu complet.",
@@ -558,8 +591,8 @@ const languageConfig = {
         pick: "상품 스캔",
         upload: "상품, 라벨, 설명, 가격표",
         note: "결과가 이 페이지에 바로 표시됩니다",
-        emptyTitle: "무엇인지, 살지, 어떻게 쓰는지",
-        emptyCopy: "상품 라벨과 주의사항을 먼저 쉽게 확인합니다.",
+        emptyTitle: "결과가 여기에 표시됩니다",
+        emptyCopy: "스캔 후 설명이 여기에 표시됩니다.",
         loadingTitle: "상품 사진을 읽는 중",
         loadingCopy: "보통 8-20초 걸립니다. 글자가 선명할수록 좋습니다.",
         error: "분석이 잘 되지 않았습니다. 더 선명한 사진을 올려 주세요.",
@@ -568,8 +601,8 @@ const languageConfig = {
         pick: "영수증 스캔",
         upload: "상품 목록과 총액이 보이게 찍기",
         note: "가족 구매, 식단, 월간 지출 분석에 사용됩니다",
-        emptyTitle: "가족이 무엇을 샀고 얼마나 썼는지 기록",
-        emptyCopy: "영수증은 월간 가족 리포트의 데이터 입력입니다.",
+        emptyTitle: "결과가 여기에 표시됩니다",
+        emptyCopy: "영수증을 스캔하면 구매 목록이 여기에 표시됩니다.",
         loadingTitle: "영수증 정리 중",
         loadingCopy: "매장, 날짜, 총액, 상품, 분류 금액을 추출합니다.",
         error: "영수증 분석이 어렵습니다. 전체 영수증을 다시 찍어 주세요.",
@@ -630,8 +663,8 @@ const languageConfig = {
         pick: "商品をスキャン",
         upload: "商品、ラベル、説明、値札",
         note: "結果はこのページに直接表示されます",
-        emptyTitle: "何か、買うべきか、使い方",
-        emptyCopy: "商品ラベル、使い方、注意点を簡単に確認します。",
+        emptyTitle: "結果はここに表示されます",
+        emptyCopy: "スキャン後、説明がここに表示されます。",
         loadingTitle: "商品写真を読んでいます",
         loadingCopy: "通常 8-20 秒です。文字がはっきりした写真が最適です。",
         error: "分析できませんでした。より鮮明な写真を試してください。",
@@ -640,8 +673,8 @@ const languageConfig = {
         pick: "レシートをスキャン",
         upload: "商品リストと合計が見えるレシート",
         note: "家族の買い物、食生活、月次支出分析に使います",
-        emptyTitle: "家族が何を買い、いくら使ったか記録",
-        emptyCopy: "レシートは月次家族レポートの入口です。",
+        emptyTitle: "結果はここに表示されます",
+        emptyCopy: "レシートをスキャンすると、買い物リストがここに表示されます。",
         loadingTitle: "レシートを整理中",
         loadingCopy: "店、日付、合計、商品、分類金額を抽出します。",
         error: "分析できませんでした。レシート全体を撮り直してください。",
@@ -702,8 +735,8 @@ const languageConfig = {
         pick: "Quét sản phẩm",
         upload: "Sản phẩm, nhãn, hướng dẫn hoặc giá",
         note: "Kết quả hiện ngay tại đây, không cần mở link",
-        emptyTitle: "Đây là gì, có nên mua, dùng thế nào",
-        emptyCopy: "Bắt đầu với nhãn sản phẩm, cách dùng và lưu ý.",
+        emptyTitle: "Kết quả sẽ hiển thị ở đây",
+        emptyCopy: "Sau khi quét, phần giải thích sẽ hiển thị ở đây.",
         loadingTitle: "Đang đọc ảnh sản phẩm",
         loadingCopy: "Thường mất 8-20 giây. Ảnh rõ chữ sẽ tốt hơn.",
         error: "Ảnh này chưa phân tích tốt. Hãy thử ảnh rõ hơn.",
@@ -712,8 +745,8 @@ const languageConfig = {
         pick: "Quét hóa đơn",
         upload: "Chụp đủ danh sách món và tổng tiền",
         note: "Dùng cho báo cáo mua sắm, ăn uống và chi tiêu gia đình",
-        emptyTitle: "Ghi lại gia đình mua gì và tiêu bao nhiêu",
-        emptyCopy: "Hóa đơn là đầu vào cho báo cáo gia đình hằng tháng.",
+        emptyTitle: "Kết quả sẽ hiển thị ở đây",
+        emptyCopy: "Sau khi quét hóa đơn, danh sách mua sắm sẽ hiển thị ở đây.",
         loadingTitle: "Đang sắp xếp hóa đơn",
         loadingCopy: "Tôi sẽ lấy cửa hàng, ngày, tổng tiền, món hàng và phân loại.",
         error: "Hóa đơn này chưa phân tích tốt. Hãy chụp lại toàn bộ hóa đơn.",
@@ -774,8 +807,8 @@ const languageConfig = {
         pick: "सामान स्कैन करें",
         upload: "सामान, लेबल, निर्देश या कीमत",
         note: "नतीजा यहीं दिखेगा, लिंक खोलने की जरूरत नहीं",
-        emptyTitle: "यह क्या है, खरीदना है या नहीं, कैसे इस्तेमाल करें",
-        emptyCopy: "पहले लेबल, इस्तेमाल और सावधानी समझें।",
+        emptyTitle: "नतीजे यहां दिखेंगे",
+        emptyCopy: "स्कैन करने के बाद जानकारी यहां दिखेगी।",
         loadingTitle: "सामान की फोटो पढ़ रहा है",
         loadingCopy: "आमतौर पर 8-20 सेकंड लगते हैं। साफ अक्षर वाली फोटो बेहतर है।",
         error: "यह फोटो ठीक से पढ़ी नहीं गई। कृपया साफ फोटो लें।",
@@ -784,8 +817,8 @@ const languageConfig = {
         pick: "रसीद स्कैन करें",
         upload: "पूरी सूची और कुल रकम की फोटो लें",
         note: "परिवार की खरीदारी, खाना और खर्च रिपोर्ट के लिए",
-        emptyTitle: "परिवार ने क्या खरीदा और कितना खर्च किया",
-        emptyCopy: "रसीद मासिक परिवार रिपोर्ट का डेटा है।",
+        emptyTitle: "नतीजे यहां दिखेंगे",
+        emptyCopy: "रसीद स्कैन करने के बाद shopping list यहां दिखेगी।",
         loadingTitle: "रसीद पढ़ रहा है",
         loadingCopy: "दुकान, तारीख, कुल रकम, सामान और श्रेणी निकालूंगा।",
         error: "यह रसीद ठीक से पढ़ी नहीं गई। पूरी रसीद फिर से फोटो लें।",
@@ -1369,31 +1402,43 @@ const profileLanguageCopy = {
 
 const homeLanguageCopy = {
   en: {
-    brandEyebrow: "Family health shopping AI",
-    panelKicker: "For the whole household",
-    panelTitle: "Your family health shopping AI.",
-    panelIntro: "Understand products and receipts. Build a health-aware shopping memory for the whole family.",
-    productSub: "Know what it is, how to use it, and who it suits.",
-    receiptSub: "Save today’s shopping to your family memory.",
+    brandEyebrow: "Immigrant family shopping AI",
+    panelKicker: "Built for shopping in a new country",
+    panelTitle: "Can’t read it? Scan before you buy.",
+    panelIntro: "For immigrant families shopping abroad: scan a product to understand it, or scan a receipt to build your family shopping memory.",
+    productSub: "Take a photo of labels, ingredients, warnings, or instructions.",
+    receiptSub: "Take a photo of the full receipt after checkout.",
+    visualProductLang: "EN / FR label",
+    visualProductTitle: "Olive oil",
+    visualProductCopy: "Use, warning, family fit",
+    visualReceiptStore: "SAFEWAY",
+    visualReceiptTitle: "Receipt saved",
+    visualReceiptCopy: "Family shopping memory",
+    useCaseProduct: "Foreign labels",
+    useCaseReceipt: "Receipts",
+    useCaseStaff: "Store staff",
+    useCaseFamily: "Family sharing",
+    staffTitle: "Ask staff",
+    staffSub: "Translate what you want to ask",
     voiceTitle: "Ask AI by voice",
-    voiceSub: "Speak naturally in your language",
-    receiptKicker: "Family memory",
-    progressTitle: "Your first family report is forming",
-    progressCopy: "Scan receipts after shopping. FamLens will learn your family’s eating and spending patterns.",
+    voiceSub: "Speak in your language while shopping",
+    receiptKicker: "Shopping memory",
+    progressTitle: "Build your family’s overseas shopping record",
+    progressCopy: "Scan receipts after each trip. Over time, FamLens learns what your household buys, eats, and spends.",
     receiptProgress: "{count} / 8 receipts",
-    sampleKicker: "Why scan receipts",
-    sampleTitle: "Unlock a monthly family report",
+    sampleKicker: "Long-term value",
+    sampleTitle: "After a month, see what your family really buys",
     sampleLink: "View sample",
-    sampleNutrition: "Nutrition",
-    sampleNutritionCopy: "Vegetables, protein, sugar, calcium, processed food trends.",
-    sampleSpending: "Spending",
-    sampleSpendingCopy: "Groceries, restaurants, personal care, household supplies.",
-    sampleFamily: "Family",
-    sampleFamilyCopy: "Personalized notes for seniors, children, and health concerns.",
-    recentKicker: "Family memory",
-    recentTitle: "Recent scans",
-    noRecent: "No records yet. Scan a product or receipt to start your family shopping memory.",
-    familyKicker: "Personalized for household",
+    sampleNutrition: "Food signals",
+    sampleNutritionCopy: "Rough patterns for vegetables, protein, sugar, calcium, and processed foods.",
+    sampleSpending: "Shopping structure",
+    sampleSpendingCopy: "Grocery, pharmacy, household supplies, restaurants, and care products.",
+    sampleFamily: "Family context",
+    sampleFamilyCopy: "Advice becomes more useful with language and household basics.",
+    recentKicker: "Shopping memory",
+    recentTitle: "Recent shopping records",
+    noRecent: "No records yet. Scan an overseas product or receipt to start your family shopping memory.",
+    familyKicker: "Personalized for immigrant households",
     familyTitle: "Family basics",
     familySenior: "Senior<br />health notes",
     familyAdult: "Adult<br />health goals",
@@ -1408,31 +1453,43 @@ const homeLanguageCopy = {
     productShort: "Product",
   },
   "zh-Hans": {
-    brandEyebrow: "家庭健康购物 AI",
-    panelKicker: "给全家使用",
-    panelTitle: "全家的健康购物 AI 管家",
-    panelIntro: "看懂商品和小票，慢慢建立全家的健康购物记忆。",
-    productSub: "看懂是什么、怎么用、适合谁。",
-    receiptSub: "把今天购物保存到家庭记录。",
+    brandEyebrow: "海外移民家庭购物 AI",
+    panelKicker: "给在国外生活的家庭用",
+    panelTitle: "看不懂？拍一下再买。",
+    panelIntro: "给海外生活的家庭用：拍商品看懂标签、用法和注意事项；扫小票沉淀全家的购物记录。",
+    productSub: "拍标签、成分、警示或说明文字。",
+    receiptSub: "结账后拍完整小票，保存采购清单。",
+    visualProductLang: "英文 / 法文标签",
+    visualProductTitle: "橄榄油",
+    visualProductCopy: "用法、注意、适合谁",
+    visualReceiptStore: "海外超市",
+    visualReceiptTitle: "小票已记录",
+    visualReceiptCopy: "家庭购物记忆",
+    useCaseProduct: "外文标签",
+    useCaseReceipt: "购物小票",
+    useCaseStaff: "问店员",
+    useCaseFamily: "发家人",
+    staffTitle: "问店员",
+    staffSub: "把你想问的话翻译给店员",
     voiceTitle: "语音问 AI",
-    voiceSub: "用你熟悉的语言直接说",
-    receiptKicker: "家庭记忆",
-    progressTitle: "你的第一份家庭报告正在形成",
-    progressCopy: "购物后扫小票，FamLens 会学习你家的饮食和支出结构。",
+    voiceSub: "在超市里直接用熟悉的语言说",
+    receiptKicker: "购物记忆",
+    progressTitle: "建立全家的海外购物记录",
+    progressCopy: "每次买完扫小票。时间久了，FamLens 会更懂你家买什么、吃什么、花在哪里。",
     receiptProgress: "{count} / 8 张小票",
-    sampleKicker: "为什么要扫小票",
-    sampleTitle: "解锁月度家庭报告",
+    sampleKicker: "长期价值",
+    sampleTitle: "一个月后，看清你家真正买了什么",
     sampleLink: "看样例",
-    sampleNutrition: "营养",
-    sampleNutritionCopy: "蔬菜、蛋白质、糖、钙、加工食品趋势。",
-    sampleSpending: "支出",
-    sampleSpendingCopy: "超市、餐厅、个人护理、家庭用品。",
-    sampleFamily: "家庭",
-    sampleFamilyCopy: "针对老人、孩子和健康关注点给建议。",
-    recentKicker: "家庭记忆",
-    recentTitle: "最近记录",
-    noRecent: "还没有记录。先拍商品或扫小票，开始建立家庭购物记忆。",
-    familyKicker: "按家庭定制",
+    sampleNutrition: "饮食信号",
+    sampleNutritionCopy: "粗略看蔬菜、蛋白质、糖、钙、加工食品等趋势。",
+    sampleSpending: "购物结构",
+    sampleSpendingCopy: "超市、药房、家庭用品、餐厅和护理用品。",
+    sampleFamily: "家庭背景",
+    sampleFamilyCopy: "结合语言和家庭基础信息，建议会越来越贴合。",
+    recentKicker: "购物记忆",
+    recentTitle: "最近购物记录",
+    noRecent: "还没有记录。先拍一个海外商品或扫一张小票，开始建立家庭购物记忆。",
+    familyKicker: "按移民家庭定制",
     familyTitle: "家庭基础信息",
     familySenior: "老人<br />健康关注",
     familyAdult: "成人<br />健康目标",
@@ -1453,6 +1510,8 @@ const homeLanguageCopy = {
     panelIntro: "Entiende productos y recibos. Crea una memoria de compras saludable para la familia.",
     productSub: "Qué es, cómo usarlo y para quién conviene.",
     receiptSub: "Guarda la compra de hoy en la memoria familiar.",
+    staffTitle: "Preguntar al personal",
+    staffSub: "Traduce lo que quieres preguntar",
     voiceTitle: "Pregunta por voz",
     voiceSub: "Habla naturalmente en tu idioma",
     receiptKicker: "Memoria familiar",
@@ -1492,6 +1551,8 @@ const homeLanguageCopy = {
     panelIntro: "Comprenez produits et reçus. Créez une mémoire d’achats santé pour la famille.",
     productSub: "Ce que c’est, comment l’utiliser, pour qui.",
     receiptSub: "Ajoutez les achats du jour à la mémoire familiale.",
+    staffTitle: "Demander au personnel",
+    staffSub: "Traduire votre question",
     voiceTitle: "Demander à l’AI par voix",
     voiceSub: "Parlez naturellement dans votre langue",
     receiptKicker: "Mémoire familiale",
@@ -1531,6 +1592,8 @@ const homeLanguageCopy = {
     panelIntro: "상품과 영수증을 이해하고 가족 쇼핑 건강 기록을 만듭니다.",
     productSub: "무엇인지, 사용법, 누구에게 맞는지 확인.",
     receiptSub: "오늘 쇼핑을 가족 기록에 저장.",
+    staffTitle: "직원에게 묻기",
+    staffSub: "묻고 싶은 말을 번역",
     voiceTitle: "음성으로 AI에게 묻기",
     voiceSub: "익숙한 언어로 자연스럽게 말하세요",
     receiptKicker: "가족 메모리",
@@ -1570,6 +1633,8 @@ const homeLanguageCopy = {
     panelIntro: "商品とレシートを理解し、家族の健康的な買い物記録を作ります。",
     productSub: "何か、使い方、誰に合うかを確認。",
     receiptSub: "今日の買い物を家族記録に保存。",
+    staffTitle: "店員に聞く",
+    staffSub: "聞きたいことを翻訳",
     voiceTitle: "音声で AI に質問",
     voiceSub: "使いやすい言語で自然に話せます",
     receiptKicker: "家族メモリー",
@@ -1609,6 +1674,8 @@ const homeLanguageCopy = {
     panelIntro: "Hiểu sản phẩm và hóa đơn. Xây dựng ký ức mua sắm sức khỏe cho gia đình.",
     productSub: "Biết là gì, dùng thế nào, hợp với ai.",
     receiptSub: "Lưu mua sắm hôm nay vào ký ức gia đình.",
+    staffTitle: "Hỏi nhân viên",
+    staffSub: "Dịch điều bạn muốn hỏi",
     voiceTitle: "Hỏi AI bằng giọng nói",
     voiceSub: "Nói tự nhiên bằng ngôn ngữ của bạn",
     receiptKicker: "Ký ức gia đình",
@@ -1648,6 +1715,8 @@ const homeLanguageCopy = {
     panelIntro: "प्रोडक्ट और रसीद समझें। पूरे परिवार की हेल्थ-aware shopping memory बनाएं।",
     productSub: "क्या है, कैसे उपयोग करें, किसके लिए सही है।",
     receiptSub: "आज की shopping को family memory में सेव करें।",
+    staffTitle: "Staff से पूछें",
+    staffSub: "जो पूछना है उसका अनुवाद करें",
     voiceTitle: "आवाज़ से AI से पूछें",
     voiceSub: "अपनी भाषा में स्वाभाविक बोलें",
     receiptKicker: "Family memory",
@@ -1679,6 +1748,49 @@ const homeLanguageCopy = {
     navAi: "AI",
     receiptShort: "Receipt",
     productShort: "Product",
+  },
+};
+
+const growthLanguageCopy = {
+  en: {
+    productShareKicker: "Shareable card",
+    productShareTitle: "Send this judgement to family",
+    productShareCopy: "One tap copies the key points so another family member can confirm before buying.",
+    productShareButton: "Share",
+    productCommerceKicker: "Optional savings",
+    productCommerceTitle: "Relevant offers can appear here later",
+    productCommerceCopy: "Brand offers stay separate from the independent product judgement.",
+    productCommerceButton: "View",
+    receiptShareKicker: "Family memory",
+    receiptShareTitle: "This receipt is saved to your household record",
+    receiptShareCopy: "Share a quick summary with family and keep building the monthly shopping picture.",
+    receiptShareButton: "Share",
+    receiptCommerceKicker: "Optional savings",
+    receiptCommerceTitle: "Cashback and coupon opportunities can appear here later",
+    receiptCommerceCopy: "Savings modules stay separate from health and family notes.",
+    receiptCommerceButton: "View",
+    productShareTemplate: "Copy the product judgement and send it to family before buying.",
+    receiptShareTemplate: "Copy this receipt summary and keep the household shopping record up to date.",
+  },
+  "zh-Hans": {
+    productShareKicker: "可分享判断卡",
+    productShareTitle: "发给家人，一起确认再买",
+    productShareCopy: "一键复制重点信息，让不在现场的家人也能看懂这个商品。",
+    productShareButton: "分享",
+    productCommerceKicker: "可选省钱信息",
+    productCommerceTitle: "未来可在这里展示相关优惠",
+    productCommerceCopy: "品牌优惠会和独立判断分开，不影响能不能买、怎么用的结论。",
+    productCommerceButton: "查看",
+    receiptShareKicker: "家庭购物记忆",
+    receiptShareTitle: "这张小票已进入家庭记录",
+    receiptShareCopy: "把小票摘要发给家人，同时继续累积一个月后的家庭购物画像。",
+    receiptShareButton: "分享",
+    receiptCommerceKicker: "可选省钱信息",
+    receiptCommerceTitle: "未来可在这里展示返现和优惠券",
+    receiptCommerceCopy: "省钱模块会和健康、家庭提醒分开展示。",
+    receiptCommerceButton: "查看",
+    productShareTemplate: "复制商品判断，买之前发给家人一起确认。",
+    receiptShareTemplate: "复制小票摘要，同时沉淀家庭购物记录。",
   },
 };
 
@@ -1807,7 +1919,10 @@ setupLanguageSelect.addEventListener("change", async () => {
   await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
 });
 profileOpenButton.addEventListener("click", () => openProfileDialog());
-homeFamilyButton?.addEventListener("click", () => openProfileDialog());
+homeFamilyButton?.addEventListener("click", () => {
+  setActiveHomeNav("family");
+  openProfileDialog();
+});
 profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
 profileSkipButton.addEventListener("click", () => {
   syncVisibleFamilyInputs();
@@ -1856,6 +1971,7 @@ cameraInput.addEventListener("change", () => {
 scanTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     setScanMode(tab.dataset.mode || "product");
+    cameraInput.click();
   });
 });
 
@@ -1911,23 +2027,35 @@ clearChatButton.addEventListener("click", () => {
 });
 
 recordsOpenButton.addEventListener("click", () => {
+  setActiveHomeNav("records");
   renderFamilyRecords();
   recordsDialog.showModal();
   sendClientEvent("open_family_records", { output_language: appLanguage });
 });
 
 homeRecordsButton?.addEventListener("click", () => {
+  setActiveHomeNav("records");
   renderFamilyRecords();
   recordsDialog.showModal();
   sendClientEvent("open_family_records", { source: "home_nav", output_language: appLanguage });
 });
 
 homeScanButton?.addEventListener("click", () => {
+  setActiveHomeNav("scan");
   document.querySelector(".camera-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-homeAiButton?.addEventListener("click", () => focusChatPanel());
-homeVoiceButton?.addEventListener("click", () => focusChatPanel());
+homeAiButton?.addEventListener("click", () => {
+  setActiveHomeNav("ai");
+  focusChatPanel();
+});
+homeVoiceButton?.addEventListener("click", () => {
+  setActiveHomeNav("ai");
+  focusChatPanel();
+});
+homeStaffButton?.addEventListener("click", handleHomeStaffEntry);
+homeStaffButton?.addEventListener("pointerup", handleHomeStaffEntry);
+homeStaffButton?.addEventListener("touchend", handleHomeStaffEntry, { passive: false });
 
 recordsCloseButton.addEventListener("click", () => recordsDialog.close());
 
@@ -1952,9 +2080,7 @@ clearRecordsButton.addEventListener("click", async () => {
 });
 
 clerkButton.addEventListener("click", () => {
-  const name = latestResult?.judgement?.item_name || "this product";
-  clerkPhrase.textContent = `Where can I find ${toEnglishFallback(name)}?`;
-  clerkDialog.showModal();
+  openStaffDialog();
 });
 
 closeDialogButton.addEventListener("click", () => clerkDialog.close());
@@ -1970,6 +2096,22 @@ copyButton.addEventListener("click", async () => {
   sendClientEvent("share_family", { mode: latestResult.receipt ? "receipt" : "product", output_language: appLanguage });
   copyButton.textContent = ui().copied;
   setTimeout(() => (copyButton.textContent = ui().shareFamily), 1200);
+});
+
+productShareButton?.addEventListener("click", async () => {
+  if (!latestResult) return;
+  await copyText(buildShareText(latestResult));
+  sendClientEvent("share_product_panel", { output_language: appLanguage, item_name: latestResult?.judgement?.item_name || "" });
+  productShareButton.textContent = ui().copied;
+  setTimeout(() => (productShareButton.textContent = growthCopy().productShareButton), 1200);
+});
+
+receiptShareButton?.addEventListener("click", async () => {
+  if (!latestResult) return;
+  await copyText(buildShareText(latestResult));
+  sendClientEvent("share_receipt_panel", { output_language: appLanguage, store_name: latestResult?.receipt?.store_name || "" });
+  receiptShareButton.textContent = ui().copied;
+  setTimeout(() => (receiptShareButton.textContent = growthCopy().receiptShareButton), 1200);
 });
 
 downloadButton.addEventListener("click", () => {
@@ -2032,6 +2174,7 @@ async function analyzeFile(file) {
 function renderResult(data) {
   latestResult = data;
   latestCardSvg = data.card_svg || "";
+  if (resultPanel) resultPanel.hidden = false;
 
   const judgement = data.judgement || {};
   verdictBadge.textContent = judgement.verdict || "OK";
@@ -2050,6 +2193,15 @@ function renderResult(data) {
     detailList.appendChild(item);
   });
 
+  applyGrowthLanguage();
+  if (productShareCopy) {
+    const name = judgement.item_name || "this product";
+    productShareCopy.textContent = `${growthCopy().productShareTemplate} ${name}: ${judgement.subtitle || judgement.what_it_is || ""}`.trim();
+  }
+  if (productCommercePanel) {
+    productCommercePanel.hidden = !data.commerce?.enabled;
+  }
+
   emptyState.hidden = true;
   loadingState.hidden = true;
   errorState.hidden = true;
@@ -2062,6 +2214,7 @@ function renderResult(data) {
 function renderReceiptResult(data) {
   latestResult = data;
   latestCardSvg = "";
+  if (resultPanel) resultPanel.hidden = false;
   const receipt = data.receipt || {};
   const currency = receipt.currency || "CAD";
 
@@ -2074,6 +2227,15 @@ function renderReceiptResult(data) {
   nutritionSignal.textContent = receipt.nutrition_signal || "";
   spendingSignal.textContent = receipt.spending_signal || "";
   familyReportNote.textContent = receipt.family_report_note || "";
+  applyGrowthLanguage();
+  if (receiptShareCopy) {
+    const store = receipt.store_name || ui().unknownStore;
+    const total = formatAmount(receipt.total_amount, currency);
+    receiptShareCopy.textContent = `${growthCopy().receiptShareTemplate} ${store}: ${total}.`;
+  }
+  if (receiptCommercePanel) {
+    receiptCommercePanel.hidden = !data.commerce?.enabled;
+  }
 
   receiptItems.innerHTML = "";
   (receipt.items || []).slice(0, 12).forEach((item) => {
@@ -2153,9 +2315,56 @@ async function localizeLatestResult() {
 }
 
 function focusChatPanel() {
+  if (resultPanel) resultPanel.hidden = false;
+  emptyState.hidden = true;
+  loadingState.hidden = true;
+  errorState.hidden = true;
+  resultState.hidden = true;
+  receiptState.hidden = true;
+  feedbackPanel.hidden = true;
   chatPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
   chatInput?.focus({ preventScroll: true });
   sendClientEvent("home_ai_entry_clicked", { output_language: appLanguage });
+}
+
+function openStaffDialog() {
+  const name = latestResult?.judgement?.item_name || "this product";
+  clerkPhrase.textContent = `Where can I find ${toEnglishFallback(name)}?`;
+  try {
+    if (typeof clerkDialog.showModal === "function" && !clerkDialog.open) {
+      clerkDialog.showModal();
+    } else {
+      clerkDialog.setAttribute("open", "");
+    }
+  } catch (error) {
+    clerkDialog.setAttribute("open", "");
+  }
+  sendClientEvent("ask_staff_opened", {
+    source: latestResult?.judgement ? "product_result" : "home",
+    item_name: latestResult?.judgement?.item_name || "",
+    output_language: appLanguage,
+  });
+}
+
+function handleHomeStaffEntry(event) {
+  event?.preventDefault?.();
+  const now = Date.now();
+  if (now - lastHomeStaffOpenAt < 320) return;
+  lastHomeStaffOpenAt = now;
+  setActiveHomeNav("scan");
+  openStaffDialog();
+}
+
+function setActiveHomeNav(view) {
+  const navItems = [
+    [homeScanButton, "scan"],
+    [homeRecordsButton, "records"],
+    [homeFamilyButton, "family"],
+    [homeAiButton, "ai"],
+  ];
+  navItems.forEach(([button, key]) => {
+    button?.classList.toggle("active", key === view);
+  });
 }
 
 async function askChat(rawQuestion, options = {}) {
@@ -2866,6 +3075,7 @@ function submitFeedback(feedback) {
 }
 
 function showLoading() {
+  if (resultPanel) resultPanel.hidden = false;
   emptyState.hidden = true;
   loadingState.hidden = false;
   errorState.hidden = true;
@@ -2877,6 +3087,7 @@ function showLoading() {
 }
 
 function showError(message) {
+  if (resultPanel) resultPanel.hidden = false;
   errorTitle.textContent = ui().errorTitle;
   errorText.textContent = message;
   emptyState.hidden = true;
@@ -2927,6 +3138,7 @@ function toEnglishFallback(name) {
 }
 
 function setScanMode(mode) {
+  setActiveHomeNav("scan");
   scanMode = mode === "receipt" ? "receipt" : "product";
   latestResult = null;
   latestCardSvg = "";
@@ -2941,6 +3153,7 @@ function setScanMode(mode) {
     tab.classList.toggle("active", tab.dataset.mode === scanMode);
   });
   updateModeCopy();
+  if (resultPanel) resultPanel.hidden = true;
   emptyState.hidden = false;
   loadingState.hidden = true;
   errorState.hidden = true;
@@ -3041,6 +3254,7 @@ function applyLanguage() {
   nutritionSignalLabel.textContent = ui().nutrition;
   spendingSignalLabel.textContent = ui().spending;
   familyReportNoteLabel.textContent = ui().report;
+  applyGrowthLanguage();
   applyFeedbackLanguage();
   applyChatLanguage();
   renderFamilyRecords();
@@ -3057,39 +3271,73 @@ function applyLanguage() {
 
 function applyHomeLanguage() {
   const copy = homeCopy();
-  if (brandEyebrow) brandEyebrow.textContent = copy.brandEyebrow;
-  if (panelKicker) panelKicker.textContent = copy.panelKicker;
-  if (panelTitle) panelTitle.textContent = copy.panelTitle;
-  if (panelIntro) panelIntro.textContent = copy.panelIntro;
-  if (productTab) productTab.dataset.subtitle = copy.productSub;
-  if (receiptTab) receiptTab.dataset.subtitle = copy.receiptSub;
-  if (homeVoiceTitle) homeVoiceTitle.textContent = copy.voiceTitle;
-  if (homeVoiceSub) homeVoiceSub.textContent = copy.voiceSub;
-  if (homeReceiptKicker) homeReceiptKicker.textContent = copy.receiptKicker;
-  if (homeReceiptProgressTitle) homeReceiptProgressTitle.textContent = copy.progressTitle;
-  if (homeReceiptProgressCopy) homeReceiptProgressCopy.textContent = copy.progressCopy;
-  if (homeSampleKicker) homeSampleKicker.textContent = copy.sampleKicker;
-  if (homeSampleTitle) homeSampleTitle.textContent = copy.sampleTitle;
-  if (homeSampleLink) homeSampleLink.textContent = copy.sampleLink;
-  if (homeSampleNutrition) homeSampleNutrition.textContent = copy.sampleNutrition;
-  if (homeSampleNutritionCopy) homeSampleNutritionCopy.textContent = copy.sampleNutritionCopy;
-  if (homeSampleSpending) homeSampleSpending.textContent = copy.sampleSpending;
-  if (homeSampleSpendingCopy) homeSampleSpendingCopy.textContent = copy.sampleSpendingCopy;
-  if (homeSampleFamily) homeSampleFamily.textContent = copy.sampleFamily;
-  if (homeSampleFamilyCopy) homeSampleFamilyCopy.textContent = copy.sampleFamilyCopy;
-  if (homeRecentKicker) homeRecentKicker.textContent = copy.recentKicker;
-  if (homeRecentTitle) homeRecentTitle.textContent = copy.recentTitle;
-  if (homeFamilyKicker) homeFamilyKicker.textContent = copy.familyKicker;
-  if (homeFamilyTitle) homeFamilyTitle.textContent = copy.familyTitle;
-  if (homeFamilyTileSenior) homeFamilyTileSenior.innerHTML = copy.familySenior;
-  if (homeFamilyTileAdult) homeFamilyTileAdult.innerHTML = copy.familyAdult;
-  if (homeFamilyTileChild) homeFamilyTileChild.innerHTML = copy.familyChild;
-  if (homeFamilyTileLanguage) homeFamilyTileLanguage.innerHTML = copy.familyLanguage;
-  if (homeFamilyNote) homeFamilyNote.textContent = copy.familyNote;
-  if (homeScanButton) homeScanButton.textContent = copy.navScan;
-  if (homeRecordsButton) homeRecordsButton.textContent = copy.navRecords;
-  if (homeFamilyButton) homeFamilyButton.textContent = copy.navFamily;
-  if (homeAiButton) homeAiButton.textContent = copy.navAi;
+  const fallback = homeLanguageCopy.en;
+  const t = (key) => copy[key] || fallback[key] || "";
+  if (brandEyebrow) brandEyebrow.textContent = t("brandEyebrow");
+  if (panelKicker) panelKicker.textContent = t("panelKicker");
+  if (panelTitle) panelTitle.textContent = t("panelTitle");
+  if (panelIntro) panelIntro.textContent = t("panelIntro");
+  if (productTab) productTab.dataset.subtitle = t("productSub");
+  if (receiptTab) receiptTab.dataset.subtitle = t("receiptSub");
+  if (visualProductLang) visualProductLang.textContent = t("visualProductLang");
+  if (visualProductTitle) visualProductTitle.textContent = t("visualProductTitle");
+  if (visualProductCopy) visualProductCopy.textContent = t("visualProductCopy");
+  if (visualReceiptStore) visualReceiptStore.textContent = t("visualReceiptStore");
+  if (visualReceiptTitle) visualReceiptTitle.textContent = t("visualReceiptTitle");
+  if (visualReceiptCopy) visualReceiptCopy.textContent = t("visualReceiptCopy");
+  if (useCaseProduct) useCaseProduct.textContent = t("useCaseProduct");
+  if (useCaseReceipt) useCaseReceipt.textContent = t("useCaseReceipt");
+  if (useCaseStaff) useCaseStaff.textContent = t("useCaseStaff");
+  if (useCaseFamily) useCaseFamily.textContent = t("useCaseFamily");
+  if (homeVoiceTitle) homeVoiceTitle.textContent = t("voiceTitle");
+  if (homeVoiceSub) homeVoiceSub.textContent = t("voiceSub");
+  if (homeStaffTitle) homeStaffTitle.textContent = t("staffTitle");
+  if (homeStaffSub) homeStaffSub.textContent = t("staffSub");
+  if (homeReceiptKicker) homeReceiptKicker.textContent = t("receiptKicker");
+  if (homeReceiptProgressTitle) homeReceiptProgressTitle.textContent = t("progressTitle");
+  if (homeReceiptProgressCopy) homeReceiptProgressCopy.textContent = t("progressCopy");
+  if (homeSampleKicker) homeSampleKicker.textContent = t("sampleKicker");
+  if (homeSampleTitle) homeSampleTitle.textContent = t("sampleTitle");
+  if (homeSampleLink) homeSampleLink.textContent = t("sampleLink");
+  if (homeSampleNutrition) homeSampleNutrition.textContent = t("sampleNutrition");
+  if (homeSampleNutritionCopy) homeSampleNutritionCopy.textContent = t("sampleNutritionCopy");
+  if (homeSampleSpending) homeSampleSpending.textContent = t("sampleSpending");
+  if (homeSampleSpendingCopy) homeSampleSpendingCopy.textContent = t("sampleSpendingCopy");
+  if (homeSampleFamily) homeSampleFamily.textContent = t("sampleFamily");
+  if (homeSampleFamilyCopy) homeSampleFamilyCopy.textContent = t("sampleFamilyCopy");
+  if (homeRecentKicker) homeRecentKicker.textContent = t("recentKicker");
+  if (homeRecentTitle) homeRecentTitle.textContent = t("recentTitle");
+  if (homeFamilyKicker) homeFamilyKicker.textContent = t("familyKicker");
+  if (homeFamilyTitle) homeFamilyTitle.textContent = t("familyTitle");
+  if (homeFamilyTileSenior) homeFamilyTileSenior.innerHTML = t("familySenior");
+  if (homeFamilyTileAdult) homeFamilyTileAdult.innerHTML = t("familyAdult");
+  if (homeFamilyTileChild) homeFamilyTileChild.innerHTML = t("familyChild");
+  if (homeFamilyTileLanguage) homeFamilyTileLanguage.innerHTML = t("familyLanguage");
+  if (homeFamilyNote) homeFamilyNote.textContent = t("familyNote");
+  if (homeScanButton) homeScanButton.textContent = t("navScan");
+  if (homeRecordsButton) homeRecordsButton.textContent = t("navRecords");
+  if (homeFamilyButton) homeFamilyButton.textContent = t("navFamily");
+  if (homeAiButton) homeAiButton.textContent = t("navAi");
+}
+
+function applyGrowthLanguage() {
+  const copy = growthCopy();
+  if (productShareKicker) productShareKicker.textContent = copy.productShareKicker;
+  if (productShareTitle) productShareTitle.textContent = copy.productShareTitle;
+  if (productShareCopy && !latestResult?.judgement) productShareCopy.textContent = copy.productShareCopy;
+  if (productShareButton) productShareButton.textContent = copy.productShareButton;
+  if (productCommerceKicker) productCommerceKicker.textContent = copy.productCommerceKicker;
+  if (productCommerceTitle) productCommerceTitle.textContent = copy.productCommerceTitle;
+  if (productCommerceCopy) productCommerceCopy.textContent = copy.productCommerceCopy;
+  if (productCommerceButton) productCommerceButton.textContent = copy.productCommerceButton;
+  if (receiptShareKicker) receiptShareKicker.textContent = copy.receiptShareKicker;
+  if (receiptShareTitle) receiptShareTitle.textContent = copy.receiptShareTitle;
+  if (receiptShareCopy && !latestResult?.receipt) receiptShareCopy.textContent = copy.receiptShareCopy;
+  if (receiptShareButton) receiptShareButton.textContent = copy.receiptShareButton;
+  if (receiptCommerceKicker) receiptCommerceKicker.textContent = copy.receiptCommerceKicker;
+  if (receiptCommerceTitle) receiptCommerceTitle.textContent = copy.receiptCommerceTitle;
+  if (receiptCommerceCopy) receiptCommerceCopy.textContent = copy.receiptCommerceCopy;
+  if (receiptCommerceButton) receiptCommerceButton.textContent = copy.receiptCommerceButton;
 }
 
 function applyFeedbackLanguage() {
@@ -3224,6 +3472,10 @@ function feedbackCopy() {
 
 function profileCopy() {
   return profileLanguageCopy[appLanguage] || profileLanguageCopy.en;
+}
+
+function growthCopy() {
+  return growthLanguageCopy[appLanguage] || growthLanguageCopy.en;
 }
 
 function familyJoinCopy() {

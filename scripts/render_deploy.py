@@ -44,6 +44,7 @@ def main() -> int:
     deploy_hook_url = os.getenv("RENDER_DEPLOY_HOOK_URL", "").strip()
     api_key = os.getenv("RENDER_API_KEY", "").strip()
     service_id = os.getenv("RENDER_SERVICE_ID", "").strip()
+    require_credentials = os.getenv("RENDER_REQUIRE_CREDENTIALS") == "1"
 
     try:
         if deploy_hook_url:
@@ -58,7 +59,7 @@ def main() -> int:
             "No Render deployment credential configured. "
             "Set RENDER_DEPLOY_HOOK_URL, or set both RENDER_API_KEY and RENDER_SERVICE_ID."
         )
-        return 0
+        return 1 if require_credentials else 0
     except httpx.HTTPStatusError as error:
         print(f"Render deploy request failed with HTTP {error.response.status_code}.", file=sys.stderr)
         print(error.response.text[:1000], file=sys.stderr)
