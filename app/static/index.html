@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=25" />
+    <link rel="stylesheet" href="/static/styles.css?v=26" />
   </head>
   <body>
     <main class="shell">
@@ -74,6 +74,61 @@
             <button class="scan-tab" id="receiptTab" type="button" data-mode="receipt" data-subtitle="Save today’s shopping to your family memory.">Receipt</button>
           </div>
 
+          <section class="home-result-preview" aria-label="Example results">
+            <div class="home-result-preview-head">
+              <span id="homePreviewKicker">Scan result</span>
+              <strong id="homePreviewTitle">Example card</strong>
+            </div>
+            <div class="home-preview-cards">
+              <article class="home-result-shot product-preview-card">
+                <div class="sample-product-top">
+                  <div class="sample-product-image" aria-hidden="true">
+                    <span></span>
+                  </div>
+                  <div class="sample-product-copy">
+                    <span id="homeProductPreviewLabel">Product result</span>
+                    <strong id="homeProductPreviewTitle">A2 Milk Powder</strong>
+                    <small id="homeProductPreviewSubtitle">Milk powder for the family</small>
+                  </div>
+                </div>
+                <div class="preview-decision-sample">
+                  <span class="preview-pill good" id="homeProductPreviewBadgeGood">OK for most families</span>
+                  <span class="preview-pill caution" id="homeProductPreviewBadgeCaution">Check warning</span>
+                </div>
+                <div class="sample-result-grid">
+                  <div>
+                    <span id="homeProductPreviewOneLabel">Use</span>
+                    <strong id="homeProductPreviewOne">Mix with water. Drink after prepared.</strong>
+                  </div>
+                  <div>
+                    <span id="homeProductPreviewTwoLabel">Careful</span>
+                    <strong id="homeProductPreviewTwo">Milk or soy allergy.</strong>
+                  </div>
+                </div>
+              </article>
+              <article class="home-result-shot receipt-preview-card">
+                <div class="sample-report-head">
+                  <div>
+                    <span id="homeReceiptPreviewLabel">Receipt result</span>
+                    <strong id="homeReceiptPreviewTitle">Family shopping summary</strong>
+                  </div>
+                  <small>Jun</small>
+                </div>
+                <div class="preview-receipt-sample">
+                  <div>
+                    <span id="homeReceiptPreviewFood">Food</span>
+                    <strong>58%</strong>
+                  </div>
+                  <div>
+                    <span id="homeReceiptPreviewCare">Care</span>
+                    <strong>24%</strong>
+                  </div>
+                </div>
+                <div class="sample-report-note" id="homeReceiptPreviewOne">More vegetables this week. Fewer protein items.</div>
+              </article>
+            </div>
+          </section>
+
           <div class="home-secondary-actions" aria-label="In-store help">
             <button class="mini-home-action" id="homeStaffButton" type="button">
               <strong id="homeStaffTitle">Ask staff</strong>
@@ -84,51 +139,6 @@
               <small id="homeVoiceSub">Ask by speaking naturally</small>
             </button>
           </div>
-
-          <section class="home-result-preview" aria-label="Example results">
-            <div class="home-result-preview-head">
-              <span id="homePreviewKicker">What you get</span>
-              <strong id="homePreviewTitle">Not just translation. A shopping decision card.</strong>
-            </div>
-            <div class="home-preview-cards">
-              <article class="home-preview-card product-preview-card">
-                <div class="home-preview-card-head">
-                  <span id="homeProductPreviewLabel">Product scan</span>
-                  <strong id="homeProductPreviewTitle">Can my family use this?</strong>
-                </div>
-                <div class="preview-decision-sample" aria-hidden="true">
-                  <span class="preview-pill good" id="homeProductPreviewBadgeGood">OK for most families</span>
-                  <span class="preview-pill caution" id="homeProductPreviewBadgeCaution">Check warning</span>
-                </div>
-                <ul>
-                  <li id="homeProductPreviewOne">Plain-language use and warning</li>
-                  <li id="homeProductPreviewTwo">Who should be careful</li>
-                  <li id="homeProductPreviewThree">What to ask or compare next</li>
-                </ul>
-              </article>
-              <article class="home-preview-card receipt-preview-card">
-                <div class="home-preview-card-head">
-                  <span id="homeReceiptPreviewLabel">Receipt scan</span>
-                  <strong id="homeReceiptPreviewTitle">Build family shopping memory</strong>
-                </div>
-                <div class="preview-receipt-sample" aria-hidden="true">
-                  <div>
-                    <span id="homeReceiptPreviewFood">Food</span>
-                    <strong>58%</strong>
-                  </div>
-                  <div>
-                    <span id="homeReceiptPreviewCare">Care</span>
-                    <strong>24%</strong>
-                  </div>
-                </div>
-                <ul>
-                  <li id="homeReceiptPreviewOne">What the family bought</li>
-                  <li id="homeReceiptPreviewTwo">Food and household categories</li>
-                  <li id="homeReceiptPreviewThree">Monthly diet and spending signals</li>
-                </ul>
-              </article>
-            </div>
-          </section>
 
           <div class="upload-zone" id="dropZone">
             <input id="cameraInput" class="file-input" type="file" accept="image/*" capture="environment" />
@@ -541,6 +551,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=25"></script>
+    <script src="/static/app.js?v=26"></script>
   </body>
 </html>
