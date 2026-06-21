@@ -4,7 +4,13 @@ from io import BytesIO
 
 from PIL import Image
 
-from app.uploads import image_data_url, normalize_image_upload, save_uploaded_image, validate_image_upload
+from app.uploads import (
+    NORMALIZED_IMAGE_MAX_EDGE,
+    image_data_url,
+    normalize_image_upload,
+    save_uploaded_image,
+    validate_image_upload,
+)
 
 
 class UploadTests(unittest.TestCase):
@@ -41,6 +47,16 @@ class UploadTests(unittest.TestCase):
 
         self.assertEqual(content_type, "image/jpeg")
         self.assertTrue(data.startswith(b"\xff\xd8"))
+
+    def test_normalize_image_upload_resizes_large_images(self):
+        source = BytesIO()
+        Image.new("RGB", (3200, 2400), "#f5f1e8").save(source, format="JPEG")
+
+        data, content_type = normalize_image_upload(source.getvalue(), "image/jpeg")
+
+        self.assertEqual(content_type, "image/jpeg")
+        with Image.open(BytesIO(data)) as image:
+            self.assertLessEqual(max(image.size), NORMALIZED_IMAGE_MAX_EDGE)
 
 
 if __name__ == "__main__":

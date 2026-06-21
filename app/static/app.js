@@ -252,6 +252,10 @@ const deviceUserId = getDeviceUserId();
 let clientUserId = getStoredHouseholdId() || deviceUserId;
 const profileStorageKey = "famlens.familyProfile.v1";
 const profileSetupCompletedKey = "famlens.profileSetup.completed.v1";
+const productUploadMaxEdge = 1600;
+const receiptUploadMaxEdge = 2048;
+const productUploadQuality = 0.82;
+const receiptUploadQuality = 0.84;
 let familyProfileState = loadFamilyProfileState();
 if (familyProfileState.output_language && supportedLanguageKeys.has(familyProfileState.output_language)) {
   appLanguage = familyProfileState.output_language;
@@ -2573,6 +2577,76 @@ downloadButton.addEventListener("click", async () => {
   setTimeout(() => (downloadButton.textContent = ui().saveCard), 1200);
 });
 
+async function prepareImageForUpload(file) {
+  const maxEdge = scanMode === "receipt" ? receiptUploadMaxEdge : productUploadMaxEdge;
+  const quality = scanMode === "receipt" ? receiptUploadQuality : productUploadQuality;
+
+  if (file.size <= 900_000 && file.type === "image/jpeg") {
+    return file;
+  }
+
+  try {
+    const compressed = await compressImageFile(file, maxEdge, quality);
+    if (!compressed || compressed.size >= file.size) {
+      return file;
+    }
+    return compressed;
+  } catch (error) {
+    return file;
+  }
+}
+
+function loadImageForCanvas(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("image load failed"));
+    };
+    image.src = objectUrl;
+  });
+}
+
+async function compressImageFile(file, maxEdge, quality) {
+  const image = await loadImageForCanvas(file);
+  const sourceWidth = image.naturalWidth || image.width;
+  const sourceHeight = image.naturalHeight || image.height;
+  if (!sourceWidth || !sourceHeight) {
+    return file;
+  }
+
+  const scale = Math.min(1, maxEdge / Math.max(sourceWidth, sourceHeight));
+  const targetWidth = Math.max(1, Math.round(sourceWidth * scale));
+  const targetHeight = Math.max(1, Math.round(sourceHeight * scale));
+  if (scale >= 0.98 && file.type === "image/jpeg" && file.size <= 1_200_000) {
+    return file;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = targetWidth;
+  canvas.height = targetHeight;
+  const context = canvas.getContext("2d", { alpha: false });
+  if (!context) {
+    return file;
+  }
+  context.drawImage(image, 0, 0, targetWidth, targetHeight);
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob((result) => {
+      if (result) resolve(result);
+      else reject(new Error("image compression failed"));
+    }, "image/jpeg", quality);
+  });
+
+  const baseName = (file.name || "famlens-photo").replace(/\.[a-z0-9]+$/i, "");
+  return new File([blob], `${baseName}.jpg`, { type: "image/jpeg", lastModified: Date.now() });
+}
+
 async function analyzeFile(file) {
   if (!file.type.startsWith("image/")) {
     showError(scanMode === "receipt" ? ui().receiptFileError : ui().productFileError);
@@ -2587,8 +2661,16 @@ async function analyzeFile(file) {
   showLoading();
   setServiceStatus("analyzing");
 
+  const uploadFile = await prepareImageForUpload(file);
+  sendClientEvent("client_image_prepared", {
+    mode: scanMode,
+    original_bytes: file.size,
+    upload_bytes: uploadFile.size,
+    compressed: uploadFile !== file,
+  });
+
   const form = new FormData();
-  form.append("image", file);
+  form.append("image", uploadFile);
   form.append("family_profile", profileContextText());
   form.append("output_language", appLanguage);
   form.append("user_id", clientUserId);

@@ -31,8 +31,7 @@ async def analyze_product_image(
         return fallback_judgement("AI response did not include text.")
 
     try:
-        judgement = parse_product_judgement(text)
-        return await _localize_product_judgement(judgement, output_language)
+        return parse_product_judgement(text)
     except (ValueError, TypeError) as error:
         raise AnalysisError(f"Could not parse AI JSON: {error}") from error
 
@@ -58,8 +57,7 @@ async def analyze_receipt_image(
         return fallback_receipt_analysis("AI response did not include text.")
 
     try:
-        receipt = parse_receipt_analysis(text)
-        return await _localize_receipt_analysis(receipt, output_language)
+        return parse_receipt_analysis(text)
     except (ValueError, TypeError) as error:
         raise AnalysisError(f"Could not parse receipt JSON: {error}") from error
 

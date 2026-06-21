@@ -16,6 +16,7 @@ MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"}
 NORMALIZED_IMAGE_TYPE = "image/jpeg"
 CARD_THUMBNAIL_SIZE = (640, 640)
+NORMALIZED_IMAGE_MAX_EDGE = 2048
 
 
 def validate_image_upload(content_type: str | None, size: int) -> None:
@@ -69,8 +70,11 @@ def normalize_image_upload(data: bytes, content_type: str | None) -> tuple[bytes
             elif normalized.mode == "L":
                 normalized = normalized.convert("RGB")
 
+            if max(normalized.size) > NORMALIZED_IMAGE_MAX_EDGE:
+                normalized.thumbnail((NORMALIZED_IMAGE_MAX_EDGE, NORMALIZED_IMAGE_MAX_EDGE))
+
             output = BytesIO()
-            normalized.save(output, format="JPEG", quality=88, optimize=True)
+            normalized.save(output, format="JPEG", quality=84, optimize=True)
             normalized_data = output.getvalue()
     except (UnidentifiedImageError, OSError) as error:
         raise ValueError("这张图片格式不标准，请换一张照片或截图后再上传。") from error
