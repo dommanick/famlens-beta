@@ -22,6 +22,10 @@
   box-sizing: border-box;
 }
 
+.product-hidden {
+  display: none !important;
+}
+
 body {
   margin: 0;
   background:

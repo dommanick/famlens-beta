@@ -2741,7 +2741,7 @@ function renderResult(data) {
   errorState.hidden = true;
   resultState.hidden = false;
   receiptState.hidden = true;
-  feedbackPanel.hidden = false;
+  feedbackPanel.hidden = true;
   feedbackThanks.hidden = true;
 }
 
@@ -2811,7 +2811,7 @@ function renderReceiptResult(data) {
   errorState.hidden = true;
   resultState.hidden = true;
   receiptState.hidden = false;
-  feedbackPanel.hidden = false;
+  feedbackPanel.hidden = true;
   feedbackThanks.hidden = true;
 }
 
