@@ -628,6 +628,71 @@ h1 {
   border-radius: 14px;
 }
 
+.image-save-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.58);
+}
+
+.image-save-card {
+  width: min(100%, 430px);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  border-radius: 24px;
+  background: #fffdf8;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.28);
+}
+
+.image-save-copy {
+  padding: 20px 20px 12px;
+}
+
+.image-save-copy strong {
+  display: block;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.image-save-copy p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.image-save-card img {
+  display: block;
+  width: calc(100% - 28px);
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #eef1ec;
+}
+
+.image-save-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 14px 20px 20px;
+}
+
+.image-save-actions button {
+  min-height: 48px;
+  border-radius: 999px;
+  background: #f0e8db;
+  color: var(--ink);
+  font-weight: 850;
+}
+
+.image-save-actions button:first-child {
+  background: var(--green);
+  color: #fff;
+}
+
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

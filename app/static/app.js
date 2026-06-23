@@ -264,14 +264,14 @@ if (familyProfileState.output_language && supportedLanguageKeys.has(familyProfil
 let serviceState = "ready";
 
 const actionStatusCopy = {
-  en: { shared: "Shared", saved: "Saved PNG", imageReady: "Image ready" },
-  "zh-Hans": { shared: "已分享", saved: "已保存图片", imageReady: "图片已生成" },
-  es: { shared: "Compartido", saved: "PNG guardado", imageReady: "Imagen lista" },
-  fr: { shared: "Partagé", saved: "PNG enregistré", imageReady: "Image prête" },
-  ko: { shared: "공유됨", saved: "PNG 저장됨", imageReady: "이미지 준비됨" },
-  ja: { shared: "共有しました", saved: "PNG保存済み", imageReady: "画像準備済み" },
-  vi: { shared: "Đã chia sẻ", saved: "Đã lưu PNG", imageReady: "Ảnh đã sẵn sàng" },
-  hi: { shared: "Share हो गया", saved: "PNG saved", imageReady: "Image ready" },
+  en: { shared: "Shared", saved: "Save image", imageReady: "Image ready" },
+  "zh-Hans": { shared: "已分享", saved: "保存图片", imageReady: "图片已生成" },
+  es: { shared: "Compartido", saved: "Guardar imagen", imageReady: "Imagen lista" },
+  fr: { shared: "Partagé", saved: "Enregistrer", imageReady: "Image prête" },
+  ko: { shared: "공유됨", saved: "이미지 저장", imageReady: "이미지 준비됨" },
+  ja: { shared: "共有しました", saved: "画像を保存", imageReady: "画像準備済み" },
+  vi: { shared: "Đã chia sẻ", saved: "Lưu ảnh", imageReady: "Ảnh đã sẵn sàng" },
+  hi: { shared: "Share हो गया", saved: "Image save करें", imageReady: "Image ready" },
 };
 let currentAudio = null;
 let currentAudioUrl = null;
@@ -2572,8 +2572,8 @@ downloadButton.addEventListener("click", async () => {
   if (!latestCardSvg) return;
   sendClientEvent("save_card", { output_language: appLanguage, item_name: latestResult?.judgement?.item_name || "" });
   const blob = await renderLatestCardPngBlob();
-  downloadBlob(blob, cardImageFilename());
-  downloadButton.textContent = actionStatus("saved");
+  await saveImageBlob(blob, cardImageFilename());
+  downloadButton.textContent = actionStatus("imageReady");
   setTimeout(() => (downloadButton.textContent = ui().saveCard), 1200);
 });
 
@@ -3641,8 +3641,28 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 800);
 }
 
+async function saveImageBlob(blob, filename) {
+  const file = typeof File === "function" ? new File([blob], filename, { type: "image/png" }) : null;
+  if (file && navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) {
+    await navigator.share({
+      title: latestResult?.judgement?.item_name || "FamLens",
+      text: buildShareText(latestResult),
+      files: [file],
+    });
+    return;
+  }
+  if (isTouchDevice()) {
+    showImageSavePreview(blob, filename);
+    return;
+  }
+  downloadBlob(blob, filename);
+}
+
 async function renderLatestCardPngBlob() {
   if (!latestCardSvg) throw new Error("No card available");
+  if (latestResult?.judgement) {
+    return renderJudgementCanvasPngBlob(latestResult);
+  }
   const svgBlob = new Blob([latestCardSvg], { type: "image/svg+xml;charset=utf-8" });
   const svgUrl = URL.createObjectURL(svgBlob);
   try {
@@ -3674,6 +3694,338 @@ function loadImage(src) {
     image.onerror = () => reject(new Error("Could not render card image"));
     image.src = src;
   });
+}
+
+async function renderJudgementCanvasPngBlob(result) {
+  const judgement = result?.judgement || {};
+  const canvas = document.createElement("canvas");
+  canvas.width = 900;
+  canvas.height = 1400;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not create canvas");
+
+  const theme = cardThemeForVerdict(judgement.verdict || "");
+  drawCanvasCardBackground(ctx);
+  await drawCanvasHero(ctx, judgement, theme, result.card_image_data_url || "");
+  const detailConfig = config().details;
+  drawCanvasPanel(ctx, 74, 392, "#f8fafc", "#e2e8f0", detailLabel(detailConfig, "what_it_is", "What it is"), judgement.what_it_is || judgement.category || "", "info");
+  drawCanvasPanel(ctx, 74, 594, "#ecfdf5", "#bbf7d0", detailLabel(detailConfig, "how_to_use", "How to use"), judgement.how_to_use || "", "use");
+  drawCanvasPanel(ctx, 74, 796, "#f0fdf4", "#bbf7d0", detailLabel(detailConfig, "benefit", "Good to know"), judgement.benefit || judgement.subtitle || "", "benefit");
+  drawCanvasPanel(ctx, 74, 998, "#fff7ed", "#fed7aa", detailLabel(detailConfig, "warning", "Watch out"), judgement.warning || "", "warn");
+  drawCanvasFooter(ctx, detailLabel(detailConfig, "storage", "Storage"), judgement.storage || "");
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((pngBlob) => {
+      if (pngBlob) resolve(pngBlob);
+      else reject(new Error("Could not create PNG"));
+    }, "image/png", 0.96);
+  });
+}
+
+function drawCanvasCardBackground(ctx) {
+  ctx.fillStyle = "#eef2f7";
+  ctx.fillRect(0, 0, 900, 1400);
+  ctx.save();
+  ctx.shadowColor = "rgba(15, 23, 42, 0.12)";
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetY = 10;
+  roundRect(ctx, 42, 36, 816, 1328, 42);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  ctx.restore();
+}
+
+async function drawCanvasHero(ctx, judgement, theme, imageDataUrl) {
+  const gradient = ctx.createLinearGradient(74, 68, 826, 360);
+  gradient.addColorStop(0, theme.heroStart);
+  gradient.addColorStop(1, theme.heroEnd);
+  roundRect(ctx, 74, 68, 752, 292, 34);
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  roundRect(ctx, 110, 104, 176, 58, 29);
+  ctx.fillStyle = theme.badge;
+  ctx.fill();
+  drawCanvasText(ctx, judgement.verdict || "Check", 198, 143, 150, 30, 1, {
+    align: "center",
+    baseline: "middle",
+    color: "#ffffff",
+    font: canvasFont(850, 28),
+  });
+
+  const hasPhoto = Boolean(imageDataUrl);
+  const titleMaxWidth = hasPhoto ? 450 : 680;
+  const titleLines = drawCanvasText(ctx, judgement.item_name || "Product", 110, hasPhoto ? 204 : 178, titleMaxWidth, 58, 2, {
+    color: "#122033",
+    font: canvasFont(850, hasPhoto ? 50 : 58),
+  });
+  drawCanvasText(ctx, judgement.subtitle || "", 112, hasPhoto ? 316 : 302, titleMaxWidth, 36, 2, {
+    color: "#475569",
+    font: canvasFont(720, 30),
+  });
+
+  if (hasPhoto) {
+    await drawCanvasProductPhoto(ctx, imageDataUrl);
+  }
+  return titleLines;
+}
+
+async function drawCanvasProductPhoto(ctx, imageDataUrl) {
+  const image = await loadImage(imageDataUrl);
+  roundRect(ctx, 592, 90, 212, 212, 30);
+  ctx.fillStyle = "rgba(255, 255, 255, 0.94)";
+  ctx.fill();
+  ctx.save();
+  roundRect(ctx, 604, 102, 188, 188, 24);
+  ctx.clip();
+  drawImageCover(ctx, image, 604, 102, 188, 188);
+  ctx.restore();
+  roundRect(ctx, 604, 102, 188, 188, 24);
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 8;
+  ctx.stroke();
+}
+
+function drawCanvasPanel(ctx, x, y, fill, stroke, title, body, icon) {
+  roundRect(ctx, x, y, 752, 178, 28);
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x + 74, y + 86, 42, 0, Math.PI * 2);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+  drawCanvasIcon(ctx, x + 74, y + 86, icon);
+
+  drawCanvasText(ctx, title, x + 144, y + 44, 540, 38, 1, {
+    color: "#0f172a",
+    font: canvasFont(850, 32),
+  });
+  drawCanvasText(ctx, body || "", x + 144, y + 96, 560, 42, 2, {
+    color: "#1f2937",
+    font: canvasFont(720, 30),
+  });
+}
+
+function drawCanvasFooter(ctx, title, body) {
+  roundRect(ctx, 74, 1220, 752, 112, 28);
+  ctx.fillStyle = "#eef2ff";
+  ctx.fill();
+  drawCanvasText(ctx, title, 116, 1240, 620, 34, 1, {
+    color: "#334155",
+    font: canvasFont(850, 27),
+  });
+  drawCanvasText(ctx, body || "", 172, 1254, 600, 36, 2, {
+    color: "#334155",
+    font: canvasFont(720, 27),
+  });
+}
+
+function drawCanvasIcon(ctx, cx, cy, icon) {
+  ctx.save();
+  if (icon === "warn") {
+    ctx.fillStyle = "#f97316";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 40);
+    ctx.lineTo(cx + 43, cy + 36);
+    ctx.lineTo(cx - 43, cy + 36);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#fff7ed";
+    roundRect(ctx, cx - 4, cy - 10, 8, 27, 4);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy + 26, 5, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (icon === "benefit") {
+    ctx.fillStyle = "#16a34a";
+    ctx.beginPath();
+    ctx.moveTo(cx - 31, cy + 4);
+    ctx.bezierCurveTo(cx - 26, cy - 40, cx + 22, cy - 50, cx + 38, cy - 26);
+    ctx.bezierCurveTo(cx + 25, cy + 20, cx - 16, cy + 34, cx - 31, cy + 4);
+    ctx.fill();
+    ctx.strokeStyle = "#bbf7d0";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(cx - 20, cy + 8);
+    ctx.bezierCurveTo(cx - 2, cy - 10, cx + 15, cy - 20, cx + 34, cy - 27);
+    ctx.stroke();
+  } else if (icon === "use") {
+    ctx.fillStyle = "#16a34a";
+    ctx.beginPath();
+    ctx.moveTo(cx - 30, cy + 4);
+    ctx.lineTo(cx + 30, cy + 4);
+    ctx.lineTo(cx + 22, cy + 36);
+    ctx.lineTo(cx - 22, cy + 36);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#16a34a";
+    ctx.lineWidth = 9;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(cx - 22, cy - 8);
+    ctx.lineTo(cx + 22, cy - 8);
+    ctx.stroke();
+    ctx.strokeStyle = "#86efac";
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(cx - 16, cy - 22);
+    ctx.bezierCurveTo(cx - 28, cy - 42, cx - 4, cy - 46, cx - 16, cy - 64);
+    ctx.moveTo(cx + 12, cy - 22);
+    ctx.bezierCurveTo(cx, cy - 42, cx + 24, cy - 46, cx + 12, cy - 64);
+    ctx.stroke();
+  } else {
+    ctx.fillStyle = "#2563eb";
+    ctx.beginPath();
+    ctx.arc(cx, cy, 34, 0, Math.PI * 2);
+    ctx.fill();
+    drawCanvasText(ctx, "?", cx, cy + 2, 40, 42, 1, {
+      align: "center",
+      baseline: "middle",
+      color: "#ffffff",
+      font: canvasFont(850, 42),
+    });
+  }
+  ctx.restore();
+}
+
+function cardThemeForVerdict(verdict) {
+  const text = String(verdict || "").toLowerCase();
+  if (text.includes("不") || text.includes("avoid") || text.includes("not") || text.includes("위험")) {
+    return { heroStart: "#fee2e2", heroEnd: "#fff7ed", badge: "#dc2626" };
+  }
+  if (text.includes("注意") || text.includes("caution") || text.includes("careful") || text.includes("watch")) {
+    return { heroStart: "#fef3c7", heroEnd: "#fefce8", badge: "#d97706" };
+  }
+  return { heroStart: "#dcfce7", heroEnd: "#eff6ff", badge: "#16a34a" };
+}
+
+function detailLabel(detailConfig, key, fallback) {
+  const match = detailConfig.find((item) => item[1] === key);
+  return match ? match[0] : fallback;
+}
+
+function canvasFont(weight, size) {
+  return `${weight} ${size}px -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif`;
+}
+
+function drawCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines, options = {}) {
+  ctx.save();
+  ctx.font = options.font || canvasFont(700, 28);
+  const lines = wrapCanvasText(ctx, String(text || ""), maxWidth, maxLines);
+  ctx.fillStyle = options.color || "#0f172a";
+  ctx.textAlign = options.align || "left";
+  ctx.textBaseline = options.baseline || "alphabetic";
+  lines.forEach((line, index) => {
+    ctx.fillText(line, x, y + index * lineHeight);
+  });
+  ctx.restore();
+  return lines;
+}
+
+function wrapCanvasText(ctx, text, maxWidth, maxLines) {
+  const cleanText = text.replace(/\s+/g, " ").trim();
+  if (!cleanText) return [];
+  const units = /[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]/.test(cleanText)
+    ? Array.from(cleanText)
+    : cleanText.split(/(\s+)/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  units.forEach((unit) => {
+    const next = line ? line + unit : unit.trimStart();
+    if (ctx.measureText(next).width <= maxWidth || !line) {
+      line = next;
+      return;
+    }
+    lines.push(line.trim());
+    line = unit.trimStart();
+  });
+  if (line) lines.push(line.trim());
+  if (lines.length <= maxLines) return lines;
+  const kept = lines.slice(0, maxLines);
+  let last = kept[kept.length - 1];
+  while (ctx.measureText(`${last}...`).width > maxWidth && last.length > 1) {
+    last = last.slice(0, -1);
+  }
+  kept[kept.length - 1] = `${last}...`;
+  return kept;
+}
+
+function roundRect(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function drawImageCover(ctx, image, x, y, width, height) {
+  const sourceWidth = image.naturalWidth || image.width;
+  const sourceHeight = image.naturalHeight || image.height;
+  const scale = Math.max(width / sourceWidth, height / sourceHeight);
+  const sw = width / scale;
+  const sh = height / scale;
+  const sx = (sourceWidth - sw) / 2;
+  const sy = (sourceHeight - sh) / 2;
+  ctx.drawImage(image, sx, sy, sw, sh, x, y, width, height);
+}
+
+function isTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+function showImageSavePreview(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const copy = imageSavePreviewCopy();
+  const sheet = document.createElement("div");
+  sheet.className = "image-save-sheet";
+  sheet.innerHTML = `
+    <div class="image-save-card" role="dialog" aria-modal="true" aria-label="${escapeHtml(copy.title)}">
+      <div class="image-save-copy">
+        <strong>${escapeHtml(copy.title)}</strong>
+        <p>${escapeHtml(copy.hint)}</p>
+      </div>
+      <img src="${url}" alt="${escapeHtml(filename)}" />
+      <div class="image-save-actions">
+        <button type="button" data-action="download">${escapeHtml(copy.download)}</button>
+        <button type="button" data-action="close">${escapeHtml(copy.close)}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(sheet);
+  const close = () => {
+    sheet.remove();
+    URL.revokeObjectURL(url);
+  };
+  sheet.addEventListener("click", (event) => {
+    if (event.target === sheet || event.target?.dataset?.action === "close") close();
+    if (event.target?.dataset?.action === "download") downloadBlob(blob, filename);
+  });
+}
+
+function imageSavePreviewCopy() {
+  const copy = {
+    en: {
+      title: "Image card is ready",
+      hint: "Long-press the image to save it, or use the button below.",
+      download: "Download file",
+      close: "Close",
+    },
+    "zh-Hans": {
+      title: "图文卡已生成",
+      hint: "长按图片可保存到手机；也可以点下面按钮下载文件。",
+      download: "下载文件",
+      close: "关闭",
+    },
+  };
+  return copy[appLanguage] || copy.en;
 }
 
 async function shareResultWithFamily(button, resetLabel, eventName, eventPayload) {
