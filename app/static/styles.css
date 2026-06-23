@@ -557,13 +557,15 @@ h1 {
 
 .verdict-line {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 14px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
 }
 
 #verdictBadge {
-  min-width: 86px;
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
   padding: 11px 15px;
   border-radius: 999px;
   background: var(--green);
@@ -571,17 +573,23 @@ h1 {
   text-align: center;
   font-size: 18px;
   font-weight: 900;
+  overflow-wrap: anywhere;
 }
 
 #itemName {
-  font-size: 32px;
-  line-height: 1.18;
+  max-width: 100%;
+  font-size: clamp(25px, 7vw, 34px);
+  line-height: 1.16;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 #subtitle {
   margin-top: 4px;
   color: var(--muted);
   font-size: 18px;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
 }
 
 .voice-box {
