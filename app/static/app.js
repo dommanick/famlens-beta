@@ -242,6 +242,7 @@ const feedbackThanks = document.querySelector("#feedbackThanks");
 
 let latestResult = null;
 let latestCardSvg = "";
+let currentCardImageDataUrl = "";
 let scanMode = "product";
 const languageStorageKey = "famlens.language.v2";
 const legacyLanguageStorageKey = "carecart.language";
@@ -2638,6 +2639,30 @@ async function prepareImageForUpload(file) {
   }
 }
 
+async function createCardImageDataUrl(file) {
+  try {
+    const image = await loadImageForCanvas(file);
+    const sourceWidth = image.naturalWidth || image.width;
+    const sourceHeight = image.naturalHeight || image.height;
+    if (!sourceWidth || !sourceHeight) return "";
+    const maxEdge = 640;
+    const scale = Math.min(1, maxEdge / Math.max(sourceWidth, sourceHeight));
+    const targetWidth = Math.max(1, Math.round(sourceWidth * scale));
+    const targetHeight = Math.max(1, Math.round(sourceHeight * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const context = canvas.getContext("2d", { alpha: false });
+    if (!context) return "";
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, targetWidth, targetHeight);
+    context.drawImage(image, 0, 0, targetWidth, targetHeight);
+    return canvas.toDataURL("image/jpeg", 0.78);
+  } catch (error) {
+    return "";
+  }
+}
+
 function loadImageForCanvas(file) {
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file);
@@ -2697,6 +2722,7 @@ async function analyzeFile(file) {
 
   previewImage.src = URL.createObjectURL(file);
   previewWrap.hidden = false;
+  currentCardImageDataUrl = scanMode === "product" ? await createCardImageDataUrl(file) : "";
   dropZone.hidden = true;
   chatHistory = [];
   renderChatMessages();
@@ -2747,16 +2773,20 @@ function setHomeResultPreviewVisible(visible) {
 }
 
 function renderResult(data) {
-  latestResult = data;
+  const cardImageDataUrl = data.card_image_data_url || currentCardImageDataUrl || "";
+  latestResult = {
+    ...data,
+    card_image_data_url: cardImageDataUrl,
+  };
   latestCardSvg = data.card_svg || "";
   if (resultPanel) resultPanel.hidden = false;
   setHomeResultPreviewVisible(false);
 
-  const judgement = data.judgement || {};
+  const judgement = latestResult.judgement || {};
   verdictBadge.textContent = judgement.verdict || "OK";
   itemName.textContent = judgement.item_name || "Product";
   subtitle.textContent = judgement.subtitle || "";
-  voiceSummary.textContent = data.voice_summary || judgement.voice_summary || "";
+  voiceSummary.textContent = latestResult.voice_summary || judgement.voice_summary || "";
 
   cardStage.innerHTML = latestCardSvg;
   cardStage.hidden = !latestCardSvg;
@@ -2812,6 +2842,7 @@ function openProductRecord(recordId) {
     judgement,
     voice_summary: judgement.voice_summary,
     card_svg: record.card_svg || "",
+    card_image_data_url: record.thumbnail || "",
     record,
   });
   if (recordsDialog?.open) recordsDialog.close();
@@ -3308,7 +3339,7 @@ function addProductRecord(data) {
     storage: judgement.storage || serverRecord?.storage || "",
     voice_summary: judgement.voice_summary || data?.voice_summary || serverRecord?.voice_summary || "",
   });
-  record.thumbnail = data.card_image_data_url || findExistingProductThumbnail(record.id) || "";
+  record.thumbnail = data.card_image_data_url || currentCardImageDataUrl || findExistingProductThumbnail(record.id) || "";
   if (data?.monthly_report) familyRecords.monthlyReport = data.monthly_report;
   familyRecords.products = [record, ...familyRecords.products.filter((item) => item.id !== record.id)].slice(0, 80);
   saveFamilyRecords();

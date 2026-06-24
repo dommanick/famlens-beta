@@ -39,6 +39,8 @@ class CardTests(unittest.TestCase):
 
         self.assertIn("<image", svg)
         self.assertIn("data:image/jpeg;base64,abc", svg)
+        self.assertIn('xmlns:xlink="http://www.w3.org/1999/xlink"', svg)
+        self.assertIn("xlink:href=", svg)
         self.assertIn("productPhotoClip", svg)
 
     def test_save_card(self):

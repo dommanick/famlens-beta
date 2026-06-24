@@ -115,7 +115,7 @@ def render_judgement_card_svg(
     product_photo_svg = _product_photo_svg(product_image_data_url) if product_image_data_url else ""
     product_photo_defs = _product_photo_defs() if product_image_data_url else ""
 
-    return f"""<svg width="900" height="1400" viewBox="0 0 900 1400" xmlns="http://www.w3.org/2000/svg">
+    return f"""<svg width="900" height="1400" viewBox="0 0 900 1400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
     <style>
       .font {{ font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }}
@@ -189,7 +189,7 @@ def _product_photo_defs() -> str:
 def _product_photo_svg(product_image_data_url: str) -> str:
     return f"""
   <rect x="592" y="90" width="212" height="212" rx="30" fill="#ffffff" opacity="0.94"/>
-  <image href="{_e(product_image_data_url)}" x="604" y="102" width="188" height="188" preserveAspectRatio="xMidYMid slice" clip-path="url(#productPhotoClip)"/>
+  <image href="{_e(product_image_data_url)}" xlink:href="{_e(product_image_data_url)}" x="604" y="102" width="188" height="188" preserveAspectRatio="xMidYMid slice" clip-path="url(#productPhotoClip)"/>
   <rect x="604" y="102" width="188" height="188" rx="24" fill="none" stroke="#ffffff" stroke-width="8"/>
 """
 
