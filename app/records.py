@@ -150,6 +150,10 @@ def _product_record(judgement: dict[str, Any], output_language: str) -> dict[str
         "verdict": _text(judgement.get("verdict"), "", 60),
         "subtitle": _text(judgement.get("subtitle"), "", 120),
         "warning": _text(judgement.get("warning"), "", 220),
+        "what_it_is": _text(judgement.get("what_it_is"), "", 260),
+        "how_to_use": _text(judgement.get("how_to_use"), "", 260),
+        "benefit": _text(judgement.get("benefit"), "", 260),
+        "storage": _text(judgement.get("storage"), "", 220),
         "voice_summary": _text(judgement.get("voice_summary"), "", 260),
     }
 

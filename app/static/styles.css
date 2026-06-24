@@ -1363,6 +1363,16 @@ h1 {
   align-items: center;
 }
 
+.record-card[role="button"],
+.home-recent-item[role="button"] {
+  cursor: pointer;
+}
+
+.record-card[role="button"]:active,
+.home-recent-item[role="button"]:active {
+  transform: translateY(1px);
+}
+
 .record-card.with-thumb {
   grid-template-columns: 62px minmax(0, 1fr) auto;
 }
@@ -2848,8 +2858,17 @@ h1 {
 }
 
 .language-control span,
-.records-open {
+.top-actions .status-dot {
   display: none;
+}
+
+.records-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 10px;
+  font-size: 13px;
 }
 
 .language-select {

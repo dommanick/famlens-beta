@@ -50,6 +50,28 @@ class FamilyRecordStoreTests(unittest.TestCase):
             self.assertTrue(store.clear("user-1"))
             self.assertEqual(store.get_user_records("user-1")["products"], [])
 
+    def test_store_saves_product_detail_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            store = FamilyRecordStore(str(Path(directory) / "records.json"))
+            product = store.save_product(
+                "user-1",
+                {
+                    "item_name": "A2 milk powder",
+                    "category": "Food",
+                    "verdict": "OK",
+                    "what_it_is": "Full cream instant milk powder.",
+                    "how_to_use": "Mix powder with water.",
+                    "benefit": "Provides calcium and protein.",
+                    "storage": "Keep sealed in a cool, dry place.",
+                },
+                "en",
+            )
+
+            self.assertEqual(product["what_it_is"], "Full cream instant milk powder.")
+            self.assertEqual(product["how_to_use"], "Mix powder with water.")
+            self.assertEqual(product["benefit"], "Provides calcium and protein.")
+            self.assertEqual(product["storage"], "Keep sealed in a cool, dry place.")
+
 
 class FamilyRecordApiTests(unittest.TestCase):
     def setUp(self) -> None:

@@ -2528,6 +2528,48 @@ recordsDialog.addEventListener("click", (event) => {
   if (event.target === recordsDialog) recordsDialog.close();
 });
 
+recentReceipts.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
+recentReceipts.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  event.preventDefault();
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
+recentProducts.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
+recentProducts.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  event.preventDefault();
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
+homeRecentList?.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
+homeRecentList?.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest("[data-record-id]");
+  if (!card) return;
+  event.preventDefault();
+  openFamilyRecord(card.dataset.recordType, card.dataset.recordId);
+});
+
 clearRecordsButton.addEventListener("click", async () => {
   familyRecords = emptyFamilyRecords();
   saveFamilyRecords();
@@ -2717,6 +2759,8 @@ function renderResult(data) {
   voiceSummary.textContent = data.voice_summary || judgement.voice_summary || "";
 
   cardStage.innerHTML = latestCardSvg;
+  cardStage.hidden = !latestCardSvg;
+  downloadButton.disabled = !latestCardSvg;
   detailList.innerHTML = "";
   config().details.forEach(([label, key]) => {
     const value = judgement[key];
@@ -2743,6 +2787,59 @@ function renderResult(data) {
   receiptState.hidden = true;
   feedbackPanel.hidden = true;
   feedbackThanks.hidden = true;
+}
+
+function buildJudgementFromProductRecord(record) {
+  return {
+    item_name: record.itemName || record.item_name || recordCopy().unknownProduct,
+    category: record.category || "",
+    verdict: record.verdict || "",
+    subtitle: record.subtitle || "",
+    warning: record.warning || "",
+    what_it_is: record.what_it_is || record.whatItIs || "",
+    how_to_use: record.how_to_use || record.howToUse || "",
+    benefit: record.benefit || "",
+    storage: record.storage || "",
+    voice_summary: record.voice_summary || record.voiceSummary || "",
+  };
+}
+
+function openProductRecord(recordId) {
+  const record = familyRecords.products.find((item) => item.id === recordId);
+  if (!record) return;
+  const judgement = buildJudgementFromProductRecord(record);
+  renderResult({
+    judgement,
+    voice_summary: judgement.voice_summary,
+    card_svg: record.card_svg || "",
+    record,
+  });
+  if (recordsDialog?.open) recordsDialog.close();
+  resultPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+  sendClientEvent("open_product_record", { category: record.category || "", output_language: appLanguage });
+}
+
+function openReceiptRecord(recordId) {
+  const record = familyRecords.receipts.find((item) => item.id === recordId);
+  if (!record) return;
+  renderReceiptResult({
+    receipt: record,
+    record,
+    voice_summary: record.voice_summary || "",
+  });
+  if (recordsDialog?.open) recordsDialog.close();
+  resultPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+  sendClientEvent("open_receipt_record", { output_language: appLanguage });
+}
+
+function openFamilyRecord(type, recordId) {
+  if (type === "product") {
+    openProductRecord(recordId);
+    return;
+  }
+  if (type === "receipt") {
+    openReceiptRecord(recordId);
+  }
 }
 
 function renderReceiptResult(data) {
@@ -3194,16 +3291,23 @@ function addProductRecord(data) {
   const judgement = data?.judgement || {};
   const itemName = judgement.item_name || recordCopy().unknownProduct;
   const serverRecord = normalizeProductRecord(data?.record);
-  const record = serverRecord || {
-    id: createRecordId("product", itemName),
-    created_at: new Date().toISOString(),
+  const record = normalizeProductRecord({
+    ...(serverRecord || {}),
+    id: serverRecord?.id || createRecordId("product", itemName),
+    created_at: serverRecord?.created_at || new Date().toISOString(),
+    output_language: serverRecord?.output_language || appLanguage,
     itemName,
     item_name: itemName,
-    category: judgement.category || "",
-    verdict: judgement.verdict || "",
-    subtitle: judgement.subtitle || "",
-    warning: judgement.warning || "",
-  };
+    category: judgement.category || serverRecord?.category || "",
+    verdict: judgement.verdict || serverRecord?.verdict || "",
+    subtitle: judgement.subtitle || serverRecord?.subtitle || "",
+    warning: judgement.warning || serverRecord?.warning || "",
+    what_it_is: judgement.what_it_is || serverRecord?.what_it_is || "",
+    how_to_use: judgement.how_to_use || serverRecord?.how_to_use || "",
+    benefit: judgement.benefit || serverRecord?.benefit || "",
+    storage: judgement.storage || serverRecord?.storage || "",
+    voice_summary: judgement.voice_summary || data?.voice_summary || serverRecord?.voice_summary || "",
+  });
   record.thumbnail = data.card_image_data_url || findExistingProductThumbnail(record.id) || "";
   if (data?.monthly_report) familyRecords.monthlyReport = data.monthly_report;
   familyRecords.products = [record, ...familyRecords.products.filter((item) => item.id !== record.id)].slice(0, 80);
@@ -3269,7 +3373,25 @@ function normalizeProductRecord(record) {
     verdict: record.verdict || "",
     subtitle: record.subtitle || "",
     warning: record.warning || "",
+    what_it_is: record.what_it_is || record.whatItIs || "",
+    how_to_use: record.how_to_use || record.howToUse || "",
+    benefit: record.benefit || "",
+    storage: record.storage || "",
+    voice_summary: record.voice_summary || record.voiceSummary || "",
   };
+}
+
+function mergeProductRecord(remoteRecord, localRecord) {
+  if (!localRecord) return remoteRecord;
+  return normalizeProductRecord({
+    ...remoteRecord,
+    thumbnail: localRecord.thumbnail || remoteRecord.thumbnail || "",
+    what_it_is: remoteRecord.what_it_is || localRecord.what_it_is || localRecord.whatItIs || "",
+    how_to_use: remoteRecord.how_to_use || localRecord.how_to_use || localRecord.howToUse || "",
+    benefit: remoteRecord.benefit || localRecord.benefit || "",
+    storage: remoteRecord.storage || localRecord.storage || "",
+    voice_summary: remoteRecord.voice_summary || localRecord.voice_summary || localRecord.voiceSummary || "",
+  });
 }
 
 function normalizeReceiptRecord(record) {
@@ -3362,6 +3484,8 @@ function renderHomeRecentList() {
   if (!homeRecentList) return;
   const copy = homeCopy();
   const receipts = familyRecords.receipts.slice(0, 4).map((record) => ({
+    id: record.id,
+    recordType: "receipt",
     type: copy.receiptShort,
     title: record.storeName || record.store_name || recordCopy().unknownStore,
     detail: [
@@ -3372,6 +3496,8 @@ function renderHomeRecentList() {
     thumbnail: "",
   }));
   const products = familyRecords.products.slice(0, 4).map((record) => ({
+    id: record.id,
+    recordType: "product",
     type: copy.productShort,
     title: record.itemName || record.item_name || recordCopy().unknownProduct,
     detail: [record.verdict || "", record.category || record.subtitle || ""].filter(Boolean).join(" · "),
@@ -3392,7 +3518,7 @@ function renderHomeRecentList() {
       ? `<img src="${escapeHtml(item.thumbnail)}" alt="" />`
       : `<span>${escapeHtml(item.type.slice(0, 1))}</span>`;
     return `
-      <article class="home-recent-item">
+      <article class="home-recent-item" role="button" tabindex="0" data-record-type="${escapeHtml(item.recordType)}" data-record-id="${escapeHtml(item.id)}">
         <div class="home-recent-thumb">${thumb}</div>
         <div>
           <strong>${escapeHtml(item.title)}</strong>
@@ -3404,7 +3530,7 @@ function renderHomeRecentList() {
 }
 
 function applyRecordsLanguage() {
-  recordsOpenButton.textContent = recordCopy().open;
+  updateRecordsOpenButton();
   recordsCloseButton.setAttribute("aria-label", recordCopy().close);
   recordsKicker.textContent = recordCopy().kicker;
   recordsTitle.textContent = recordCopy().title;
@@ -3415,6 +3541,11 @@ function applyRecordsLanguage() {
   monthlyInsightTitle.textContent = recordCopy().monthlyInsight;
   recentReceiptsTitle.textContent = recordCopy().recentReceipts;
   recentProductsTitle.textContent = recordCopy().recentProducts;
+}
+
+function updateRecordsOpenButton() {
+  const count = familyRecords.products.length + familyRecords.receipts.length;
+  recordsOpenButton.textContent = count ? `${recordCopy().open} ${count}` : recordCopy().open;
 }
 
 function renderMonthlyInsight(monthReceipts) {
@@ -3472,6 +3603,10 @@ function renderReceiptRecords() {
   familyRecords.receipts.slice(0, 5).forEach((record) => {
     const card = document.createElement("article");
     card.className = "record-card";
+    card.dataset.recordType = "receipt";
+    card.dataset.recordId = record.id;
+    card.setAttribute("role", "button");
+    card.tabIndex = 0;
     const storeName = record.storeName || record.store_name || recordCopy().unknownStore;
     const date = formatRecordDate(record.purchaseDate || record.purchase_date || record.created_at || record.createdAt);
     const amount = record.totalAmount ?? record.total_amount;
@@ -3495,6 +3630,10 @@ function renderProductRecords() {
   familyRecords.products.slice(0, 5).forEach((record) => {
     const card = document.createElement("article");
     card.className = `record-card${record.thumbnail ? " with-thumb" : ""}`;
+    card.dataset.recordType = "product";
+    card.dataset.recordId = record.id;
+    card.setAttribute("role", "button");
+    card.tabIndex = 0;
     const thumb = record.thumbnail ? `<img class="record-thumb" src="${escapeHtml(record.thumbnail)}" alt="" />` : "";
     const productName = record.itemName || record.item_name || recordCopy().unknownProduct;
     card.innerHTML = `
@@ -4887,13 +5026,11 @@ async function hydrateFamilyRecordsFromBackend() {
     const remoteReceipts = Array.isArray(data.receipts) ? data.receipts.map(normalizeReceiptRecord).filter(Boolean) : [];
     const hasRemoteRecords = remoteProducts.length || remoteReceipts.length;
     if (hasRemoteRecords || data.monthly_report) {
-      const localThumbnails = new Map(familyRecords.products.map((record) => [record.id, record.thumbnail || ""]));
-      remoteProducts.forEach((record) => {
-        record.thumbnail = localThumbnails.get(record.id) || record.thumbnail || "";
-      });
+      const localProducts = new Map(familyRecords.products.map((record) => [record.id, record]));
+      const mergedProducts = remoteProducts.map((record) => mergeProductRecord(record, localProducts.get(record.id)));
       familyRecords = {
-        products: hasRemoteRecords ? remoteProducts : familyRecords.products,
-        receipts: hasRemoteRecords ? remoteReceipts : familyRecords.receipts,
+        products: remoteProducts.length ? mergedProducts : familyRecords.products,
+        receipts: remoteReceipts.length ? remoteReceipts : familyRecords.receipts,
         monthlyReport: data.monthly_report || familyRecords.monthlyReport || null,
       };
       saveFamilyRecords();
