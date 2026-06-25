@@ -1,7 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#166b48"/>
-  <path d="M148 190h216l-25 186H173l-25-186Z" fill="#fffdf8"/>
-  <path d="M190 190c0-46 29-78 66-78s66 32 66 78" fill="none" stroke="#fffdf8" stroke-width="34" stroke-linecap="round"/>
-  <path d="M206 283c39 8 71-5 101-39 22 68-27 112-92 94" fill="#d9a354"/>
-  <text x="256" y="316" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Arial,sans-serif" font-size="118" font-weight="900" fill="#166b48">C</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="FamLens">
+  <defs>
+    <linearGradient id="labelGradient" x1="92" y1="76" x2="405" y2="424" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#173c4d"/>
+      <stop offset="1" stop-color="#187253"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="#fff6e3"/>
+  <path d="M160 96h152l94 94v206c0 31-25 56-56 56H160c-31 0-56-25-56-56V152c0-31 25-56 56-56Z" fill="url(#labelGradient)"/>
+  <path d="M314 103v70c0 16 13 29 29 29h56" fill="none" stroke="#e9f3ee" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="189" cy="199" r="27" fill="#f5c84b"/>
+  <path d="M172 288h125" stroke="#fffdf7" stroke-width="29" stroke-linecap="round"/>
+  <path d="M172 346h92" stroke="#fffdf7" stroke-width="29" stroke-linecap="round"/>
+  <circle cx="314" cy="317" r="78" fill="none" stroke="#fffdf7" stroke-width="22"/>
+  <path d="M366 371l54 54" stroke="#fffdf7" stroke-width="24" stroke-linecap="round"/>
 </svg>

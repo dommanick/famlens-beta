@@ -257,6 +257,8 @@ const productUploadMaxEdge = 1600;
 const receiptUploadMaxEdge = 2048;
 const productUploadQuality = 0.82;
 const receiptUploadQuality = 0.84;
+const speechPlaybackRate = 1.3;
+const visibleProductDetailKeys = new Set(["what_it_is", "how_to_use", "warning", "benefit"]);
 let familyProfileState = loadFamilyProfileState();
 if (familyProfileState.output_language && supportedLanguageKeys.has(familyProfileState.output_language)) {
   appLanguage = familyProfileState.output_language;
@@ -1021,7 +1023,7 @@ const chatLanguageCopy = {
 const recordsLanguageCopy = {
   "zh-Hans": {
     kicker: "家庭记录",
-    open: "家庭记录",
+    open: "记录",
     close: "关闭",
     title: "这个月家里买了什么",
     clear: "清空记录",
@@ -2789,10 +2791,11 @@ function renderResult(data) {
   voiceSummary.textContent = latestResult.voice_summary || judgement.voice_summary || "";
 
   cardStage.innerHTML = latestCardSvg;
-  cardStage.hidden = !latestCardSvg;
+  cardStage.hidden = true;
   downloadButton.disabled = !latestCardSvg;
   detailList.innerHTML = "";
-  config().details.forEach(([label, key]) => {
+  const visibleDetails = config().details.filter(([, key]) => visibleProductDetailKeys.has(key));
+  visibleDetails.forEach(([label, key]) => {
     const value = judgement[key];
     if (!value) return;
     const item = document.createElement("div");
@@ -4515,6 +4518,7 @@ async function speak(text) {
     const blob = await response.blob();
     currentAudioUrl = URL.createObjectURL(blob);
     currentAudio = new Audio(currentAudioUrl);
+    currentAudio.playbackRate = speechPlaybackRate;
     currentAudio.onended = releaseCurrentAudioUrl;
     currentAudio.onerror = releaseCurrentAudioUrl;
     await currentAudio.play();
@@ -4552,7 +4556,7 @@ function fallbackSpeech(text) {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = config().speech;
-  utterance.rate = 0.88;
+  utterance.rate = speechPlaybackRate;
   window.speechSynthesis.speak(utterance);
 }
 

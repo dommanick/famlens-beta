@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FamLens">
+  <path d="M14 7h25l11 11v30c0 5-4 9-9 9H14c-5 0-9-4-9-9V16c0-5 4-9 9-9Z" fill="#fffaf0" stroke="#0f6f50" stroke-width="4.2" stroke-linejoin="round"/>
+  <path d="M39 8v10c0 2.2 1.8 4 4 4h7" fill="none" stroke="#0f6f50" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="19" cy="21" r="3.4" fill="#e8b735"/>
+  <path d="M17 31h15" stroke="#0f6f50" stroke-width="4.2" stroke-linecap="round"/>
+  <path d="M17 40h11" stroke="#b4c0b6" stroke-width="4.2" stroke-linecap="round"/>
+  <circle cx="40" cy="40" r="10.5" fill="#fffdf7" stroke="#156f8a" stroke-width="5"/>
+  <path d="M47.5 47.5 57 57" stroke="#156f8a" stroke-width="5" stroke-linecap="round"/>
+</svg>
