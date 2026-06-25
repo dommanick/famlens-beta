@@ -1,4 +1,4 @@
-const CACHE_NAME = "famlens-shell-v52";
+const CACHE_NAME = "famlens-shell-v53";
 const SHELL_ASSETS = [
   "/",
   "/static/styles.css",
@@ -8,7 +8,8 @@ const SHELL_ASSETS = [
   "/manifest.json",
   "/site.webmanifest",
   "/static/icon.svg",
-  "/static/logo-mark.svg"
+  "/static/logo-mark.svg",
+  "/static/logo-lockup.svg"
 ];
 
 self.addEventListener("install", (event) => {
