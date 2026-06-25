@@ -2364,6 +2364,10 @@ h1 {
   gap: 12px;
 }
 
+.sample-report-head > div {
+  min-width: 0;
+}
+
 .home-section-action {
   min-height: 38px;
   padding: 0 13px;
@@ -2381,6 +2385,7 @@ h1 {
 }
 
 #homeSampleLink {
+  flex: 0 0 auto;
   min-height: 36px;
   padding: 0 13px;
   border-radius: 999px;
