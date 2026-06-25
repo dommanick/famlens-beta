@@ -4431,7 +4431,10 @@ function applyHomeLanguage() {
   if (homeReceiptProgressCopy) homeReceiptProgressCopy.textContent = t("progressCopy");
   if (homeSampleKicker) homeSampleKicker.textContent = t("sampleKicker");
   if (homeSampleTitle) homeSampleTitle.textContent = t("sampleTitle");
-  if (homeSampleLink) homeSampleLink.textContent = t("sampleLink");
+  if (homeSampleLink) {
+    homeSampleLink.textContent = t("sampleLink");
+    homeSampleLink.href = `/static/family-health-snapshot-sample.html?lang=${encodeURIComponent(appLanguage)}`;
+  }
   if (homeSampleNutrition) homeSampleNutrition.textContent = t("sampleNutrition");
   if (homeSampleNutritionCopy) homeSampleNutritionCopy.textContent = t("sampleNutritionCopy");
   if (homeSampleSpending) homeSampleSpending.textContent = t("sampleSpending");

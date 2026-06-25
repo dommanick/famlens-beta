@@ -587,5 +587,316 @@
         </div>
       </aside>
     </main>
+    <script>
+      const sampleCopy = {
+        en: {
+          pageTitle: "Family Health Snapshot Sample",
+          sample: "Sample report",
+          hero: "Family Health Snapshot",
+          intro: "Estimated from 24 product scans and 8 receipts this month. This is a trend report, not medical advice.",
+          scoreLabel: "Score",
+          scoreTitle: "Balanced, with two areas to improve.",
+          scoreCopy: "Protein and calcium sources look steady. Vegetables and high-sugar items need attention next month.",
+          metrics: ["Receipts saved this month", "Products understood by AI", "Estimated household shopping spend"],
+          nutritionTitle: "Nutrition Pattern",
+          nutritionTag: "Estimated trend",
+          bars: [["Vegetables", "Low"], ["Fruit", "Fair"], ["Protein", "Good"], ["Calcium", "Good"], ["Sugary items", "High"]],
+          insightTitle: "Family Insights",
+          insightTag: "AI notes",
+          insights: [
+            ["Good foundation", "Dairy, eggs, and lean protein appear regularly. This supports children, seniors, and busy adults."],
+            ["Watch next month", "Sweet drinks, snacks, and processed foods appeared more often than last month."],
+            ["Simple shopping goal", "Add two more green vegetables and one fruit choice to each weekly shopping trip."]
+          ],
+          mixTitle: "Shopping Mix",
+          mixTag: "Household view",
+          legend: ["Groceries and fresh food", "Personal care and health", "Restaurants and prepared food", "Household supplies"],
+          footnote: "FamLens estimates household shopping patterns from receipts and product photos. It can highlight trends and family reminders, but it does not replace medical advice or precise nutrition tracking.",
+          sideTag: "Full report preview",
+          sideTitle: "Show users the reward before asking for the habit.",
+          sideCopy: "This is the poster-style monthly report that users could receive after scanning enough receipts and product photos. It gives a clear reason to keep using FamLens beyond one-time translation.",
+          why: [
+            ["Why it helps activation", "Receipt scanning has delayed value. A sample report makes the future payoff visible immediately."],
+            ["Why it supports paid plans", "The complete report, historical comparison, and family-specific recommendations can become premium features."],
+            ["Why it protects positioning", "It keeps FamLens focused on family health shopping intelligence, not generic expense tracking."]
+          ]
+        },
+        "zh-Hans": {
+          pageTitle: "家庭健康购物月报样例",
+          sample: "样例报告",
+          hero: "家庭健康购物快照",
+          intro: "根据本月 24 次商品扫描和 8 张小票粗略估算。这是趋势报告，不是医疗建议。",
+          scoreLabel: "评分",
+          scoreTitle: "整体比较均衡，有两个地方下月可以改善。",
+          scoreCopy: "蛋白质和钙来源比较稳定。蔬菜偏少，高糖食品出现频率需要注意。",
+          metrics: ["本月保存小票", "AI 看懂的商品", "估算家庭购物支出"],
+          nutritionTitle: "饮食结构趋势",
+          nutritionTag: "粗略估算",
+          bars: [["蔬菜", "偏少"], ["水果", "一般"], ["蛋白质", "不错"], ["钙来源", "不错"], ["高糖食品", "偏高"]],
+          insightTitle: "家庭提醒",
+          insightTag: "AI 备注",
+          insights: [
+            ["基础不错", "奶制品、鸡蛋和瘦肉蛋白出现比较稳定，对孩子、老人和忙碌的成年人都有帮助。"],
+            ["下月注意", "甜饮料、零食和加工食品比上月出现得更频繁。"],
+            ["简单采购目标", "每周采购时多加两种绿色蔬菜和一种水果。"]
+          ],
+          mixTitle: "购物结构",
+          mixTag: "家庭视角",
+          legend: ["超市与新鲜食物", "个人护理与健康", "餐厅和即食食品", "家庭日用品"],
+          footnote: "FamLens 会根据小票和商品照片估算家庭购物趋势，帮助发现饮食和家庭提醒，但不能替代医疗建议或精确营养记录。",
+          sideTag: "完整报告预览",
+          sideTitle: "先让用户看到坚持记录后的回报。",
+          sideCopy: "这是用户持续拍小票和商品后可能拿到的海报式月报。它让 FamLens 不只是一次性翻译工具，而是长期家庭购物记忆。",
+          why: [
+            ["为什么能提高使用动力", "拍小票的价值不是马上出现，样例报告能让未来收益先被看见。"],
+            ["为什么能支持付费版", "完整报告、历史对比和家庭定制建议，可以成为高级功能。"],
+            ["为什么能保护定位", "它让 FamLens 聚焦在家庭健康购物智能，而不是普通记账工具。"]
+          ]
+        },
+        es: {
+          pageTitle: "Ejemplo de informe familiar",
+          sample: "Informe de ejemplo",
+          hero: "Resumen de salud familiar",
+          intro: "Estimado con 24 escaneos de productos y 8 recibos este mes. Es una tendencia, no consejo médico.",
+          scoreLabel: "Puntaje",
+          scoreTitle: "Equilibrado, con dos áreas por mejorar.",
+          scoreCopy: "Proteína y calcio se ven estables. Verduras y productos con azúcar necesitan atención.",
+          metrics: ["Recibos guardados", "Productos entendidos por AI", "Gasto familiar estimado"],
+          nutritionTitle: "Patrón nutricional",
+          nutritionTag: "Tendencia estimada",
+          bars: [["Verduras", "Bajo"], ["Fruta", "Regular"], ["Proteína", "Bien"], ["Calcio", "Bien"], ["Azúcar", "Alto"]],
+          insightTitle: "Notas familiares",
+          insightTag: "Notas AI",
+          insights: [
+            ["Buena base", "Lácteos, huevos y proteína magra aparecen con regularidad."],
+            ["Vigilar el próximo mes", "Bebidas dulces, snacks y procesados aparecieron más."],
+            ["Meta simple", "Añade dos verduras verdes y una fruta en cada compra semanal."]
+          ],
+          mixTitle: "Mezcla de compras",
+          mixTag: "Vista del hogar",
+          legend: ["Supermercado y frescos", "Cuidado personal y salud", "Restaurantes y preparados", "Artículos del hogar"],
+          footnote: "FamLens estima patrones de compras desde recibos y fotos. Puede mostrar tendencias, pero no reemplaza consejo médico ni control nutricional preciso.",
+          sideTag: "Vista previa",
+          sideTitle: "Muestra la recompensa antes de pedir el hábito.",
+          sideCopy: "Este informe mensual estilo póster muestra el valor de seguir escaneando recibos y productos.",
+          why: [
+            ["Activa el uso", "El valor del recibo llega después. El ejemplo lo hace visible."],
+            ["Apoya planes pagos", "Informe completo, comparación histórica y recomendaciones familiares pueden ser premium."],
+            ["Protege el enfoque", "Mantiene a FamLens centrado en compras saludables familiares."]
+          ]
+        },
+        fr: {
+          pageTitle: "Exemple de rapport familial",
+          sample: "Rapport exemple",
+          hero: "Aperçu santé du foyer",
+          intro: "Estimé à partir de 24 scans produits et 8 reçus ce mois-ci. C’est une tendance, pas un avis médical.",
+          scoreLabel: "Score",
+          scoreTitle: "Équilibré, avec deux points à améliorer.",
+          scoreCopy: "Les sources de protéines et calcium sont stables. Les légumes et produits sucrés méritent attention.",
+          metrics: ["Reçus enregistrés", "Produits compris par l’AI", "Dépense familiale estimée"],
+          nutritionTitle: "Tendance nutrition",
+          nutritionTag: "Estimation",
+          bars: [["Légumes", "Bas"], ["Fruits", "Moyen"], ["Protéines", "Bon"], ["Calcium", "Bon"], ["Produits sucrés", "Élevé"]],
+          insightTitle: "Notes famille",
+          insightTag: "Notes AI",
+          insights: [
+            ["Bonne base", "Laitages, œufs et protéines maigres apparaissent régulièrement."],
+            ["À surveiller", "Boissons sucrées, snacks et aliments transformés sont plus fréquents."],
+            ["Objectif simple", "Ajouter deux légumes verts et un fruit à chaque course hebdomadaire."]
+          ],
+          mixTitle: "Structure d’achats",
+          mixTag: "Vue foyer",
+          legend: ["Épicerie et frais", "Soins personnels et santé", "Restaurants et prêts-à-manger", "Produits maison"],
+          footnote: "FamLens estime les tendances d’achat à partir des reçus et photos. Il signale des tendances, mais ne remplace pas un avis médical ou un suivi nutritionnel précis.",
+          sideTag: "Aperçu complet",
+          sideTitle: "Montrer la récompense avant de demander l’habitude.",
+          sideCopy: "Ce rapport mensuel au format poster montre pourquoi continuer à scanner produits et reçus.",
+          why: [
+            ["Pourquoi cela active l’usage", "La valeur des reçus arrive plus tard. L’exemple la rend visible."],
+            ["Pourquoi cela soutient le payant", "Rapport complet, historique et conseils familiaux peuvent devenir premium."],
+            ["Pourquoi cela protège le positionnement", "FamLens reste centré sur l’intelligence d’achat santé familiale."]
+          ]
+        },
+        ko: {
+          pageTitle: "가족 건강 리포트 샘플",
+          sample: "샘플 리포트",
+          hero: "가족 건강 쇼핑 요약",
+          intro: "이번 달 상품 스캔 24회와 영수증 8장을 바탕으로 추정했습니다. 의료 조언은 아닙니다.",
+          scoreLabel: "점수",
+          scoreTitle: "전반적으로 균형이 좋고, 두 가지 개선점이 있습니다.",
+          scoreCopy: "단백질과 칼슘은 안정적입니다. 채소와 당류 섭취 패턴은 다음 달에 확인하세요.",
+          metrics: ["저장한 영수증", "AI가 이해한 상품", "예상 가족 쇼핑 지출"],
+          nutritionTitle: "영양 패턴",
+          nutritionTag: "추정 추세",
+          bars: [["채소", "낮음"], ["과일", "보통"], ["단백질", "좋음"], ["칼슘", "좋음"], ["당류", "높음"]],
+          insightTitle: "가족 메모",
+          insightTag: "AI 메모",
+          insights: [
+            ["좋은 기반", "유제품, 달걀, 저지방 단백질이 꾸준히 보입니다."],
+            ["다음 달 주의", "단 음료, 간식, 가공식품이 더 자주 보였습니다."],
+            ["간단한 목표", "매주 장볼 때 녹색 채소 두 가지와 과일 한 가지를 추가하세요."]
+          ],
+          mixTitle: "쇼핑 구조",
+          mixTag: "가족 관점",
+          legend: ["식료품과 신선식품", "개인 케어와 건강", "외식과 즉석식품", "생활용품"],
+          footnote: "FamLens는 영수증과 상품 사진으로 쇼핑 패턴을 추정합니다. 의료 조언이나 정확한 영양 추적을 대체하지 않습니다.",
+          sideTag: "전체 리포트 미리보기",
+          sideTitle: "습관을 요구하기 전에 보상을 먼저 보여줍니다.",
+          sideCopy: "충분한 영수증과 상품 사진을 스캔하면 받을 수 있는 월간 리포트 예시입니다.",
+          why: [
+            ["사용 동기", "영수증 스캔의 가치는 시간이 지나야 보입니다. 샘플이 그 가치를 먼저 보여줍니다."],
+            ["유료 기능", "전체 리포트, 과거 비교, 가족 맞춤 조언은 프리미엄이 될 수 있습니다."],
+            ["포지셔닝", "FamLens를 단순 가계부가 아닌 가족 건강 쇼핑 AI로 유지합니다."]
+          ]
+        },
+        ja: {
+          pageTitle: "家族健康レポート サンプル",
+          sample: "サンプルレポート",
+          hero: "家族の健康ショッピング概要",
+          intro: "今月の24件の商品スキャンと8枚のレシートから推定。医療アドバイスではありません。",
+          scoreLabel: "スコア",
+          scoreTitle: "全体はバランス良好。改善点が2つあります。",
+          scoreCopy: "タンパク質とカルシウムは安定。野菜と糖分の多い商品に注意しましょう。",
+          metrics: ["保存したレシート", "AIが理解した商品", "推定家庭支出"],
+          nutritionTitle: "栄養パターン",
+          nutritionTag: "推定傾向",
+          bars: [["野菜", "少なめ"], ["果物", "普通"], ["タンパク質", "良い"], ["カルシウム", "良い"], ["糖分商品", "多め"]],
+          insightTitle: "家族メモ",
+          insightTag: "AIメモ",
+          insights: [
+            ["良い土台", "乳製品、卵、赤身タンパク質が定期的にあります。"],
+            ["来月の注意", "甘い飲み物、スナック、加工食品が増えています。"],
+            ["簡単な目標", "毎週の買い物に緑の野菜2種類と果物1種類を追加しましょう。"]
+          ],
+          mixTitle: "買い物構成",
+          mixTag: "家庭ビュー",
+          legend: ["食料品と生鮮", "ケアと健康", "外食と惣菜", "日用品"],
+          footnote: "FamLensはレシートと商品写真から買い物傾向を推定します。医療アドバイスや正確な栄養記録の代わりではありません。",
+          sideTag: "レポートプレビュー",
+          sideTitle: "習慣化の前に、得られる価値を見せる。",
+          sideCopy: "十分なレシートと商品写真を記録した後に見られる月次レポートの例です。",
+          why: [
+            ["利用開始に効く理由", "レシートの価値は後から出ます。サンプルで先に見せます。"],
+            ["有料化に効く理由", "完全レポート、履歴比較、家族別提案はプレミアム機能になります。"],
+            ["定位を守る理由", "FamLensを一般的な家計簿ではなく家族健康ショッピングAIに保ちます。"]
+          ]
+        },
+        vi: {
+          pageTitle: "Mẫu báo cáo sức khỏe gia đình",
+          sample: "Báo cáo mẫu",
+          hero: "Tổng quan mua sắm sức khỏe gia đình",
+          intro: "Ước tính từ 24 lần quét sản phẩm và 8 hóa đơn trong tháng. Đây là xu hướng, không phải tư vấn y tế.",
+          scoreLabel: "Điểm",
+          scoreTitle: "Khá cân bằng, có hai điểm nên cải thiện.",
+          scoreCopy: "Đạm và canxi khá ổn. Rau xanh và đồ nhiều đường cần chú ý hơn tháng sau.",
+          metrics: ["Hóa đơn đã lưu", "Sản phẩm AI đã hiểu", "Chi tiêu gia đình ước tính"],
+          nutritionTitle: "Xu hướng dinh dưỡng",
+          nutritionTag: "Ước tính",
+          bars: [["Rau", "Thấp"], ["Trái cây", "Tạm"], ["Đạm", "Tốt"], ["Canxi", "Tốt"], ["Đồ ngọt", "Cao"]],
+          insightTitle: "Gợi ý gia đình",
+          insightTag: "Ghi chú AI",
+          insights: [
+            ["Nền tảng tốt", "Sữa, trứng và nguồn đạm nạc xuất hiện đều."],
+            ["Tháng sau chú ý", "Nước ngọt, đồ ăn vặt và thực phẩm chế biến xuất hiện nhiều hơn."],
+            ["Mục tiêu đơn giản", "Mỗi tuần thêm hai loại rau xanh và một loại trái cây."]
+          ],
+          mixTitle: "Cơ cấu mua sắm",
+          mixTag: "Góc nhìn gia đình",
+          legend: ["Thực phẩm và đồ tươi", "Chăm sóc cá nhân và sức khỏe", "Nhà hàng và đồ chế biến", "Đồ gia dụng"],
+          footnote: "FamLens ước tính xu hướng mua sắm từ hóa đơn và ảnh sản phẩm. Không thay thế tư vấn y tế hoặc theo dõi dinh dưỡng chính xác.",
+          sideTag: "Xem trước báo cáo",
+          sideTitle: "Cho người dùng thấy phần thưởng trước khi tạo thói quen.",
+          sideCopy: "Đây là mẫu báo cáo hàng tháng sau khi gia đình quét đủ hóa đơn và sản phẩm.",
+          why: [
+            ["Tăng động lực", "Giá trị của hóa đơn đến chậm. Mẫu báo cáo làm nó rõ ngay."],
+            ["Hỗ trợ trả phí", "Báo cáo đầy đủ, so sánh lịch sử và gợi ý gia đình có thể là premium."],
+            ["Giữ định vị", "FamLens tập trung vào AI mua sắm sức khỏe cho gia đình."]
+          ]
+        },
+        hi: {
+          pageTitle: "Family Health Report Sample",
+          sample: "Sample report",
+          hero: "Family Health Snapshot",
+          intro: "इस महीने 24 product scans और 8 receipts से अनुमान। यह trend report है, medical advice नहीं।",
+          scoreLabel: "Score",
+          scoreTitle: "काफी balanced, दो areas improve कर सकते हैं।",
+          scoreCopy: "Protein और calcium source ठीक दिखते हैं। Vegetables और high-sugar items पर अगले महीने ध्यान दें।",
+          metrics: ["Receipts saved", "AI ने समझे products", "Estimated family spend"],
+          nutritionTitle: "Nutrition Pattern",
+          nutritionTag: "Estimated trend",
+          bars: [["Vegetables", "Low"], ["Fruit", "Fair"], ["Protein", "Good"], ["Calcium", "Good"], ["Sugary items", "High"]],
+          insightTitle: "Family Insights",
+          insightTag: "AI notes",
+          insights: [
+            ["Good foundation", "Dairy, eggs और lean protein नियमित दिख रहे हैं।"],
+            ["Next month ध्यान दें", "Sweet drinks, snacks और processed foods ज़्यादा दिखे।"],
+            ["Simple goal", "हर weekly shopping में दो green vegetables और एक fruit जोड़ें।"]
+          ],
+          mixTitle: "Shopping Mix",
+          mixTag: "Household view",
+          legend: ["Groceries and fresh food", "Personal care and health", "Restaurants and prepared food", "Household supplies"],
+          footnote: "FamLens receipts और product photos से shopping trends estimate करता है। यह medical advice या precise nutrition tracking की जगह नहीं लेता।",
+          sideTag: "Full report preview",
+          sideTitle: "Habit मांगने से पहले reward दिखाइए।",
+          sideCopy: "यह monthly poster-style report दिखाता है कि receipts और products scan करते रहने से क्या value मिलती है।",
+          why: [
+            ["Activation में मदद", "Receipt scan की value बाद में दिखती है। Sample report उसे तुरंत visible बनाता है।"],
+            ["Paid plans में मदद", "Complete report, history comparison और family recommendations premium हो सकते हैं।"],
+            ["Positioning बचाता है", "FamLens को generic expense tracker नहीं, family health shopping AI रखता है।"]
+          ]
+        }
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const supported = Object.keys(sampleCopy);
+      const lang = supported.includes(params.get("lang")) ? params.get("lang") : "en";
+      const copy = sampleCopy[lang];
+      document.documentElement.lang = lang === "zh-Hans" ? "zh-Hans" : lang;
+      document.title = copy.pageTitle;
+
+      const setText = (selector, text) => {
+        const element = document.querySelector(selector);
+        if (element) element.textContent = text;
+      };
+      const setPair = (element, pair) => {
+        if (!element || !pair) return;
+        const title = element.querySelector("b");
+        const body = element.querySelector("p");
+        if (title) title.textContent = pair[0];
+        if (body) body.textContent = pair[1];
+      };
+
+      setText(".sample", copy.sample);
+      setText(".poster-head h1", copy.hero);
+      setText(".poster-head > p", copy.intro);
+      setText(".score-ring span", copy.scoreLabel);
+      setText(".score-copy b", copy.scoreTitle);
+      setText(".score-copy span", copy.scoreCopy);
+      document.querySelectorAll(".metric span").forEach((node, index) => {
+        if (copy.metrics[index]) node.textContent = copy.metrics[index];
+      });
+      setText(".section:nth-of-type(1) .section-title h2", copy.nutritionTitle);
+      setText(".section:nth-of-type(1) .section-title span", copy.nutritionTag);
+      document.querySelectorAll(".bar-line").forEach((node, index) => {
+        if (!copy.bars[index]) return;
+        const spans = node.querySelectorAll("span");
+        if (spans[0]) spans[0].textContent = copy.bars[index][0];
+        if (spans[1]) spans[1].textContent = copy.bars[index][1];
+      });
+      setText(".section:nth-of-type(2) .section-title h2", copy.insightTitle);
+      setText(".section:nth-of-type(2) .section-title span", copy.insightTag);
+      document.querySelectorAll(".insight").forEach((node, index) => setPair(node, copy.insights[index]));
+      setText(".section:nth-of-type(3) .section-title h2", copy.mixTitle);
+      setText(".section:nth-of-type(3) .section-title span", copy.mixTag);
+      document.querySelectorAll(".legend div").forEach((node, index) => {
+        const label = node.querySelector("span:nth-of-type(2)");
+        if (label && copy.legend[index]) label.textContent = copy.legend[index];
+      });
+      setText(".footnote", copy.footnote);
+      setText(".explainer-tag", copy.sideTag);
+      setText(".explainer h2", copy.sideTitle);
+      setText(".explainer > p", copy.sideCopy);
+      document.querySelectorAll(".why").forEach((node, index) => setPair(node, copy.why[index]));
+    </script>
   </body>
 </html>
