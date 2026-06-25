@@ -121,6 +121,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .language-control,
@@ -142,7 +143,8 @@ h1 {
 }
 
 .language-control {
-  min-width: 148px;
+  min-width: 150px;
+  max-width: 168px;
   padding: 5px 9px 5px 12px;
   border: 1px solid var(--line);
   border-radius: 15px;
@@ -2362,6 +2364,13 @@ h1 {
   gap: 12px;
 }
 
+.home-section-action {
+  min-height: 38px;
+  padding: 0 13px;
+  font-size: 13px;
+  flex: 0 0 auto;
+}
+
 .sample-report-head p,
 .sample-report-head h2 {
   color: #fff;
@@ -2808,8 +2817,8 @@ body {
 .topbar {
   min-height: 58px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) minmax(106px, auto);
+  gap: 10px;
   align-items: center;
 }
 
@@ -2861,9 +2870,9 @@ h1 {
 }
 
 .language-control {
-  min-width: 74px;
-  max-width: 82px;
-  padding: 6px 6px;
+  min-width: 104px;
+  max-width: 122px;
+  padding: 6px 7px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.74);
 }
@@ -2873,31 +2882,10 @@ h1 {
   display: none;
 }
 
-.records-open {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 38px;
-  max-width: 62px;
-  padding: 0 8px;
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .language-select {
   font-size: 13px;
   min-width: 0;
   width: 100%;
-}
-
-.profile-open {
-  min-height: 38px;
-  max-width: 58px;
-  padding: 0 9px;
-  font-size: 13px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .workspace {
@@ -3456,7 +3444,6 @@ h1 {
 }
 
 .profile-box,
-.home-insights,
 .site-footer {
   display: none;
 }
