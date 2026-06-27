@@ -775,6 +775,15 @@ h1 {
   line-height: 1.08;
 }
 
+.receipt-hero small {
+  display: block;
+  min-height: 18px;
+  margin-top: 4px;
+  color: var(--green-deep);
+  font-size: 14px;
+  font-weight: 850;
+}
+
 .receipt-hero span {
   display: block;
   margin-top: 8px;
@@ -1276,6 +1285,14 @@ h1 {
   line-height: 1.08;
 }
 
+.records-summary strong small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
 .monthly-insight {
   border: 1px solid #d9e4d9;
   border-radius: 16px;
@@ -1328,6 +1345,94 @@ h1 {
 .monthly-category span:last-child {
   color: var(--green-deep);
   white-space: nowrap;
+}
+
+.price-memory {
+  border: 1px solid #d9e4d9;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.price-memory h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+.price-memory p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.frequent-memory {
+  background: #f6fbf7;
+}
+
+.price-memory-list {
+  display: grid;
+  gap: 8px;
+}
+
+.price-memory-item {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fffaf2;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(120px, auto);
+  gap: 10px;
+  align-items: center;
+}
+
+.price-memory-item.frequent {
+  background: #ffffff;
+}
+
+.price-memory-main,
+.price-memory-side {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.price-memory-main strong {
+  min-width: 0;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.price-memory-main span,
+.price-memory-side span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.price-memory-side {
+  justify-items: end;
+  text-align: right;
+}
+
+.price-memory-side b {
+  color: var(--green-deep);
+  font-size: 13px;
+}
+
+.price-memory-delta.up {
+  color: #9b2c2c;
+}
+
+.price-memory-delta.down {
+  color: #0f7a55;
 }
 
 .records-grid {
@@ -2619,8 +2724,14 @@ h1 {
 
   .records-summary,
   .monthly-insight,
+  .price-memory-item,
   .records-grid {
     grid-template-columns: 1fr;
+  }
+
+  .price-memory-side {
+    justify-items: start;
+    text-align: left;
   }
 
   .chat-form {
@@ -3515,6 +3626,7 @@ h1 {
 }
 
 .receipt-hero p,
+.receipt-hero small,
 .receipt-hero span {
   color: rgba(255, 255, 255, 0.78);
 }

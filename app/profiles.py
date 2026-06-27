@@ -15,6 +15,7 @@ class FamilyProfile:
     updated_at: str
     language: str = ""
     members_text: str = ""
+    preferred_currency: str = ""
 
     def to_prompt_context(self) -> str:
         members = self.members_text.strip()
@@ -35,7 +36,8 @@ class ProfileStore:
         notes = str(raw.get("notes", "")).strip()
         members_text = str(raw.get("members_text", "")).strip()
         language = str(raw.get("language", "")).strip()
-        if not notes and not members_text and not language:
+        preferred_currency = str(raw.get("preferred_currency", "")).strip().upper()
+        if not notes and not members_text and not language and not preferred_currency:
             return None
         return FamilyProfile(
             user_id=user_id,
@@ -43,6 +45,7 @@ class ProfileStore:
             updated_at=str(raw.get("updated_at", "")),
             language=language,
             members_text=members_text,
+            preferred_currency=preferred_currency,
         )
 
     def save(self, user_id: str, notes: str) -> FamilyProfile:
@@ -63,8 +66,15 @@ class ProfileStore:
         self._write(data)
         return profile
 
-    def save_family_setup(self, user_id: str, language: str, members_text: str) -> FamilyProfile:
+    def save_family_setup(
+        self,
+        user_id: str,
+        language: str,
+        members_text: str,
+        preferred_currency: str = "",
+    ) -> FamilyProfile:
         clean_members = _clean_notes(members_text)
+        clean_currency = _clean_currency(preferred_currency)
         data = self._read()
         previous = data.get(user_id) if isinstance(data.get(user_id), dict) else {}
         notes = str(previous.get("notes", "")).strip() or clean_members
@@ -74,11 +84,13 @@ class ProfileStore:
             updated_at=datetime.now(UTC).isoformat(),
             language=language.strip(),
             members_text=clean_members,
+            preferred_currency=clean_currency,
         )
         data[user_id] = {
             **previous,
             "language": profile.language,
             "members_text": profile.members_text,
+            "preferred_currency": profile.preferred_currency,
             "notes": profile.notes,
             "updated_at": profile.updated_at,
         }
@@ -106,7 +118,9 @@ class ProfileStore:
         if not isinstance(source, dict):
             return False
         target = data.get(target_user_id)
-        if not isinstance(target, dict) or not (target.get("members_text") or target.get("notes") or target.get("language")):
+        if not isinstance(target, dict) or not (
+            target.get("members_text") or target.get("notes") or target.get("language") or target.get("preferred_currency")
+        ):
             data[target_user_id] = {
                 **source,
                 "migrated_from": source_user_id,
@@ -145,6 +159,11 @@ class ProfileStore:
 def _clean_notes(notes: str) -> str:
     lines = [line.strip() for line in notes.strip().splitlines()]
     return "\n".join(line for line in lines if line)
+
+
+def _clean_currency(value: str) -> str:
+    clean = "".join(char for char in str(value or "").upper() if char.isalpha())
+    return clean[:3]
 
 
 def format_profile(profile: FamilyProfile | None) -> str:

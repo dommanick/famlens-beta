@@ -91,6 +91,9 @@ class FamilyRecordStore:
             {"category": category, "estimated_amount": round(amount, 2)}
             for category, amount in sorted(category_totals.items(), key=lambda item: item[1], reverse=True)[:6]
         ]
+        item_history = _item_history(receipts)
+        frequent_items = _frequent_items(item_history)
+        price_watch = _price_watch(item_history)
 
         return {
             "month": month,
@@ -104,6 +107,8 @@ class FamilyRecordStore:
             "family_report_notes": _recent_texts(month_receipts, "family_report_note", 3),
             "recent_products": month_products[:5],
             "recent_receipts": month_receipts[:5],
+            "frequent_items": frequent_items,
+            "price_watch": price_watch,
         }
 
     def _user_bucket(self, user_id: str) -> dict[str, Any]:
@@ -188,11 +193,14 @@ def _receipt_record(receipt: dict[str, Any], output_language: str) -> dict[str, 
 def _receipt_item(item: Any) -> dict[str, Any]:
     if not isinstance(item, dict):
         item = {}
+    amount = item.get("amount")
+    if amount is None:
+        amount = item.get("price") or item.get("total") or item.get("line_total")
     return {
         "name": _text(item.get("name"), "Unknown item", 100),
         "translated_name": _text(item.get("translated_name"), "", 100),
         "category": _text(item.get("category"), "Other", 60),
-        "amount": _nullable_number(item.get("amount")),
+        "amount": _nullable_number(amount),
     }
 
 
@@ -224,6 +232,107 @@ def _category_totals(receipts: list[dict[str, Any]]) -> dict[str, float]:
                 continue
             totals[_text(item.get("category"), "Other", 60)] += _number(item.get("amount"))
     return dict(totals)
+
+
+def _item_history(receipts: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    history: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for receipt in receipts:
+        receipt_date = _text(receipt.get("purchase_date") or receipt.get("created_at"), "", 80)
+        store_name = _text(receipt.get("store_name"), "Unknown store", 80)
+        currency = _text(receipt.get("currency"), "CAD", 12)
+        for item in _list(receipt.get("items")):
+            if not isinstance(item, dict):
+                continue
+            amount = _nullable_number(item.get("amount"))
+            if amount is None:
+                continue
+            display_name = _text(item.get("translated_name") or item.get("name"), "Unknown item", 120)
+            key = _canonical_item_name(display_name)
+            if not key:
+                continue
+            history[key].append(
+                {
+                    "name": display_name,
+                    "amount": amount,
+                    "currency": currency,
+                    "store_name": store_name,
+                    "purchase_date": receipt_date,
+                    "category": _text(item.get("category"), "Other", 60),
+                    "created_at": _text(receipt.get("created_at"), "", 80),
+                }
+            )
+    for entries in history.values():
+        entries.sort(key=lambda item: str(item.get("created_at") or item.get("purchase_date") or ""), reverse=True)
+    return dict(history)
+
+
+def _frequent_items(history: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    frequent: list[dict[str, Any]] = []
+    for entries in history.values():
+        if not entries:
+            continue
+        prices = [_number(entry.get("amount")) for entry in entries if _number(entry.get("amount")) > 0]
+        if not prices:
+            continue
+        latest = entries[0]
+        frequent.append(
+            {
+                "name": latest.get("name") or "Unknown item",
+                "item_name": latest.get("name") or "Unknown item",
+                "count": len(entries),
+                "last_amount": round(prices[0], 2),
+                "average_amount": round(sum(prices) / len(prices), 2),
+                "min_amount": round(min(prices), 2),
+                "max_amount": round(max(prices), 2),
+                "currency": latest.get("currency") or "CAD",
+                "category": latest.get("category") or "Other",
+                "store_name": latest.get("store_name") or "",
+                "purchase_date": latest.get("purchase_date") or "",
+            }
+        )
+    return sorted(frequent, key=lambda item: (int(item.get("count") or 0), float(item.get("last_amount") or 0)), reverse=True)[:8]
+
+
+def _price_watch(history: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    changes: list[dict[str, Any]] = []
+    for entries in history.values():
+        if len(entries) < 2:
+            continue
+        latest = entries[0]
+        previous = next((entry for entry in entries[1:] if entry.get("currency") == latest.get("currency")), entries[1])
+        latest_amount = _number(latest.get("amount"))
+        previous_amount = _number(previous.get("amount"))
+        if not latest_amount or not previous_amount:
+            continue
+        difference = round(latest_amount - previous_amount, 2)
+        percent = round((difference / previous_amount) * 100, 1) if previous_amount else 0.0
+        if abs(percent) < 3 and abs(difference) < 0.5:
+            continue
+        changes.append(
+            {
+                "name": latest.get("name") or "Unknown item",
+                "item_name": latest.get("name") or "Unknown item",
+                "latest_amount": round(latest_amount, 2),
+                "previous_amount": round(previous_amount, 2),
+                "difference": difference,
+                "percent_change": percent,
+                "currency": latest.get("currency") or previous.get("currency") or "CAD",
+                "category": latest.get("category") or "Other",
+                "store_name": latest.get("store_name") or "",
+                "purchase_date": latest.get("purchase_date") or "",
+                "direction": "up" if difference > 0 else "down",
+            }
+        )
+    return sorted(changes, key=lambda item: abs(float(item.get("percent_change") or 0)), reverse=True)[:6]
+
+
+def _canonical_item_name(value: str) -> str:
+    text = str(value or "").lower()
+    keep = []
+    for char in text:
+        keep.append(char if char.isalnum() else " ")
+    words = [word for word in "".join(keep).split() if len(word) > 1 and not word.isdigit()]
+    return " ".join(words[:8])[:80]
 
 
 def _upsert(records: list[dict[str, Any]], record: dict[str, Any], limit: int) -> list[dict[str, Any]]:

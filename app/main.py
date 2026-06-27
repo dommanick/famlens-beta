@@ -108,6 +108,7 @@ class ProfileSetupRequest(BaseModel):
     user_id: str = "web-user"
     output_language: str | None = None
     members_text: str = ""
+    preferred_currency: str | None = None
     recovery_contact: str | None = None
 
 
@@ -335,12 +336,14 @@ async def get_profile(user_id: str) -> dict[str, str | None]:
             "user_id": clean_id,
             "output_language": None,
             "members_text": None,
+            "preferred_currency": None,
             "updated_at": None,
         }
     return {
         "user_id": clean_id,
         "output_language": profile.language or None,
         "members_text": profile.members_text or profile.notes,
+        "preferred_currency": profile.preferred_currency or None,
         "updated_at": profile.updated_at,
     }
 
@@ -349,7 +352,12 @@ async def get_profile(user_id: str) -> dict[str, str | None]:
 async def save_profile(payload: ProfileSetupRequest) -> dict[str, str | None]:
     clean_id = clean_user_id(payload.user_id)
     language = normalize_output_language(payload.output_language)
-    profile = profile_store.save_family_setup(clean_id, language, payload.members_text)
+    profile = profile_store.save_family_setup(
+        clean_id,
+        language,
+        payload.members_text,
+        payload.preferred_currency or "",
+    )
     if payload.recovery_contact:
         identity_store.save_recovery_contact(clean_id, payload.recovery_contact)
     event_logger.log(
@@ -364,6 +372,7 @@ async def save_profile(payload: ProfileSetupRequest) -> dict[str, str | None]:
         "household_id": clean_id,
         "output_language": profile.language,
         "members_text": profile.members_text,
+        "preferred_currency": profile.preferred_currency or None,
         "updated_at": profile.updated_at,
     }
 

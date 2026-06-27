@@ -121,6 +121,7 @@ const receiptSpeakButton = document.querySelector("#receiptSpeakButton");
 const receiptSpeakButtonText = document.querySelector("#receiptSpeakButtonText");
 const receiptHeroLabel = document.querySelector("#receiptHeroLabel");
 const receiptTotal = document.querySelector("#receiptTotal");
+const receiptConvertedTotal = document.querySelector("#receiptConvertedTotal");
 const receiptStore = document.querySelector("#receiptStore");
 const receiptDate = document.querySelector("#receiptDate");
 const receiptDateLabel = document.querySelector("#receiptDateLabel");
@@ -186,6 +187,8 @@ const profileMemberListTitle = document.querySelector("#profileMemberListTitle")
 const profileMemberList = document.querySelector("#profileMemberList");
 const profileRecoveryLabel = document.querySelector("#profileRecoveryLabel");
 const profileRecoveryInput = document.querySelector("#profileRecoveryInput");
+const profileCurrencyLabel = document.querySelector("#profileCurrencyLabel");
+const profileCurrencySelect = document.querySelector("#profileCurrencySelect");
 const profileIdentityHint = document.querySelector("#profileIdentityHint");
 const familyInviteCodeLabel = document.querySelector("#familyInviteCodeLabel");
 const familyInviteCode = document.querySelector("#familyInviteCode");
@@ -228,6 +231,12 @@ const monthlyProductCount = document.querySelector("#monthlyProductCount");
 const monthlyInsightTitle = document.querySelector("#monthlyInsightTitle");
 const monthlyInsightText = document.querySelector("#monthlyInsightText");
 const monthlyCategoryList = document.querySelector("#monthlyCategoryList");
+const priceMemoryTitle = document.querySelector("#priceMemoryTitle");
+const priceMemoryCopy = document.querySelector("#priceMemoryCopy");
+const priceMemoryList = document.querySelector("#priceMemoryList");
+const frequentItemsTitle = document.querySelector("#frequentItemsTitle");
+const frequentItemsCopy = document.querySelector("#frequentItemsCopy");
+const frequentItemsList = document.querySelector("#frequentItemsList");
 const recentReceiptsTitle = document.querySelector("#recentReceiptsTitle");
 const recentProductsTitle = document.querySelector("#recentProductsTitle");
 const recentReceipts = document.querySelector("#recentReceipts");
@@ -247,6 +256,41 @@ let scanMode = "product";
 const languageStorageKey = "famlens.language.v2";
 const legacyLanguageStorageKey = "carecart.language";
 const supportedLanguageKeys = new Set(["zh-Hans", "en", "es", "fr", "ko", "ja", "vi", "hi"]);
+const supportedCurrencyKeys = new Set(["CNY", "USD", "CAD", "EUR", "GBP", "INR", "KRW", "JPY", "VND", "AUD"]);
+const currencyRatesToUsd = {
+  USD: 1,
+  CAD: 0.73,
+  CNY: 0.14,
+  EUR: 1.08,
+  GBP: 1.27,
+  INR: 0.012,
+  KRW: 0.00073,
+  JPY: 0.0064,
+  VND: 0.000039,
+  AUD: 0.66,
+};
+const currencySymbols = {
+  CNY: "¥",
+  USD: "$",
+  CAD: "$",
+  EUR: "€",
+  GBP: "£",
+  INR: "₹",
+  KRW: "₩",
+  JPY: "¥",
+  VND: "₫",
+  AUD: "$",
+};
+const defaultCurrencyByLanguage = {
+  "zh-Hans": "CNY",
+  en: "USD",
+  es: "USD",
+  fr: "EUR",
+  ko: "KRW",
+  ja: "JPY",
+  vi: "VND",
+  hi: "INR",
+};
 let appLanguage = getInitialLanguage();
 const identityStorageKey = "famlens.identity.v1";
 const deviceUserId = getDeviceUserId();
@@ -1041,6 +1085,17 @@ const recordsLanguageCopy = {
     noProducts: "还没有商品记录。拍过的商品会自动留在这里，方便家人回看。",
     unknownStore: "未知商店",
     unknownProduct: "未知商品",
+    priceMemoryTitle: "价格记忆",
+    priceMemoryCopy: "常买商品会自动记住以前多少钱，方便比较这次贵不贵。",
+    frequentItemsTitle: "家庭常买清单",
+    frequentItemsCopy: "重复出现的商品会成为家庭购物基线。",
+    noPriceMemory: "多拍几张小票后，这里会提醒常买商品的价格变化。",
+    noFrequentItems: "常买商品会在这里出现。",
+    lastPrice: "这次",
+    previousPrice: "上次",
+    usualPrice: "常见价格",
+    boughtTimes: "次",
+    approximate: "约",
   },
   en: {
     kicker: "Family records",
@@ -1062,6 +1117,17 @@ const recordsLanguageCopy = {
     noProducts: "No product records yet. Scanned products will stay here for family review.",
     unknownStore: "Unknown store",
     unknownProduct: "Unknown product",
+    priceMemoryTitle: "Price memory",
+    priceMemoryCopy: "Common items remember past prices, so the family can tell if today is expensive.",
+    frequentItemsTitle: "Common family items",
+    frequentItemsCopy: "Repeated items become the household shopping baseline.",
+    noPriceMemory: "Scan more receipts and price changes for common items will appear here.",
+    noFrequentItems: "Common family items will appear here.",
+    lastPrice: "Now",
+    previousPrice: "Before",
+    usualPrice: "Usual",
+    boughtTimes: "times",
+    approximate: "approx.",
   },
   es: {
     kicker: "Registro familiar",
@@ -1270,6 +1336,7 @@ const profileLanguageCopy = {
     title: "设置你的家庭购物助手",
     intro: "先选择语言。后面的问题和结果都会使用这个语言。",
     language: "语言",
+    currency: "熟悉的货币",
     members: "家庭成员",
     membersPlaceholder: "例如：我给4口人买东西：爸爸68岁，妈妈65岁，孩子8岁，配偶成年人。有需要可写基础健康情况。",
     recovery: "保存家庭记录",
@@ -1291,6 +1358,7 @@ const profileLanguageCopy = {
     title: "Set up your family assistant",
     intro: "Choose the language first. The next questions and results will use that language.",
     language: "Language",
+    currency: "Familiar currency",
     members: "Family members",
     membersPlaceholder: "Example: I shop for 4 people: father 68, mother 65, child 8, spouse adult. Add basic health notes only if useful.",
     recovery: "Save family records",
@@ -1312,6 +1380,7 @@ const profileLanguageCopy = {
     title: "Configura tu asistente familiar",
     intro: "Elige primero el idioma. Las siguientes preguntas y resultados usarán ese idioma.",
     language: "Idioma",
+    currency: "Moneda familiar",
     members: "Miembros de la familia",
     membersPlaceholder: "Ejemplo: compro para 4 personas: padre 68, madre 65, niño 8, pareja adulta. Añade notas de salud básicas si sirven.",
     recovery: "Guardar registros",
@@ -1333,6 +1402,7 @@ const profileLanguageCopy = {
     title: "Configurez votre assistant familial",
     intro: "Choisissez d'abord la langue. Les questions et résultats suivront cette langue.",
     language: "Langue",
+    currency: "Devise familière",
     members: "Membres de la famille",
     membersPlaceholder: "Exemple : je fais les courses pour 4 personnes : père 68, mère 65, enfant 8, conjoint adulte. Ajoutez des notes de santé simples si utile.",
     recovery: "Sauvegarder les dossiers",
@@ -1354,6 +1424,7 @@ const profileLanguageCopy = {
     title: "가족 쇼핑 도우미 설정",
     intro: "먼저 언어를 선택하세요. 다음 질문과 결과가 그 언어로 표시됩니다.",
     language: "언어",
+    currency: "익숙한 통화",
     members: "가족 구성원",
     membersPlaceholder: "예: 4인 가족 장보기: 아버지 68세, 어머니 65세, 아이 8세, 배우자 성인. 필요하면 기본 건강 메모를 적어 주세요.",
     recovery: "가족 기록 저장",
@@ -1375,6 +1446,7 @@ const profileLanguageCopy = {
     title: "家族の買い物アシスタントを設定",
     intro: "最初に言語を選んでください。次の質問と結果はその言語になります。",
     language: "言語",
+    currency: "使い慣れた通貨",
     members: "家族メンバー",
     membersPlaceholder: "例：4人分を買う。父68歳、母65歳、子ども8歳、配偶者は大人。必要なら基本的な健康メモも。",
     recovery: "家族記録を保存",
@@ -1396,6 +1468,7 @@ const profileLanguageCopy = {
     title: "Thiết lập trợ lý gia đình",
     intro: "Chọn ngôn ngữ trước. Câu hỏi và kết quả sau đó sẽ dùng ngôn ngữ này.",
     language: "Ngôn ngữ",
+    currency: "Tiền tệ quen thuộc",
     members: "Thành viên gia đình",
     membersPlaceholder: "Ví dụ: tôi mua cho 4 người: bố 68, mẹ 65, bé 8 tuổi, vợ/chồng là người lớn. Thêm ghi chú sức khỏe cơ bản nếu cần.",
     recovery: "Lưu hồ sơ gia đình",
@@ -1417,6 +1490,7 @@ const profileLanguageCopy = {
     title: "अपना परिवार assistant सेट करें",
     intro: "पहले भाषा चुनें। आगे के सवाल और नतीजे उसी भाषा में होंगे।",
     language: "भाषा",
+    currency: "परिचित मुद्रा",
     members: "परिवार के सदस्य",
     membersPlaceholder: "जैसे: मैं 4 लोगों के लिए खरीदारी करता हूं: पिता 68, मां 65, बच्चा 8, जीवनसाथी वयस्क। जरूरत हो तो छोटी health note जोड़ें।",
     recovery: "परिवार रिकॉर्ड सेव करें",
@@ -2392,6 +2466,14 @@ languageSelect.addEventListener("change", async () => {
 setupLanguageSelect.addEventListener("change", async () => {
   await changeLanguage(setupLanguageSelect.value, { localizeResult: false });
 });
+profileCurrencySelect?.addEventListener("change", () => {
+  familyProfileState.preferred_currency = normalizeCurrency(profileCurrencySelect.value || defaultFamiliarCurrency());
+  persistFamilyProfileState();
+  renderFamilyRecords();
+  if (latestResult?.receipt && receiptState && !receiptState.hidden) {
+    renderReceiptResult(latestResult);
+  }
+});
 profileOpenButton.addEventListener("click", () => openProfileDialog());
 homeFamilySetupButton?.addEventListener("click", () => openProfileDialog());
 profileDialogCloseButton.addEventListener("click", () => closeProfileDialog());
@@ -2885,6 +2967,10 @@ function renderReceiptResult(data) {
   const currency = receipt.currency || "CAD";
 
   receiptTotal.textContent = formatAmount(receipt.total_amount, currency);
+  if (receiptConvertedTotal) {
+    receiptConvertedTotal.textContent = formatConvertedAmount(receipt.total_amount, currency);
+    receiptConvertedTotal.hidden = !receiptConvertedTotal.textContent;
+  }
   receiptStore.textContent = receipt.store_name || ui().unknownStore;
   receiptDate.textContent = receipt.purchase_date || ui().unknownDate;
   receiptCount.textContent = formatItemCount(receipt.item_count);
@@ -2896,7 +2982,7 @@ function renderReceiptResult(data) {
   applyGrowthLanguage();
   if (receiptShareCopy) {
     const store = receipt.store_name || ui().unknownStore;
-    const total = formatAmount(receipt.total_amount, currency);
+    const total = formatDualAmount(receipt.total_amount, currency);
     receiptShareCopy.textContent = `${growthCopy().receiptShareTemplate} ${store}: ${total}.`;
   }
   if (receiptCommercePanel) {
@@ -3491,11 +3577,15 @@ function renderFamilyRecords() {
   const spend = monthReceipts.reduce((sum, record) => sum + safeNumber(record.totalAmount ?? record.total_amount), 0);
   const serverReport = familyRecords.monthlyReport;
 
-  monthlySpend.textContent = formatAmount(serverReport?.total_spend ?? spend, serverReport?.currency || monthReceipts[0]?.currency || "CAD");
+  const reportCurrency = serverReport?.currency || monthReceipts[0]?.currency || "CAD";
+  const reportSpend = serverReport?.total_spend ?? spend;
+  const convertedSpend = formatConvertedAmount(reportSpend, reportCurrency);
+  monthlySpend.innerHTML = `${escapeHtml(formatAmount(reportSpend, reportCurrency))}${convertedSpend ? `<small>${escapeHtml(convertedSpend)}</small>` : ""}`;
   monthlyReceiptCount.textContent = formatRecordCount(serverReport?.receipt_count ?? monthReceipts.length, recordCopy().receiptUnit);
   monthlyProductCount.textContent = formatRecordCount(serverReport?.product_count ?? monthProducts.length, recordCopy().productUnit);
 
   renderMonthlyInsight(monthReceipts);
+  renderPriceMemory();
   renderReceiptRecords();
   renderProductRecords();
   renderHomeRecordsSummary(monthReceipts, monthProducts, spend, serverReport);
@@ -3524,7 +3614,7 @@ function renderHomeRecentList() {
     title: record.storeName || record.store_name || recordCopy().unknownStore,
     detail: [
       formatRecordDate(record.purchaseDate || record.purchase_date || record.created_at || record.createdAt),
-      formatAmount(record.totalAmount ?? record.total_amount, record.currency || "CAD"),
+      formatDualAmount(record.totalAmount ?? record.total_amount, record.currency || "CAD"),
     ].filter(Boolean).join(" · "),
     createdAt: record.created_at || record.createdAt || "",
     thumbnail: "",
@@ -3573,6 +3663,10 @@ function applyRecordsLanguage() {
   monthlyReceiptLabel.textContent = recordCopy().receipts;
   monthlyProductLabel.textContent = recordCopy().products;
   monthlyInsightTitle.textContent = recordCopy().monthlyInsight;
+  if (priceMemoryTitle) priceMemoryTitle.textContent = recordText("priceMemoryTitle");
+  if (priceMemoryCopy) priceMemoryCopy.textContent = recordText("priceMemoryCopy");
+  if (frequentItemsTitle) frequentItemsTitle.textContent = recordText("frequentItemsTitle");
+  if (frequentItemsCopy) frequentItemsCopy.textContent = recordText("frequentItemsCopy");
   recentReceiptsTitle.textContent = recordCopy().recentReceipts;
   recentProductsTitle.textContent = recordCopy().recentProducts;
 }
@@ -3593,7 +3687,7 @@ function renderMonthlyInsight(monthReceipts) {
   const firstCategory = topCategories[0]?.category;
   const firstAmount = topCategories[0]?.estimated_amount;
   const categoryLine = firstCategory
-    ? `${recordCopy().topCategoryPrefix}: ${firstCategory}${firstAmount ? ` ${formatAmount(firstAmount, report.currency || monthReceipts[0]?.currency || "CAD")}` : ""}.`
+    ? `${recordCopy().topCategoryPrefix}: ${firstCategory}${firstAmount ? ` ${formatDualAmount(firstAmount, report.currency || monthReceipts[0]?.currency || "CAD")}` : ""}.`
     : "";
   monthlyInsightText.textContent = [categoryLine, notes[0] || ""].filter(Boolean).join(" ") || recordCopy().insightEmpty;
 
@@ -3603,13 +3697,74 @@ function renderMonthlyInsight(monthReceipts) {
     row.className = "monthly-category";
     row.innerHTML = `
       <span>${escapeHtml(item.category || "")}</span>
-      <span>${escapeHtml(formatAmount(item.estimated_amount, report.currency || monthReceipts[0]?.currency || "CAD"))}</span>
+      <span>${escapeHtml(formatDualAmount(item.estimated_amount, report.currency || monthReceipts[0]?.currency || "CAD"))}</span>
     `;
     monthlyCategoryList.appendChild(row);
   });
   if (!monthlyCategoryList.children.length) {
     monthlyCategoryList.innerHTML = `<div class="record-empty">${escapeHtml(recordCopy().insightEmpty)}</div>`;
   }
+}
+
+function renderPriceMemory() {
+  if (!priceMemoryList || !frequentItemsList) return;
+  const report = familyRecords.monthlyReport || {};
+  const priceWatch = Array.isArray(report.price_watch) ? report.price_watch.slice(0, 5) : [];
+  const frequentItems = Array.isArray(report.frequent_items) ? report.frequent_items.slice(0, 6) : [];
+
+  if (!priceWatch.length) {
+    priceMemoryList.innerHTML = `<div class="record-empty">${escapeHtml(recordText("noPriceMemory"))}</div>`;
+  } else {
+    priceMemoryList.innerHTML = priceWatch.map((item) => {
+      const latest = safeNumber(item.latest_amount);
+      const previous = safeNumber(item.previous_amount);
+      const currency = item.currency || report.currency || "CAD";
+      const diff = latest - previous;
+      const directionClass = diff > 0 ? "up" : "down";
+      const direction = diff > 0 ? "+" : "";
+      const percent = Number(item.percent_change);
+      const percentText = Number.isFinite(percent) ? `${direction}${percent.toFixed(0)}%` : "";
+      return `
+        <article class="price-memory-item">
+          <div class="price-memory-main">
+            <strong>${escapeHtml(item.item_name || recordCopy().unknownProduct)}</strong>
+            <span>${escapeHtml([item.store_name || "", item.category || ""].filter(Boolean).join(" · "))}</span>
+          </div>
+          <div class="price-memory-side">
+            <span>${escapeHtml(recordText("lastPrice"))}: ${escapeHtml(formatDualAmount(latest, currency))}</span>
+            <span>${escapeHtml(recordText("previousPrice"))}: ${escapeHtml(formatAmount(previous, currency))}</span>
+            ${percentText ? `<b class="price-memory-delta ${directionClass}">${escapeHtml(percentText)}</b>` : ""}
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  if (!frequentItems.length) {
+    frequentItemsList.innerHTML = `<div class="record-empty">${escapeHtml(recordText("noFrequentItems"))}</div>`;
+    return;
+  }
+
+  frequentItemsList.innerHTML = frequentItems.map((item) => {
+    const currency = item.currency || report.currency || "CAD";
+    const min = safeNumber(item.min_amount);
+    const max = safeNumber(item.max_amount);
+    const usual = min && max && min !== max
+      ? `${formatAmount(min, currency)}-${formatAmount(max, currency)}`
+      : formatDualAmount(item.last_amount || item.average_amount || min || max, currency);
+    return `
+      <article class="price-memory-item frequent">
+        <div class="price-memory-main">
+          <strong>${escapeHtml(item.item_name || recordCopy().unknownProduct)}</strong>
+          <span>${escapeHtml([item.category || "", item.store_name || ""].filter(Boolean).join(" · "))}</span>
+        </div>
+        <div class="price-memory-side">
+          <span>${escapeHtml(recordText("usualPrice"))}: ${escapeHtml(usual)}</span>
+          <b>${escapeHtml(`${item.count || 0} ${recordText("boughtTimes")}`)}</b>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
 function deriveTopCategories(receipts) {
@@ -3650,7 +3805,7 @@ function renderReceiptRecords() {
         <strong>${escapeHtml(storeName)}</strong>
         <span>${escapeHtml(date)} · ${escapeHtml(formatItemCount(count))}</span>
       </div>
-      <div class="record-side">${escapeHtml(formatAmount(amount, record.currency || "CAD"))}</div>
+      <div class="record-side">${escapeHtml(formatDualAmount(amount, record.currency || "CAD"))}</div>
     `;
     recentReceipts.appendChild(card);
   });
@@ -3760,7 +3915,7 @@ function buildShareText(data) {
     const receipt = data.receipt || {};
     return [
       `${ui().receiptRecord}: ${receipt.store_name || ui().unknownStore}`,
-      `${ui().receiptTotalPrefix}: ${formatAmount(receipt.total_amount, receipt.currency || "CAD")}`,
+      `${ui().receiptTotalPrefix}: ${formatDualAmount(receipt.total_amount, receipt.currency || "CAD")}`,
       `${ui().receiptItems}: ${(receipt.items || []).slice(0, 6).map((item) => item.translated_name || item.name).filter(Boolean).join(", ")}`,
       `${ui().nutrition}: ${receipt.nutrition_signal || ""}`,
       `${ui().spending}: ${receipt.spending_signal || ""}`,
@@ -4308,6 +4463,8 @@ function applyProfileLanguage() {
   profileDialogTitle.textContent = copy.title;
   profileDialogIntro.textContent = copy.intro;
   setupLanguageLabel.textContent = copy.language;
+  if (profileCurrencyLabel) profileCurrencyLabel.textContent = copy.currency || profileLanguageCopy.en.currency;
+  if (profileCurrencySelect) profileCurrencySelect.value = preferredCurrency();
   if (profileMembersLabel) profileMembersLabel.textContent = copy.members;
   if (profileMembersInput) profileMembersInput.placeholder = copy.membersPlaceholder;
   profileRecoveryLabel.textContent = copy.recovery || profileLanguageCopy.en.recovery;
@@ -4563,12 +4720,54 @@ function fallbackSpeech(text) {
   window.speechSynthesis.speak(utterance);
 }
 
+function normalizeCurrency(value) {
+  const clean = String(value || "").trim().toUpperCase();
+  return supportedCurrencyKeys.has(clean) ? clean : "";
+}
+
+function defaultFamiliarCurrency() {
+  return defaultCurrencyByLanguage[appLanguage] || "USD";
+}
+
+function preferredCurrency() {
+  return normalizeCurrency(familyProfileState.preferred_currency) || defaultFamiliarCurrency();
+}
+
+function convertAmount(value, fromCurrency, toCurrency) {
+  const number = Number(value);
+  const from = normalizeCurrency(fromCurrency);
+  const to = normalizeCurrency(toCurrency);
+  if (Number.isNaN(number) || !from || !to || !currencyRatesToUsd[from] || !currencyRatesToUsd[to]) return null;
+  return (number * currencyRatesToUsd[from]) / currencyRatesToUsd[to];
+}
+
 function formatAmount(value, currency) {
   if (value === null || value === undefined || value === "") return "--";
   const number = Number(value);
   if (Number.isNaN(number)) return "--";
-  const symbol = currency === "USD" || currency === "CAD" ? "$" : `${currency} `;
-  return `${symbol}${number.toFixed(2)}`;
+  const code = normalizeCurrency(currency);
+  const symbol = currencySymbols[code] || `${currency || ""} `;
+  const compactCurrencies = new Set(["JPY", "KRW", "VND"]);
+  const decimals = compactCurrencies.has(code) ? 0 : 2;
+  return `${symbol}${number.toLocaleString(undefined, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  })}`;
+}
+
+function formatConvertedAmount(value, sourceCurrency) {
+  const source = normalizeCurrency(sourceCurrency);
+  const target = preferredCurrency();
+  if (!source || !target || source === target) return "";
+  const converted = convertAmount(value, source, target);
+  if (converted === null) return "";
+  return `${recordText("approximate")} ${formatAmount(converted, target)}`;
+}
+
+function formatDualAmount(value, currency) {
+  const base = formatAmount(value, currency);
+  const converted = formatConvertedAmount(value, currency);
+  return converted ? `${base} · ${converted}` : base;
 }
 
 function formatItemCount(value) {
@@ -4598,6 +4797,10 @@ function chatCopy() {
 
 function recordCopy() {
   return recordsLanguageCopy[appLanguage] || recordsLanguageCopy.en;
+}
+
+function recordText(key) {
+  return recordCopy()[key] || recordsLanguageCopy.en[key] || "";
 }
 
 function homeCopy() {
@@ -4657,6 +4860,7 @@ function loadFamilyProfileState() {
       main_shopper: normalizeProfilePerson(saved.main_shopper || {}),
       members: Array.isArray(saved.members) ? saved.members.map(normalizeProfilePerson).filter(hasProfilePersonData) : [],
       recovery_contact: String(saved.recovery_contact || ""),
+      preferred_currency: normalizeCurrency(saved.preferred_currency) || "",
       household_id: String(saved.household_id || ""),
       family_code: String(saved.family_code || ""),
       updated_at: String(saved.updated_at || ""),
@@ -4675,6 +4879,7 @@ function persistFamilyProfileState() {
       main_shopper: normalizeProfilePerson(familyProfileState.main_shopper || {}),
       members: normalizedFamilyMembers(),
       recovery_contact: familyProfileState.recovery_contact || "",
+      preferred_currency: preferredCurrency(),
       household_id: familyProfileState.household_id || clientUserId,
       family_code: familyProfileState.family_code || "",
       updated_at: familyProfileState.updated_at || new Date().toISOString(),
@@ -4996,6 +5201,7 @@ async function saveFamilyProfile(membersText) {
     output_language: appLanguage,
     members_text: cleanMembers,
     recovery_contact: String(profileRecoveryInput?.value || familyProfileState.recovery_contact || "").trim(),
+    preferred_currency: normalizeCurrency(profileCurrencySelect?.value) || preferredCurrency(),
     household_id: familyProfileState.household_id || clientUserId,
     updated_at: new Date().toISOString(),
   };
@@ -5019,6 +5225,7 @@ async function syncFamilyProfileToBackend() {
         output_language: appLanguage,
         members_text: familyProfileState.members_text || "",
         recovery_contact: familyProfileState.recovery_contact || "",
+        preferred_currency: preferredCurrency(),
       }),
     });
   } catch (error) {
@@ -5039,6 +5246,7 @@ async function hydrateFamilyProfileFromBackend() {
       output_language: supportedLanguageKeys.has(remoteLanguage) ? remoteLanguage : appLanguage,
       members_text: remoteMembers || familyProfileState.members_text || "",
       household_id: data.household_id || familyProfileState.household_id || clientUserId,
+      preferred_currency: normalizeCurrency(data.preferred_currency) || familyProfileState.preferred_currency || "",
       updated_at: String(data.updated_at || familyProfileState.updated_at || ""),
     };
     if (remoteMembers) {

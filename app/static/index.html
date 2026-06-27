@@ -10,7 +10,7 @@
     />
     <title>FamLens</title>
     <link rel="manifest" href="/static/manifest.webmanifest" />
-    <link rel="stylesheet" href="/static/styles.css?v=57" />
+    <link rel="stylesheet" href="/static/styles.css?v=58" />
   </head>
   <body>
     <main class="shell">
@@ -262,6 +262,7 @@
             <div class="receipt-hero">
               <p id="receiptHeroLabel">Receipt record</p>
               <h2 id="receiptTotal">Total --</h2>
+              <small id="receiptConvertedTotal"></small>
               <span id="receiptStore">Unknown store</span>
             </div>
 
@@ -456,6 +457,21 @@
             <option value="hi">हिन्दी</option>
           </select>
         </label>
+        <label class="setup-field" for="profileCurrencySelect">
+          <span id="profileCurrencyLabel">Familiar currency</span>
+          <select id="profileCurrencySelect" class="language-select">
+            <option value="CNY">CNY · ¥</option>
+            <option value="USD">USD · $</option>
+            <option value="CAD">CAD · $</option>
+            <option value="EUR">EUR · €</option>
+            <option value="GBP">GBP · £</option>
+            <option value="INR">INR · ₹</option>
+            <option value="KRW">KRW · ₩</option>
+            <option value="JPY">JPY · ¥</option>
+            <option value="VND">VND · ₫</option>
+            <option value="AUD">AUD · $</option>
+          </select>
+        </label>
         <section class="structured-profile" aria-label="Family member basics">
           <section class="profile-structured-card">
             <h3 id="profileMainTitle">Main shopper</h3>
@@ -598,6 +614,22 @@
           <div class="monthly-category-list" id="monthlyCategoryList"></div>
         </section>
 
+        <section class="price-memory" aria-label="Family price memory">
+          <div>
+            <h3 id="priceMemoryTitle">Price memory</h3>
+            <p id="priceMemoryCopy">After scanning receipts, FamLens can remind you what common items cost before.</p>
+          </div>
+          <div class="price-memory-list" id="priceMemoryList"></div>
+        </section>
+
+        <section class="price-memory frequent-memory" aria-label="Frequent family items">
+          <div>
+            <h3 id="frequentItemsTitle">Common family items</h3>
+            <p id="frequentItemsCopy">Items that appear often will become the family's shopping baseline.</p>
+          </div>
+          <div class="price-memory-list" id="frequentItemsList"></div>
+        </section>
+
         <div class="records-grid">
           <section class="record-section" aria-label="Recent receipts">
             <h3 id="recentReceiptsTitle">Recent receipts</h3>
@@ -612,6 +644,6 @@
       </section>
     </dialog>
 
-    <script src="/static/app.js?v=57"></script>
+    <script src="/static/app.js?v=58"></script>
   </body>
 </html>
