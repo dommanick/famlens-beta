@@ -1,4 +1,4 @@
-const CACHE_NAME = "famlens-shell-v58";
+const CACHE_NAME = "famlens-shell-v59";
 const SHELL_ASSETS = [
   "/",
   "/static/styles.css",
@@ -8,6 +8,10 @@ const SHELL_ASSETS = [
   "/manifest.json",
   "/site.webmanifest",
   "/static/icon.svg",
+  "/static/icon-192.png?v=59",
+  "/static/icon-512.png?v=59",
+  "/static/apple-touch-icon.png?v=59",
+  "/static/favicon-32.png?v=59",
   "/static/logo-mark.svg",
   "/static/logo-lockup.svg"
 ];
