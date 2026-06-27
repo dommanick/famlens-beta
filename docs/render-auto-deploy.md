@@ -23,6 +23,27 @@ python scripts/configure_github_render_webhook.py
 
 这个方式不依赖 GitHub Actions，所以不需要 GitHub token 拥有 `workflow` 权限。
 
+如果脚本返回 `Resource not accessible by personal access token`，说明当前 GitHub token 没有管理 Webhook 的权限。可以二选一：
+
+- 在 GitHub 后台手动创建 webhook，Payload URL 填 Render Deploy Hook URL，Content type 选 `application/json`，事件选择 `Just the push event`。
+- 重新创建一个有 Webhook 管理权限的 GitHub token，然后再运行配置脚本。
+
+## 本地发布命令
+
+在 GitHub Webhook 没配好之前，本机可以使用：
+
+```bash
+python scripts/push_and_deploy.py
+```
+
+它会先执行：
+
+```bash
+git push origin HEAD:main
+```
+
+只有 push 成功后，才会调用 Render Deploy Hook。
+
 ## 可选方式：GitHub Actions
 
 如果后续 GitHub token 增加了 `workflow` 权限，也可以使用 Actions 工作流。模板保留在：
