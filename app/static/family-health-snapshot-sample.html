@@ -44,13 +44,9 @@
       }
 
       .page {
-        width: min(1180px, calc(100vw - 32px));
+        width: min(560px, calc(100vw - 32px));
         margin: 0 auto;
         padding: 34px 0 52px;
-        display: grid;
-        grid-template-columns: minmax(360px, 520px) minmax(0, 1fr);
-        gap: 34px;
-        align-items: start;
       }
 
       .poster {
@@ -370,77 +366,10 @@
         line-height: 1.42;
       }
 
-      .explainer {
-        padding-top: 12px;
-      }
-
-      .explainer-tag {
-        display: inline-flex;
-        min-height: 34px;
-        align-items: center;
-        padding: 0 13px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.72);
-        color: #285142;
-        font-size: 14px;
-        font-weight: 900;
-      }
-
-      .explainer h2 {
-        max-width: 600px;
-        margin-top: 14px;
-        font-size: clamp(38px, 5vw, 70px);
-        line-height: 0.98;
-        letter-spacing: 0;
-      }
-
-      .explainer > p {
-        max-width: 640px;
-        margin-top: 18px;
-        color: #59675f;
-        font-size: 18px;
-        line-height: 1.55;
-      }
-
-      .why-list {
-        display: grid;
-        gap: 13px;
-        margin-top: 28px;
-      }
-
-      .why {
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        background: rgba(255, 253, 248, 0.74);
-        padding: 18px;
-      }
-
-      .why b {
-        display: block;
-        color: var(--green);
-        font-size: 18px;
-      }
-
-      .why p {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.46;
-      }
-
       @media (max-width: 980px) {
-        .page {
-          grid-template-columns: 1fr;
-        }
-
         .poster {
           width: min(100%, 560px);
           margin: 0 auto;
-        }
-
-        .explainer {
-          order: -1;
         }
       }
 
@@ -564,28 +493,6 @@
           </p>
         </section>
       </article>
-
-      <aside class="explainer">
-        <span class="explainer-tag">Full report preview</span>
-        <h2>Show users the reward before asking for the habit.</h2>
-        <p>
-          This is the poster-style monthly report that users could receive after scanning enough receipts and product photos. It gives a clear reason to keep using FamLens beyond one-time translation.
-        </p>
-        <div class="why-list">
-          <div class="why">
-            <b>Why it helps activation</b>
-            <p>Receipt scanning has delayed value. A sample report makes the future payoff visible immediately.</p>
-          </div>
-          <div class="why">
-            <b>Why it supports paid plans</b>
-            <p>The complete report, historical comparison, and family-specific recommendations can become premium features.</p>
-          </div>
-          <div class="why">
-            <b>Why it protects positioning</b>
-            <p>It keeps FamLens focused on family health shopping intelligence, not generic expense tracking.</p>
-          </div>
-        </div>
-      </aside>
     </main>
     <script>
       const sampleCopy = {
@@ -611,15 +518,7 @@
           mixTitle: "Shopping Mix",
           mixTag: "Household view",
           legend: ["Groceries and fresh food", "Personal care and health", "Restaurants and prepared food", "Household supplies"],
-          footnote: "FamLens estimates household shopping patterns from receipts and product photos. It can highlight trends and family reminders, but it does not replace medical advice or precise nutrition tracking.",
-          sideTag: "Full report preview",
-          sideTitle: "Show users the reward before asking for the habit.",
-          sideCopy: "This is the poster-style monthly report that users could receive after scanning enough receipts and product photos. It gives a clear reason to keep using FamLens beyond one-time translation.",
-          why: [
-            ["Why it helps activation", "Receipt scanning has delayed value. A sample report makes the future payoff visible immediately."],
-            ["Why it supports paid plans", "The complete report, historical comparison, and family-specific recommendations can become premium features."],
-            ["Why it protects positioning", "It keeps FamLens focused on family health shopping intelligence, not generic expense tracking."]
-          ]
+          footnote: "FamLens estimates household shopping patterns from receipts and product photos. It can highlight trends and family reminders, but it does not replace medical advice or precise nutrition tracking."
         },
         "zh-Hans": {
           pageTitle: "家庭健康购物月报样例",
@@ -643,15 +542,7 @@
           mixTitle: "购物结构",
           mixTag: "家庭视角",
           legend: ["超市与新鲜食物", "个人护理与健康", "餐厅和即食食品", "家庭日用品"],
-          footnote: "FamLens 会根据小票和商品照片估算家庭购物趋势，帮助发现饮食和家庭提醒，但不能替代医疗建议或精确营养记录。",
-          sideTag: "完整报告预览",
-          sideTitle: "先让用户看到坚持记录后的回报。",
-          sideCopy: "这是用户持续拍小票和商品后可能拿到的海报式月报。它让 FamLens 不只是一次性翻译工具，而是长期家庭购物记忆。",
-          why: [
-            ["为什么能提高使用动力", "拍小票的价值不是马上出现，样例报告能让未来收益先被看见。"],
-            ["为什么能支持付费版", "完整报告、历史对比和家庭定制建议，可以成为高级功能。"],
-            ["为什么能保护定位", "它让 FamLens 聚焦在家庭健康购物智能，而不是普通记账工具。"]
-          ]
+          footnote: "FamLens 会根据小票和商品照片估算家庭购物趋势，帮助发现饮食和家庭提醒，但不能替代医疗建议或精确营养记录。"
         },
         es: {
           pageTitle: "Ejemplo de informe familiar",
@@ -675,15 +566,7 @@
           mixTitle: "Mezcla de compras",
           mixTag: "Vista del hogar",
           legend: ["Supermercado y frescos", "Cuidado personal y salud", "Restaurantes y preparados", "Artículos del hogar"],
-          footnote: "FamLens estima patrones de compras desde recibos y fotos. Puede mostrar tendencias, pero no reemplaza consejo médico ni control nutricional preciso.",
-          sideTag: "Vista previa",
-          sideTitle: "Muestra la recompensa antes de pedir el hábito.",
-          sideCopy: "Este informe mensual estilo póster muestra el valor de seguir escaneando recibos y productos.",
-          why: [
-            ["Activa el uso", "El valor del recibo llega después. El ejemplo lo hace visible."],
-            ["Apoya planes pagos", "Informe completo, comparación histórica y recomendaciones familiares pueden ser premium."],
-            ["Protege el enfoque", "Mantiene a FamLens centrado en compras saludables familiares."]
-          ]
+          footnote: "FamLens estima patrones de compras desde recibos y fotos. Puede mostrar tendencias, pero no reemplaza consejo médico ni control nutricional preciso."
         },
         fr: {
           pageTitle: "Exemple de rapport familial",
@@ -707,15 +590,7 @@
           mixTitle: "Structure d’achats",
           mixTag: "Vue foyer",
           legend: ["Épicerie et frais", "Soins personnels et santé", "Restaurants et prêts-à-manger", "Produits maison"],
-          footnote: "FamLens estime les tendances d’achat à partir des reçus et photos. Il signale des tendances, mais ne remplace pas un avis médical ou un suivi nutritionnel précis.",
-          sideTag: "Aperçu complet",
-          sideTitle: "Montrer la récompense avant de demander l’habitude.",
-          sideCopy: "Ce rapport mensuel au format poster montre pourquoi continuer à scanner produits et reçus.",
-          why: [
-            ["Pourquoi cela active l’usage", "La valeur des reçus arrive plus tard. L’exemple la rend visible."],
-            ["Pourquoi cela soutient le payant", "Rapport complet, historique et conseils familiaux peuvent devenir premium."],
-            ["Pourquoi cela protège le positionnement", "FamLens reste centré sur l’intelligence d’achat santé familiale."]
-          ]
+          footnote: "FamLens estime les tendances d’achat à partir des reçus et photos. Il signale des tendances, mais ne remplace pas un avis médical ou un suivi nutritionnel précis."
         },
         ko: {
           pageTitle: "가족 건강 리포트 샘플",
@@ -739,15 +614,7 @@
           mixTitle: "쇼핑 구조",
           mixTag: "가족 관점",
           legend: ["식료품과 신선식품", "개인 케어와 건강", "외식과 즉석식품", "생활용품"],
-          footnote: "FamLens는 영수증과 상품 사진으로 쇼핑 패턴을 추정합니다. 의료 조언이나 정확한 영양 추적을 대체하지 않습니다.",
-          sideTag: "전체 리포트 미리보기",
-          sideTitle: "습관을 요구하기 전에 보상을 먼저 보여줍니다.",
-          sideCopy: "충분한 영수증과 상품 사진을 스캔하면 받을 수 있는 월간 리포트 예시입니다.",
-          why: [
-            ["사용 동기", "영수증 스캔의 가치는 시간이 지나야 보입니다. 샘플이 그 가치를 먼저 보여줍니다."],
-            ["유료 기능", "전체 리포트, 과거 비교, 가족 맞춤 조언은 프리미엄이 될 수 있습니다."],
-            ["포지셔닝", "FamLens를 단순 가계부가 아닌 가족 건강 쇼핑 AI로 유지합니다."]
-          ]
+          footnote: "FamLens는 영수증과 상품 사진으로 쇼핑 패턴을 추정합니다. 의료 조언이나 정확한 영양 추적을 대체하지 않습니다."
         },
         ja: {
           pageTitle: "家族健康レポート サンプル",
@@ -771,15 +638,7 @@
           mixTitle: "買い物構成",
           mixTag: "家庭ビュー",
           legend: ["食料品と生鮮", "ケアと健康", "外食と惣菜", "日用品"],
-          footnote: "FamLensはレシートと商品写真から買い物傾向を推定します。医療アドバイスや正確な栄養記録の代わりではありません。",
-          sideTag: "レポートプレビュー",
-          sideTitle: "習慣化の前に、得られる価値を見せる。",
-          sideCopy: "十分なレシートと商品写真を記録した後に見られる月次レポートの例です。",
-          why: [
-            ["利用開始に効く理由", "レシートの価値は後から出ます。サンプルで先に見せます。"],
-            ["有料化に効く理由", "完全レポート、履歴比較、家族別提案はプレミアム機能になります。"],
-            ["定位を守る理由", "FamLensを一般的な家計簿ではなく家族健康ショッピングAIに保ちます。"]
-          ]
+          footnote: "FamLensはレシートと商品写真から買い物傾向を推定します。医療アドバイスや正確な栄養記録の代わりではありません。"
         },
         vi: {
           pageTitle: "Mẫu báo cáo sức khỏe gia đình",
@@ -803,15 +662,7 @@
           mixTitle: "Cơ cấu mua sắm",
           mixTag: "Góc nhìn gia đình",
           legend: ["Thực phẩm và đồ tươi", "Chăm sóc cá nhân và sức khỏe", "Nhà hàng và đồ chế biến", "Đồ gia dụng"],
-          footnote: "FamLens ước tính xu hướng mua sắm từ hóa đơn và ảnh sản phẩm. Không thay thế tư vấn y tế hoặc theo dõi dinh dưỡng chính xác.",
-          sideTag: "Xem trước báo cáo",
-          sideTitle: "Cho người dùng thấy phần thưởng trước khi tạo thói quen.",
-          sideCopy: "Đây là mẫu báo cáo hàng tháng sau khi gia đình quét đủ hóa đơn và sản phẩm.",
-          why: [
-            ["Tăng động lực", "Giá trị của hóa đơn đến chậm. Mẫu báo cáo làm nó rõ ngay."],
-            ["Hỗ trợ trả phí", "Báo cáo đầy đủ, so sánh lịch sử và gợi ý gia đình có thể là premium."],
-            ["Giữ định vị", "FamLens tập trung vào AI mua sắm sức khỏe cho gia đình."]
-          ]
+          footnote: "FamLens ước tính xu hướng mua sắm từ hóa đơn và ảnh sản phẩm. Không thay thế tư vấn y tế hoặc theo dõi dinh dưỡng chính xác."
         },
         hi: {
           pageTitle: "Family Health Report Sample",
@@ -835,15 +686,7 @@
           mixTitle: "Shopping Mix",
           mixTag: "Household view",
           legend: ["Groceries and fresh food", "Personal care and health", "Restaurants and prepared food", "Household supplies"],
-          footnote: "FamLens receipts और product photos से shopping trends estimate करता है। यह medical advice या precise nutrition tracking की जगह नहीं लेता।",
-          sideTag: "Full report preview",
-          sideTitle: "Habit मांगने से पहले reward दिखाइए।",
-          sideCopy: "यह monthly poster-style report दिखाता है कि receipts और products scan करते रहने से क्या value मिलती है।",
-          why: [
-            ["Activation में मदद", "Receipt scan की value बाद में दिखती है। Sample report उसे तुरंत visible बनाता है।"],
-            ["Paid plans में मदद", "Complete report, history comparison और family recommendations premium हो सकते हैं।"],
-            ["Positioning बचाता है", "FamLens को generic expense tracker नहीं, family health shopping AI रखता है।"]
-          ]
+          footnote: "FamLens receipts और product photos से shopping trends estimate करता है। यह medical advice या precise nutrition tracking की जगह नहीं लेता।"
         }
       };
 
@@ -893,10 +736,6 @@
         if (label && copy.legend[index]) label.textContent = copy.legend[index];
       });
       setText(".footnote", copy.footnote);
-      setText(".explainer-tag", copy.sideTag);
-      setText(".explainer h2", copy.sideTitle);
-      setText(".explainer > p", copy.sideCopy);
-      document.querySelectorAll(".why").forEach((node, index) => setPair(node, copy.why[index]));
     </script>
   </body>
 </html>
