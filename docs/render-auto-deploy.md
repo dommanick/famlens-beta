@@ -2,34 +2,34 @@
 
 这个项目已经预留了自动部署入口。目标是以后推送到 GitHub `main` 后，不需要再手动进入 Render 点 `Manual Deploy`。
 
-## 推荐方式：Deploy Hook
+## 推荐方式：GitHub Webhook -> Render Deploy Hook
 
 1. 打开 Render 服务 `famlens-beta`。
 2. 进入 Settings，找到 Deploy Hook。
 3. 复制 Hook URL。
-4. 打开 GitHub 仓库 `famlens-beta`。
-5. 进入 Settings -> Secrets and variables -> Actions。
-6. 新增 Repository secret：
+4. 在本地临时设置这个 Hook URL：
 
-```text
-RENDER_DEPLOY_HOOK_URL=Render 给你的 Deploy Hook URL
+```bash
+export RENDER_DEPLOY_HOOK_URL="Render 给你的 Deploy Hook URL"
 ```
 
-以后推送到 `main` 时，GitHub Actions 会自动调用这个 Hook。
+5. 运行配置脚本：
 
-当前仓库已经启用 GitHub Actions 工作流：
-
-```text
-.github/workflows/render-deploy.yml
+```bash
+python scripts/configure_github_render_webhook.py
 ```
 
-它来自项目里保留的模板：
+这个脚本会用 `github.env` 里的 `GITHUB_TOKEN`，在 GitHub 仓库 `famlens-beta` 里创建一个 push webhook。以后只要推送到 GitHub，GitHub 会直接请求 Render Deploy Hook，不需要再进入 Render 后台点手动部署。
+
+这个方式不依赖 GitHub Actions，所以不需要 GitHub token 拥有 `workflow` 权限。
+
+## 可选方式：GitHub Actions
+
+如果后续 GitHub token 增加了 `workflow` 权限，也可以使用 Actions 工作流。模板保留在：
 
 ```text
 docs/render-deploy.workflow.yml
 ```
-
-如果 GitHub 里没有配置 Render secret，工作流会明确失败并提示需要配置部署凭证，避免误以为已经上线。
 
 ## 备用方式：Render API
 
