@@ -1,8 +1,8 @@
-const CACHE_NAME = "famlens-shell-v59";
+const CACHE_NAME = "famlens-shell-v60";
 const SHELL_ASSETS = [
   "/",
   "/static/styles.css",
-  "/static/app.js",
+  "/static/app.js?v=60",
   "/static/family-health-snapshot-sample.html",
   "/static/manifest.webmanifest",
   "/manifest.json",

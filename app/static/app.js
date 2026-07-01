@@ -255,6 +255,8 @@ let currentCardImageDataUrl = "";
 let scanMode = "product";
 const languageStorageKey = "famlens.language.v2";
 const legacyLanguageStorageKey = "carecart.language";
+const attributionStorageKey = "famlens.attribution.v1";
+const attributionSessionKey = "famlens.attribution.session.v1";
 const supportedLanguageKeys = new Set(["zh-Hans", "en", "es", "fr", "ko", "ja", "vi", "hi"]);
 const supportedCurrencyKeys = new Set(["CNY", "USD", "CAD", "EUR", "GBP", "INR", "KRW", "JPY", "VND", "AUD"]);
 const currencyRatesToUsd = {
@@ -3857,12 +3859,16 @@ function safeNumber(value) {
 }
 
 function sendClientEvent(eventType, payload = {}) {
+  const eventContext = buildClientEventContext();
   fetch("/api/events/client", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       event_type: eventType,
-      payload,
+      payload: {
+        ...eventContext,
+        ...payload,
+      },
       user_id: clientUserId,
     }),
   }).catch(() => {
@@ -5348,6 +5354,63 @@ function getDeviceUserId() {
   const id = `user-${randomId}`;
   localStorage.setItem(key, id);
   return id;
+}
+
+function buildClientEventContext() {
+  const attribution = getCampaignAttribution();
+  const context = {
+    page_path: window.location.pathname,
+    page_search: window.location.search.slice(0, 240),
+    is_standalone:
+      window.matchMedia?.("(display-mode: standalone)")?.matches ||
+      window.navigator.standalone === true,
+  };
+
+  if (Object.keys(attribution).length) {
+    context.attribution = attribution;
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach((key) => {
+      if (attribution[key]) context[key] = attribution[key];
+    });
+  }
+
+  return context;
+}
+
+function getCampaignAttribution() {
+  const params = new URLSearchParams(window.location.search);
+  const trackedKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  const current = {};
+
+  trackedKeys.forEach((key) => {
+    const value = params.get(key);
+    if (value) current[key] = value.slice(0, 120);
+  });
+
+  const source = params.get("source") || params.get("ref") || params.get("channel");
+  if (source && !current.utm_source) current.utm_source = source.slice(0, 120);
+
+  if (Object.keys(current).length) {
+    current.referrer = document.referrer.slice(0, 240);
+    current.landing_path = window.location.pathname;
+    current.landing_search = window.location.search.slice(0, 240);
+    current.captured_at = new Date().toISOString();
+    localStorage.setItem(attributionStorageKey, JSON.stringify(current));
+
+    const sessionKey = JSON.stringify(current);
+    if (sessionStorage.getItem(attributionSessionKey) !== sessionKey) {
+      sessionStorage.setItem(attributionSessionKey, sessionKey);
+      setTimeout(() => sendClientEvent("campaign_landing", { campaign: current }), 0);
+    }
+
+    return current;
+  }
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(attributionStorageKey) || "{}");
+    return saved && typeof saved === "object" ? saved : {};
+  } catch (error) {
+    return {};
+  }
 }
 
 function getStoredHouseholdId() {
