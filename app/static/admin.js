@@ -6,20 +6,26 @@ const channelChart = document.querySelector("#channelChart");
 const eventList = document.querySelector("#eventList");
 const generatedAt = document.querySelector("#generatedAt");
 const refreshButton = document.querySelector("#refreshButton");
+const periodSelect = document.querySelector("#periodSelect");
 const northStarTitle = document.querySelector("#northStarTitle");
 const northStarSubtitle = document.querySelector("#northStarSubtitle");
 const northStarGrid = document.querySelector("#northStarGrid");
 const channelTable = document.querySelector("#channelTable");
+const userTable = document.querySelector("#userTable");
 const commerceGrid = document.querySelector("#commerceGrid");
 const dataMoat = document.querySelector("#dataMoat");
 const familyPanel = document.querySelector("#familyPanel");
 
 refreshButton.addEventListener("click", loadAdminOverview);
+periodSelect?.addEventListener("change", loadAdminOverview);
 
 async function loadAdminOverview() {
   setLoading(true);
   try {
-    const response = await fetch("/api/admin/overview");
+    const params = new URLSearchParams();
+    const days = periodSelect?.value || "30";
+    if (days !== "") params.set("days", days);
+    const response = await fetch(`/api/admin/overview?${params.toString()}`);
     if (!response.ok) throw new Error("admin overview failed");
     const data = await response.json();
     renderOverview(data);
@@ -37,6 +43,7 @@ function renderOverview(data) {
   renderKpis(summary);
   renderModules(data.modules || []);
   renderChannelTable(data.channels || []);
+  renderUserTable(data.users || []);
   renderCommerce(data.monetization || {});
   renderDataMoat(data.data_moat || {});
   renderFamilyPanel(data.families || {});
@@ -140,6 +147,69 @@ function renderChannelTable(channels) {
       `;
     })
     .join("");
+}
+
+function renderUserTable(users) {
+  if (!users.length) {
+    userTable.innerHTML = `<tr><td colspan="7" class="table-empty">当前周期暂无用户数据。新访问会记录语言、地区线索、设备平台和拍照缩略图。</td></tr>`;
+    return;
+  }
+
+  userTable.innerHTML = users
+    .map((user) => {
+      const images = user.latest_images || [];
+      const events = user.latest_events || [];
+      const deviceDetail = [user.device, user.platform, user.screen].filter(Boolean).join(" · ");
+      const regionDetail = [user.country_region, user.timezone].filter(Boolean).join(" · ");
+      const counts = [
+        `商品 ${user.product_scans || 0}`,
+        `小票 ${user.receipt_scans || 0}`,
+        `保存 ${user.records_saved || 0}`,
+        `档案 ${user.profile_saved || 0}`,
+      ].join(" / ");
+      return `
+        <tr>
+          <td>
+            <strong class="user-id">${escapeHtml(user.user_id || "unknown")}</strong>
+            <small>首次 ${escapeHtml(formatDateTime(user.first_seen))}</small>
+          </td>
+          <td>${escapeHtml(regionDetail || "暂无")}</td>
+          <td>${escapeHtml(deviceDetail || "暂无")}</td>
+          <td>${escapeHtml(user.language || "暂无")}</td>
+          <td>${escapeHtml(counts)}</td>
+          <td>
+            ${
+              images.length
+                ? `<div class="media-strip">${images.map(renderMediaThumb).join("")}</div>`
+                : `<span class="muted-text">暂无图片</span>`
+            }
+            ${
+              events.length
+                ? `<div class="event-mini">${events
+                    .slice(-2)
+                    .reverse()
+                    .map((event) => `<span>${escapeHtml(event.summary || event.event_type || "")}</span>`)
+                    .join("")}</div>`
+                : ""
+            }
+          </td>
+          <td>${escapeHtml(formatDateTime(user.last_seen))}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function renderMediaThumb(image) {
+  const label = image.label || image.event_type || "photo";
+  const url = image.url || "";
+  if (!url) return "";
+  return `
+    <a class="media-thumb" href="${escapeAttribute(url)}" target="_blank" rel="noreferrer" title="${escapeAttribute(label)}">
+      <img src="${escapeAttribute(url)}" alt="${escapeAttribute(label)}" loading="lazy">
+      <span>${escapeHtml(label)}</span>
+    </a>
+  `;
 }
 
 function renderCommerce(monetization) {
@@ -313,6 +383,10 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value);
 }
 
 loadAdminOverview();

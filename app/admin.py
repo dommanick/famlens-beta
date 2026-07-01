@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from datetime import UTC, date, datetime, timedelta
 from typing import Any
+from urllib.parse import quote
 
 from app.events import Event, event_to_dict
 
@@ -61,6 +62,7 @@ def build_admin_overview(events: list[Event], identity_summary: dict[str, int] |
         "modules": _modules(events, identity_summary),
         "channels": _channel_performance(events),
         "families": _family_intelligence(events, identity_summary),
+        "users": _user_profiles(events),
         "monetization": _monetization(events),
         "data_moat": _data_moat(events, identity_summary),
         "charts": {
@@ -316,6 +318,83 @@ def _family_intelligence(events: list[Event], identity_summary: dict[str, int]) 
     }
 
 
+def _user_profiles(events: list[Event]) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, Any]] = {}
+    for event in events:
+        user_id = event.user_id or "unknown"
+        profile = grouped.setdefault(
+            user_id,
+            {
+                "user_id": user_id,
+                "first_seen": event.created_at,
+                "last_seen": event.created_at,
+                "language": "",
+                "country_region": "",
+                "timezone": "",
+                "device": "",
+                "platform": "",
+                "screen": "",
+                "product_scans": 0,
+                "receipt_scans": 0,
+                "records_saved": 0,
+                "profile_saved": 0,
+                "latest_images": [],
+                "latest_events": [],
+            },
+        )
+        if _is_after(event.created_at, str(profile["last_seen"])):
+            profile["last_seen"] = event.created_at
+        if _is_before(event.created_at, str(profile["first_seen"])):
+            profile["first_seen"] = event.created_at
+
+        payload = event.payload or {}
+        profile["language"] = str(payload.get("output_language") or profile["language"] or "")
+        profile["timezone"] = str(payload.get("timezone") or profile["timezone"] or "")
+        profile["platform"] = str(payload.get("platform") or profile["platform"] or "")
+        profile["screen"] = str(payload.get("screen") or profile["screen"] or "")
+        country_region = _country_region(payload)
+        if country_region:
+            profile["country_region"] = country_region
+
+        user_agent = str(payload.get("user_agent") or "")
+        if user_agent:
+            profile["device"] = _device_from_user_agent(user_agent)
+
+        if event.event_type in PRODUCT_ANALYSIS_EVENTS:
+            profile["product_scans"] += 1
+        if event.event_type in RECEIPT_SCAN_EVENTS:
+            profile["receipt_scans"] += 1
+        if event.event_type in RECORD_SAVE_EVENTS:
+            profile["records_saved"] += 1
+        if event.event_type in PROFILE_EVENTS:
+            profile["profile_saved"] += 1
+
+        image_path = payload.get("image_path")
+        if image_path:
+            image = {
+                "event_type": event.event_type,
+                "created_at": event.created_at,
+                "path": str(image_path),
+                "url": f"/api/admin/media?path={quote(str(image_path), safe='')}",
+                "label": str(payload.get("category") or payload.get("store_name") or event.event_type),
+            }
+            profile["latest_images"].append(image)
+            profile["latest_images"] = profile["latest_images"][-4:]
+
+        profile["latest_events"].append(
+            {
+                "event_type": event.event_type,
+                "created_at": event.created_at,
+                "summary": _event_summary(event),
+            }
+        )
+        profile["latest_events"] = profile["latest_events"][-4:]
+
+    rows = list(grouped.values())
+    rows.sort(key=lambda item: str(item.get("last_seen") or ""), reverse=True)
+    return rows[:120]
+
+
 def _monetization(events: list[Event]) -> dict[str, Any]:
     scans = sum(1 for event in events if event.event_type in PRODUCT_ANALYSIS_EVENTS or event.event_type in RECEIPT_SCAN_EVENTS)
     records = sum(1 for event in events if event.event_type in RECORD_SAVE_EVENTS)
@@ -410,6 +489,63 @@ def _event_channel(event: Event) -> str:
     if event.event_type.startswith("web_"):
         return "web / direct"
     return "unknown / direct"
+
+
+def _country_region(payload: dict[str, Any]) -> str:
+    country_code = str(payload.get("country_code") or "").strip()
+    locale_region = str(payload.get("locale_region") or "").strip()
+    timezone = str(payload.get("timezone") or "").strip()
+    if country_code:
+        return country_code.upper()
+    if locale_region:
+        return locale_region.upper()
+    if timezone:
+        return timezone
+    return ""
+
+
+def _device_from_user_agent(user_agent: str) -> str:
+    ua = user_agent.lower()
+    if "iphone" in ua:
+        return "iPhone"
+    if "ipad" in ua:
+        return "iPad"
+    if "android" in ua:
+        if "mobile" in ua:
+            return "Android phone"
+        return "Android tablet"
+    if "macintosh" in ua or "mac os x" in ua:
+        return "Mac"
+    if "windows" in ua:
+        return "Windows PC"
+    if "linux" in ua:
+        return "Linux"
+    return user_agent[:80] or "未知设备"
+
+
+def _event_summary(event: Event) -> str:
+    payload = event.payload or {}
+    parts = []
+    for key in ("category", "verdict", "store_name", "total_amount", "output_language", "utm_source"):
+        value = payload.get(key)
+        if value not in (None, ""):
+            parts.append(f"{key}: {value}")
+    return " · ".join(parts) or event.event_type
+
+
+def _is_after(left: str, right: str) -> bool:
+    return _parse_datetime(left) > _parse_datetime(right)
+
+
+def _is_before(left: str, right: str) -> bool:
+    return _parse_datetime(left) < _parse_datetime(right)
+
+
+def _parse_datetime(value: str) -> datetime:
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return datetime.min.replace(tzinfo=UTC)
 
 
 def _counter_items(counter: Counter[str], limit: int = 8) -> list[dict[str, Any]]:

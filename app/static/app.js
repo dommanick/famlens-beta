@@ -5361,6 +5361,13 @@ function buildClientEventContext() {
   const context = {
     page_path: window.location.pathname,
     page_search: window.location.search.slice(0, 240),
+    locale: navigator.language || "",
+    locale_region: parseLocaleRegion(navigator.language || ""),
+    browser_languages: Array.from(navigator.languages || []).slice(0, 5).join(","),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+    platform: navigator.platform || "",
+    vendor: navigator.vendor || "",
+    screen: `${window.screen?.width || 0}x${window.screen?.height || 0}@${window.devicePixelRatio || 1}`,
     is_standalone:
       window.matchMedia?.("(display-mode: standalone)")?.matches ||
       window.navigator.standalone === true,
@@ -5374,6 +5381,11 @@ function buildClientEventContext() {
   }
 
   return context;
+}
+
+function parseLocaleRegion(locale) {
+  const parts = String(locale || "").split("-");
+  return parts.length >= 2 ? parts[parts.length - 1].slice(0, 8) : "";
 }
 
 function getCampaignAttribution() {

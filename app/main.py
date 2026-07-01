@@ -7,6 +7,7 @@ import io
 import secrets
 from pathlib import Path
 from urllib.parse import quote
+from datetime import UTC, datetime, timedelta
 
 from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, HTTPException, Request, UploadFile, status
 from fastapi.responses import FileResponse, PlainTextResponse, Response
@@ -255,18 +256,52 @@ async def health() -> dict[str, str]:
 async def admin_overview(
     request: Request,
     limit: int = 5000,
+    days: int | None = 30,
     _: bool = Depends(require_admin_access),
 ) -> dict[str, object]:
     safe_limit = min(max(limit, 1), 20000)
-    return build_admin_overview(event_logger.read(limit=safe_limit), identity_store.overview())
+    events = event_logger.read(limit=safe_limit)
+    if days is not None and days > 0:
+        since = datetime.now(UTC) - timedelta(days=days)
+        filtered_events = []
+        for event in events:
+            try:
+                created_at = datetime.fromisoformat(event.created_at.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if created_at >= since:
+                filtered_events.append(event)
+        events = filtered_events
+    return build_admin_overview(events, identity_store.overview())
+
+
+@app.get("/api/admin/media")
+async def admin_media(path: str, _: bool = Depends(require_admin_access)) -> FileResponse:
+    requested = Path(path)
+    if not requested.is_absolute():
+        requested = Path.cwd() / requested
+    resolved = requested.resolve()
+    allowed_roots = [card_output_dir.resolve(), upload_output_dir.resolve()]
+    if not any(resolved == root or root in resolved.parents for root in allowed_roots):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Media not found.")
+    if not resolved.exists() or not resolved.is_file():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Media not found.")
+    return FileResponse(resolved)
 
 
 @app.post("/api/events/client")
-async def client_event(payload: ClientEventRequest) -> dict[str, str]:
+async def client_event(request: Request, payload: ClientEventRequest) -> dict[str, str]:
     event_type = payload.event_type.strip().lower().replace(" ", "_")
     if not event_type.startswith("client_"):
         event_type = f"client_{event_type}"
-    event_logger.log(event_type[:80], clean_user_id(payload.user_id), **(payload.payload or {}))
+    event_payload = dict(payload.payload or {})
+    if "client_ip" not in event_payload:
+        forwarded_for = request.headers.get("x-forwarded-for", "")
+        event_payload["client_ip"] = forwarded_for.split(",")[0].strip() or (request.client.host if request.client else "")
+    country_code = request.headers.get("cf-ipcountry") or request.headers.get("x-vercel-ip-country")
+    if country_code and "country_code" not in event_payload:
+        event_payload["country_code"] = country_code[:8]
+    event_logger.log(event_type[:80], clean_user_id(payload.user_id), **event_payload)
     return {"status": "ok"}
 
 
