@@ -3,54 +3,135 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f6f7f2" />
+    <meta name="theme-color" content="#f4f5f0" />
     <title>FamLens Admin</title>
-    <link rel="stylesheet" href="/static/admin.css" />
+    <link rel="stylesheet" href="/static/admin.css?v=2" />
   </head>
   <body>
     <main class="admin-shell">
       <header class="admin-topbar">
-        <div>
-          <p>FamLens Operations</p>
-          <h1>家庭 AI 购物管家后台</h1>
+        <div class="brand-block">
+          <span class="brand-mark">F</span>
+          <div>
+            <p>FamLens Command Center</p>
+            <h1>家庭海外购物 AI 后台</h1>
+          </div>
         </div>
         <div class="topbar-actions">
-          <a href="/" class="ghost-link">用户端</a>
+          <a href="/" class="ghost-link">打开用户端</a>
           <button id="refreshButton" type="button">刷新数据</button>
         </div>
       </header>
 
+      <section class="hero-panel" aria-label="后台定位">
+        <div>
+          <p class="section-kicker">North Star</p>
+          <h2 id="northStarTitle">让 AI 越来越懂一个家庭</h2>
+          <p id="northStarSubtitle">后台正在加载数据。</p>
+        </div>
+        <div class="north-star-grid" id="northStarGrid"></div>
+      </section>
+
       <section class="kpi-grid" id="kpiGrid" aria-label="核心指标"></section>
 
-      <section class="admin-layout">
+      <section class="admin-section">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Product Modules</p>
+            <h2>产品与运营模块</h2>
+          </div>
+          <span id="generatedAt">--</span>
+        </div>
         <div class="module-grid" id="moduleGrid" aria-label="运营模块"></div>
+      </section>
+
+      <section class="admin-layout">
+        <div class="main-stack">
+          <section class="admin-section">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Growth</p>
+                <h2>渠道与增长分析</h2>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>渠道</th>
+                    <th>用户</th>
+                    <th>打开</th>
+                    <th>扫描</th>
+                    <th>保存</th>
+                    <th>扫描转化</th>
+                    <th>主要活动</th>
+                  </tr>
+                </thead>
+                <tbody id="channelTable"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="admin-section">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Commercialization</p>
+                <h2>付费与商业化预留</h2>
+              </div>
+            </div>
+            <div class="commerce-grid" id="commerceGrid"></div>
+          </section>
+
+          <section class="admin-section">
+            <div class="section-head">
+              <div>
+                <p class="section-kicker">Data Moat</p>
+                <h2>数据资产与投资人看板</h2>
+              </div>
+            </div>
+            <div class="data-moat" id="dataMoat"></div>
+          </section>
+        </div>
 
         <aside class="insight-panel">
-          <div class="panel-block">
-            <div class="section-head">
+          <section class="panel-block">
+            <div class="section-head compact">
+              <h2>家庭智能</h2>
+            </div>
+            <div id="familyPanel"></div>
+          </section>
+
+          <section class="panel-block">
+            <div class="section-head compact">
               <h2>语言分布</h2>
-              <span id="generatedAt">--</span>
             </div>
             <div class="bar-list" id="languageChart"></div>
-          </div>
+          </section>
 
-          <div class="panel-block">
-            <div class="section-head">
+          <section class="panel-block">
+            <div class="section-head compact">
               <h2>品类分布</h2>
             </div>
             <div class="bar-list" id="categoryChart"></div>
-          </div>
+          </section>
 
-          <div class="panel-block">
-            <div class="section-head">
+          <section class="panel-block">
+            <div class="section-head compact">
+              <h2>渠道分布</h2>
+            </div>
+            <div class="bar-list" id="channelChart"></div>
+          </section>
+
+          <section class="panel-block">
+            <div class="section-head compact">
               <h2>最近事件</h2>
             </div>
             <div class="event-list" id="eventList"></div>
-          </div>
+          </section>
         </aside>
       </section>
     </main>
 
-    <script src="/static/admin.js"></script>
+    <script src="/static/admin.js?v=2"></script>
   </body>
 </html>
