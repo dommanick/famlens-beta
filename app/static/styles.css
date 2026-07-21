@@ -3122,6 +3122,35 @@ h1 {
   margin-bottom: 12px;
 }
 
+/* H5 app is intentionally phone-shaped on desktop. Keep lower home cards
+   single-column too, otherwise wide viewport media rules can squeeze text. */
+.home-insights,
+.sample-report-grid {
+  grid-template-columns: 1fr;
+}
+
+.sample-report-card {
+  grid-row: auto;
+}
+
+.sample-report-head,
+.home-section-head {
+  min-width: 0;
+}
+
+.sample-report-head > div,
+.home-section-head > div {
+  min-width: 0;
+}
+
+.sample-report-head h2,
+.home-section-head h2,
+.sample-report-grid strong,
+.sample-report-grid span {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
 .mini-home-action {
   min-height: 82px;
   border: 1px solid var(--line);
